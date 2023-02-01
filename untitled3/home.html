@@ -48,6 +48,13 @@
     </div>
   </div>
 </header><main>
+
+
+
+
+
+
+
 <div class="card mb-4">
   <div class="card-header">
     <i class="fas fa-table me-1"></i>
@@ -554,3 +561,69 @@
     location.href = "Form Page.html";
   };
 </script>
+
+
+<!DOCTYPE html>
+<html>
+<head>
+  <style>
+    /* Style for the overlay */
+    .overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background-color: rgba(0, 0, 0, 0.5);
+      z-index: 10;
+    }
+
+    /* Style for the pop-up notepad */
+    .popup {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background-color: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px black;
+      width: 500px;
+      height: 500px;
+      overflow: scroll;
+      z-index: 11;
+    }
+  </style>
+</head>
+<body>
+<!-- Button to open the pop-up notepad -->
+<button id="openBtn">Open Notepad</button>
+
+<!-- The overlay -->
+<div class="overlay">
+  <!-- The pop-up notepad -->
+  <div class="popup">
+    <textarea id="notepad" rows="16" cols="58"></textarea>
+    <br><br>
+    <!-- Button to close the pop-up notepad -->
+    <button id="closeBtn">Close</button>
+  </div>
+</div>
+
+<!-- JavaScript to show and hide the pop-up notepad -->
+<script>
+  var openBtn = document.getElementById("openBtn");
+  var closeBtn = document.getElementById("closeBtn");
+  var overlay = document.querySelector(".overlay");
+
+  openBtn.addEventListener("click", function() {
+    overlay.style.display = "block";
+  });
+
+  closeBtn.addEventListener("click", function() {
+    overlay.style.display = "none";
+  });
+</script>
+</body>
+</html>

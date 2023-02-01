@@ -25,7 +25,7 @@
 <body>
 <header class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0 shadow">
   <a class="navbar-brand col-md-3 col-lg-2 me-0 px-3 fs-6" href="home.html">
-    <img src="" alt="JT"/>
+    <img src="/img/AL_BLR_LA_MC_RGB.png" alt="JT"/>
   </a>
   <div class="navbar-nav">
     <div class="nav-item text-nowrap">
@@ -47,45 +47,49 @@
       <a class="nav-link px-3" href="Log In.html">Sign Out</a>
     </div>
   </div>
+
+  </head>
+
+
+
 </header><main>
 
 
 
 
-
-
-
-  <!DOCTYPE html>
   <html>
   <head>
     <style>
-      body {
-        background-color: #808080;
-      }
-      .container {
-        display: flex;
-      }
-      .left {
-        width: 50%;
+      .container1 {
+        width: 37%;
+        float: left;
+        background-color: lightgray;
+        padding: 150px;
+        margin-left: 180px;
+        margin-top: 170px;
         text-align: center;
-        padding: 20px;
-        border-right: solid black;
       }
-      .right {
-        width: 50%;
+
+      .container2 {
+        width: 37%;
+        float: left;
+        background-color: lightgrey;
+        padding: 150px;
+        margin-left: 50px;
+        margin-top: 170px;
         text-align: center;
-        padding: 20px;
       }
     </style>
+
   </head>
   <body>
-  <div class="container">
-    <div class="left">
-      Create a new board
-    </div>
-    <div class="right">
-      Return to current board
-    </div>
+  <div class="container1">
+    <button onclick="window.location.href = 'homeblank.html';">New Board</button>
   </div>
+  <div class="container2">
+    <button onclick="window.location.href = 'home.html';">Current Board</button>
+  </div>
+
+
   </body>
   </html>
