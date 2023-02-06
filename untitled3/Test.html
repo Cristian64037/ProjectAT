@@ -1,95 +1,105 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-  <!DOCTYPE html>
-  <html lang="en">
-  <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <link rel="canonical" href="https://getbootstrap.com/docs/5.2/examples/dashboard/">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/simple-datatables@latest/dist/style.css" rel="stylesheet" />
-    <link href="styles.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/simple-datatables@latest/dist/style.css" rel="stylesheet"/>
+    <link href="styles.css" rel="stylesheet"/>
     <script src="https://use.fontawesome.com/releases/v6.1.0/js/all.js" crossorigin="anonymous"></script>
 
+    <style>
+        body {
+            font-family: Bahnschrift;
+        }
 
-  </head>
+        .container1 {
+            width: 40%;
+            margin-left: 6.75%;
+            margin-top: 10%;
+            position: relative;
+        }
+
+        .container1 img {
+            width: 100%;
+            height: 100%;
+            border: 15px #422702FC outset;
+        }
+
+        .container1 .btn {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            -ms-transform: translate(-50%, -50%);
+            background-color: #422702FC;
+            color: white;
+            font-size: 18px;
+            padding: 12px 40px;
+            outline: 0.25px white solid;
+        }
+
+        .container1 .btn:hover {
+            background-color: white; !important;
+        }
+
+        @media screen and (max-width: 1366px) {
+            .container1 {
+                width: 35%;
+                margin-left: 10%;
+                margin-top: 5%;
+            }
+
+            .container1 img {
+                border: 10px #422702FC outset;
+            }
+        }
+    </style>
+</head>
 
 <body>
+
 <header class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0 shadow">
-  <a class="navbar-brand col-md-3 col-lg-2 me-0 px-3 fs-6" href="home.html">
-    <img src="/img/AL_BLR_LA_MC_RGB.png" alt="JT"/>
-  </a>
-  <div class="navbar-nav">
-    <div class="nav-item text-nowrap">
-      <a class="nav-link px-3" href="home.html">Boards</a>
+    <a class="navbar-brand col-md-3 col-lg-2 me-0 px-3 fs-6" href="home.html">
+        <img alt="JT"/>
+    </a>
+    <div class="navbar-nav">
+        <div class="nav-item text-nowrap">
+            <a class="nav-link px-3" href="home.html">Boards</a>
+        </div>
     </div>
-  </div>
-  <div class="navbar-nav">
-    <div class="nav-item text-nowrap">
-      <a class="nav-link px-3" href="Documents.html">Documents</a>
+    <div class="navbar-nav">
+        <div class="nav-item text-nowrap">
+            <a class="nav-link px-3" href="Documents.html">Documents</a>
+        </div>
     </div>
-  </div>
-  <div class="navbar-nav">
-    <div class="nav-item text-nowrap">
-      <a class="nav-link px-3" href="INTPrep.html">Interview Prep</a>
+    <div class="navbar-nav">
+        <div class="nav-item text-nowrap">
+            <a class="nav-link px-3" href="INTPrep.html">Interview Prep</a>
+        </div>
     </div>
-  </div>
-  <div class="navbar-nav">
-    <div class="nav-item text-nowrap logout">
-      <a class="nav-link px-3" href="Log In.html">Sign Out</a>
+    <div class="navbar-nav">
+        <div class="nav-item text-nowrap logout">
+            <a class="nav-link px-3" href="Log In.html">Sign Out</a>
+        </div>
     </div>
-  </div>
+</header>
 
-  </head>
+<main>
+    <div class="row">
+        <div class="col-6 container1">
+            <img src="JT.png" alt="JT">
+            <button class="btn" onclick="window.location.href = 'homeblank.html';">New Board</button>
+        </div>
+        <div class="col-6 container1">
+            <img src="JT.png" alt="JT">
+            <button class="btn" onclick="window.location.href = 'home.html';">Previous Board</button>
+        </div>
+    </div>
+</main>
 
-
-
-</header><main>
-
-
-
-
-  <html>
-  <head>
-    <style>
-      .container1 {
-        width: 37%;
-        float: left;
-        background-color: lightgray;
-        padding: 150px;
-        margin-left: 180px;
-        margin-top: 170px;
-        text-align: center;
-      }
-
-      .container2 {
-        width: 37%;
-        float: left;
-        background-color: lightgrey;
-        padding: 150px;
-        margin-left: 50px;
-        margin-top: 170px;
-        text-align: center;
-      }
-    </style>
-
-  </head>
-  <body>
-  <div class="container1">
-    <button onclick="window.location.href = 'homeblank.html';">New Board</button>
-  </div>
-  <div class="container2">
-    <button onclick="window.location.href = 'home.html';">Current Board</button>
-  </div>
-
-
-  </body>
-  </html>
+</body>
+</html>
