@@ -10,6 +10,36 @@
     <link href="https://cdn.jsdelivr.net/npm/simple-datatables@latest/dist/style.css" rel="stylesheet"/>
     <link href="../CSS%20Files/styles.css" rel="stylesheet"/>
     <script src="https://use.fontawesome.com/releases/v6.1.0/js/all.js" crossorigin="anonymous"></script>
+
+    <style>
+        /* Style for the overlay */
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 10;
+        }
+
+        /* Style for the pop-up notepad */
+        .popup {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px black;
+            width: 500px;
+            height: 500px;
+            overflow: scroll;
+            z-index: 11;
+        }
+    </style>
 </head>
 
 <body>
@@ -41,11 +71,30 @@
 <main>
     <div class="card mb-4">
         <div class="card-header">
-            <i class="fas fa-table me-1"></i>
-            Applications
+            <i class="fas fa-table me-2 fs-4"></i>
+            <span style="font-size: 28px">Applications</span>
+
+            <!-- Button to open the pop-up notepad -->
+            <button id="openBtn" class="float-lg-end  btn btn-outline-dark">Open Notepad</button>
+
+            <span class="float-lg-end">&nbsp;&nbsp;&nbsp;</span>
+
+            <!-- Button to open the job form -->
+            <button id="myButton" class="float-lg-end  btn btn-outline-dark submit-button">Create Application</button>
+
+            <!-- The overlay -->
+            <div class="overlay">
+                <!-- The pop-up notepad -->
+                <div class="popup">
+                    <textarea id="notepad" rows="16" cols="58"></textarea>
+                    <br><br>
+                    <!-- Button to close the pop-up notepad -->
+                    <button id="closeBtn">Close</button>
+                </div>
+            </div>
         </div>
         <div class="card-body">
-            <table id="datatablesSimple">
+            <table class="table">
                 <thead>
                 <tr>
                     <th>Company Name</th>
@@ -54,22 +103,9 @@
                     <th>Stage</th>
                     <th>Date Applied</th>
                     <th>Salary</th>
+                    <th>Edit</th>
                 </tr>
                 </thead>
-                <tfoot>
-                <tr>
-                    <th>Name</th>
-                    <th>Position</th>
-                    <th>Office</th>
-                    <th>Age</th>
-                    <th>Start date</th>
-                    <th>Salary</th>
-                </tr>
-                </tfoot>
-                <tbody>
-
-
-                </tbody>
             </table>
         </div>
     </div>
@@ -95,6 +131,7 @@
                 return table
             }
             const tHead = table.childNodes[0]
+            console.log(tHead);
             const filterHeaders = {
                 nodeName: "TR",
                 childNodes: tHead.childNodes[0].childNodes.map(
@@ -118,67 +155,11 @@
         }
     })
 </script>
-</body>
-</html>
-
-
-<button id="myButton" class="float-right submit-button">Create Application</button>
-
 <script type="text/javascript">
     document.getElementById("myButton").onclick = function () {
         location.href = "Form Page.html";
     };
 </script>
-
-
-<!DOCTYPE html>
-<html>
-<head>
-    <style>
-        /* Style for the overlay */
-        .overlay {
-            display: none;
-            position: fixed;
-            top: 0;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            background-color: rgba(0, 0, 0, 0.5);
-            z-index: 10;
-        }
-
-        /* Style for the pop-up notepad */
-        .popup {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background-color: white;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 0 10px black;
-            width: 500px;
-            height: 500px;
-            overflow: scroll;
-            z-index: 11;
-        }
-    </style>
-</head>
-<body>
-<!-- Button to open the pop-up notepad -->
-<button id="openBtn">Open Notepad</button>
-
-<!-- The overlay -->
-<div class="overlay">
-    <!-- The pop-up notepad -->
-    <div class="popup">
-        <textarea id="notepad" rows="16" cols="58"></textarea>
-        <br><br>
-        <!-- Button to close the pop-up notepad -->
-        <button id="closeBtn">Close</button>
-    </div>
-</div>
-
 <!-- JavaScript to show and hide the pop-up notepad -->
 <script>
     var openBtn = document.getElementById("openBtn");
