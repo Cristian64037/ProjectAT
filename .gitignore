@@ -1,3 +1,7 @@
 node_modules
 node_modules/.package-lock.json
 node_modules/dayjs/.editorconfig
+.idea/misc.xml
+project_at/package-lock.json
+project_at/package-lock.json
+project_at/package.json
