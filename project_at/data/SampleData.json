@@ -1,5 +1,4 @@
 {
-
   "Jobs": [
     {
       "id":1 ,
@@ -103,5 +102,15 @@
       "UserName":"RoberM21" ,
       "PSWD":"ValldLog"
     }
+  ],
+  "BoxCard" : [
+    {"BoxCardId" :  1, "BoxCardName" : "Resumes" },
+    {"BoxCardId" :  2, "BoxCardName" : "Cover Letters" },
+    {"BoxCardId" :  3, "BoxCardName" : "Recommendations" },
+    {"BoxCardId" :  4, "BoxCardName" : "Behavioral Questions" },
+    {"BoxCardId" :  5, "BoxCardName" : "Technical Question" },
+    {"BoxCardId" :  6, "BoxCardName" : "Certifications" },
+    {"BoxCardId" :  7, "BoxCardName" : "Awards" },
+    {"BoxCardId" :  8, "BoxCardName" : "Other Documents" }
   ]
 }

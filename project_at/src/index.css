@@ -1,0 +1,36 @@
+/*Document Page Styles*/
+.doc-container {
+    width: 20%;
+    height: 200px;
+    float: left;
+    margin: 10px;
+    border: 1px solid black;
+    text-align: center;
+    margin-left: 60px;
+    margin-top: 80px;
+}
+
+.scroll-container {
+    height: 150px;
+    overflow-x: scroll;
+    display: flex;
+}
+
+.card-wrapper {
+    display: flex;
+}
+
+.card {
+    width: 50%;
+    margin: 10px;
+    padding: 20px;
+    background-color: #ddd;
+    border-radius: 10px;
+    display: inline-block;
+    border: 2px solid black;
+}
+
+.upload {
+    display: flex;
+    alignItems: center
+}
