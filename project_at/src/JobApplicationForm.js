@@ -2,7 +2,7 @@
 const JobApplicationForm=()=>{
 
     return(
-        <div className="container">
+        <div className="app-container">
             <header>Application Form</header>
 
             <form action="#">
