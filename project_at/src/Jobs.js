@@ -1,7 +1,5 @@
 import useFetch from "./useFetch";
 import {useNavigate} from "react-router";
-import {useEffect} from "react";
-
 
 const Boardss=()=> {
     let navigate = useNavigate();
@@ -66,7 +64,7 @@ const Boardss=()=> {
     }
 
     function GoToAppAdder() {
-        let path = `/documents`;
+        let path = `/JobApplicationForm`;
         navigate(path);
     }
 

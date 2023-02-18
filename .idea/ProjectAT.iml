@@ -9,5 +9,6 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="simple-datatables" level="application" />
+    <orderEntry type="library" name="line" level="application" />
   </component>
 </module>

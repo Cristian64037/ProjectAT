@@ -1,11 +1,11 @@
-import NavBar from './NavBarCS';
+import NavBar from './NavBar2';
 import FootEnd from './FootEnd';
-import Home from "./Home";
+
 import {BrowserRouter as Router, Route, Routes} from "react-router-dom";
 import Documents from "./Documents";
-import BlogDetails from "./BlogDetails";
 import Boards from "./Boards";
 import InterviewPrep from "./InterviewPrep";
+import JobApplicationForm from "./JobApplicationForm"
 
 function App() {
 
@@ -15,11 +15,10 @@ function App() {
           <NavBar/>
           <div className="Content">
             <Routes>
-              <Route exact path={"/"} element={<Home/>}>  </Route>
-              <Route  path={"/blogs/:id"} element={<BlogDetails/>}>  </Route>
               <Route exact path={"/documents"} element={<Documents/>}>  </Route>
               <Route exact path={"/interviewPrep"} element={<InterviewPrep/>}>  </Route>
               <Route exact path={"/boards"} element={<Boards/>}>  </Route>
+              <Route exact path={"/JobApplicationForm"} element={<JobApplicationForm/>}>  </Route>
             </Routes>
           </div>
           <FootEnd/>
