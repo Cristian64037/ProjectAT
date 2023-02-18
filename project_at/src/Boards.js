@@ -2,7 +2,6 @@
 import JobList from "./JobList";
 import useFetch from "./useFetch";
 import Boardss from "./Jobs.js"
-import "./styles.css";
 
 const Boards=()=>{
 

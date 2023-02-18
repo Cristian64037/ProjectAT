@@ -12,21 +12,21 @@ const Documents = () => {
                 {boxes && boxes.map((box) => (
                     <div className="doc-container" key={box.BoxCardId}>
                         <p><b>{box.BoxCardName}</b></p>
-                        <div className="scroll-container">
-                            <div className="card-wrapper">
-                                <div className="card">
+                        <div className="doc-box-container">
+                            <div className="doc-wrapper">
+                                <div className="doc-card">
                                     <p style={{fontSize: '12px'}}>December Resume</p>
                                 </div>
-                                <div className="card">
+                                <div className="doc-card">
                                     <p style={{fontSize: '12px'}}>January Resume</p>
                                 </div>
-                                <div className="card">
+                                <div className="doc-card">
                                     <p style={{fontSize: '12px'}}>February Resume</p>
                                 </div>
                             </div>
                         </div>
                         <br/><br/>
-                        <form className="upload" action="save_file.php" encType="multipart/form-data" method="post">
+                        <form className="doc-upload" action="save_file.php" encType="multipart/form-data" method="post">
                             <input type="file"/>
                         </form>
                     </div>
