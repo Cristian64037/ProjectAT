@@ -1,10 +1,11 @@
 import useFetch from "./useFetch";
 import {useNavigate} from "react-router";
 
-const Boardss=()=> {
+const Boardss = () => {
     let navigate = useNavigate();
-    const {data:jobs,isPending,error}= useFetch( "http://localhost:8000/Jobs");
-    function FormatTable(){
+    const {data: jobs, isPending, error} = useFetch("http://localhost:8000/Jobs");
+
+    function FormatTable() {
         new window.simpleDatatables.DataTable("table", {
             perPageSelect: [5, 10, ["All", -1]],
             columns: [
@@ -21,12 +22,13 @@ const Boardss=()=> {
                 if (type === "print") {
                     return table
                 }
-                const tHead = table.childNodes[0]
+                const tHead = table.childNodes[0];
+                const tbead = table.childNodes[0].childNodes[0].childNodes;
                 console.log(tHead);
 
                 const filterHeaders = {
                     nodeName: "TR",
-                    childNodes: tHead.childNodes[0].childNodes.map(
+                    childNodes: tHead.childNodes[0].childNodes.slice(0,6).map(
                         (_th, index) => ({
                             nodeName: "TH",
                             childNodes: [
@@ -35,7 +37,7 @@ const Boardss=()=> {
                                     attributes: {
                                         class: "datatable-input",
                                         type: "search",
-                                        size:"10px",
+                                        size: "5px",
                                         "data-columns": `[${index}]`
                                     }
                                 }
@@ -70,20 +72,22 @@ const Boardss=()=> {
     }
 
     return (
-
         <div className="card mb-4">
             <div className="card-header">
                 <i className="fas fa-table me-2 fs-4"/>
                 <span style={{fontSize: '28px'}}>Applications</span>
                 {/* Button to open the pop-up notepad */}
-                <button id="openBtn" className="float-lg-end  btn btn-outline-dark" onClick={OpenPad}>Open Notepad</button>
+                <button id="openBtn" className="float-lg-end  btn btn-outline-dark" onClick={OpenPad}>Open Notepad
+                </button>
                 <span className="float-lg-end">&nbsp;&nbsp;&nbsp;</span>
                 {/* Button to open the job form */}
-                <button id="myButton" className="float-lg-end  btn btn-outline-dark submit-button" onClick={GoToAppAdder}>Documents
+                <button id="myButton" className="float-lg-end  btn btn-outline-dark submit-button"
+                        onClick={GoToAppAdder}>Documents
                     Application
                 </button>
                 {/*Format Table*/}
-                <button id="myButton" className="float-lg-end  btn btn-outline-dark submit-button" onClick={FormatTable}>Format
+                <button id="myButton" className="float-lg-end  btn btn-outline-dark submit-button"
+                        onClick={FormatTable}>Format
                 </button>
                 {/* The overlay */}
                 <div className="overlay">
@@ -97,6 +101,7 @@ const Boardss=()=> {
                 </div>
             </div>
             <div className="card-body">
+                {isPending && <div> Loading...</div>}
                 <table className="table">
                     <thead>
 
@@ -111,28 +116,24 @@ const Boardss=()=> {
                     </tr>
                     </thead>
                     <tbody>
-                    { isPending && <div> Loading...</div>}
                     {jobs && jobs.map((job) => {
                         return (
-
-
-                        <tr>
-                            <td>{job.CompName}</td>
-                            <td>{job.PositionName}</td>
-                            <td>{job.StatusID}</td>
-                            <td>{job.InterviewRound}</td>
-                            <td>{job.AppliedDate}</td>
-                            <td>{job.InterestLevel}</td>
-                            <td>
-                                <button style={{backgroundColor: '#191c1f', color: 'white'}} key={job.id}>Edit Job</button>
-                            </td>
-                        </tr>
+                            <tr key={job.id}>
+                                <td>{job.CompName}</td>
+                                <td>{job.PositionName}</td>
+                                <td>{job.StatusID}</td>
+                                <td>{job.InterviewRound}</td>
+                                <td>{job.AppliedDate}</td>
+                                <td>{job.InterestLevel}</td>
+                                <td>
+                                    <button style={{backgroundColor: '#191c1f', color: 'white'}}>Edit Job</button>
+                                </td>
+                            </tr>
                         )
                     })}
 
                     </tbody>
                 </table>
-
 
 
             </div>
