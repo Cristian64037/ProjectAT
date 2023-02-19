@@ -23,8 +23,6 @@ const Boardss = () => {
                     return table
                 }
                 const tHead = table.childNodes[0];
-                const tbead = table.childNodes[0].childNodes[0].childNodes;
-                console.log(tHead);
 
                 const filterHeaders = {
                     nodeName: "TR",
