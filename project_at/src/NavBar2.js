@@ -17,7 +17,7 @@ function CollapsibleExample() {
             <Nav.Link href="/documents"> Documents </Nav.Link>
           </Nav>
           <Nav>
-          <Nav.Link href="/boards" id="BookAppointmentLogo"> Sign Out </Nav.Link>
+          <Nav.Link href="/login" id="BookAppointmentLogo"> Sign Out </Nav.Link>
           </Nav>
         </Navbar.Collapse>
       </Container>
