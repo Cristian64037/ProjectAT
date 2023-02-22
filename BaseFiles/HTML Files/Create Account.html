@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Documents Account</title>
+    <link rel="stylesheet" href="../CSS%20Files/Create%20Account.css">
+    <style>
+        .alert {
+            position: fixed;
+            top: 20px;
+            left: 0;
+            right: 0;
+            margin: auto;
+            padding: 20px;
+            background-color: green;
+            color: white;
+            border-radius: 5px;
+            width: 100%;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 1;
+            transition: opacity 0.5s;
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            cursor: pointer;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="myform">
+        <form>
+            <h2>CREATE ACCOUNT</h2>
+            <input type="text" placeholder="Full Name">
+            <input type="email" placeholder="Email">
+            <input type="password" placeholder="Password">
+            <div class="form-actions">
+                <button type="submit" onclick="showAlert()">CREATE ACCOUNT</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div id="alert" class="alert" style="display:none;">
+    Account Created Successfully
+    <span class="close-btn" onclick="closeAlert()">&times</span>
+</div>
+
+<script>
+    function showAlert() {
+        document.getElementById("alert").style.display = "block";
+        setTimeout(closeAlert, 1500);
+    }
+
+    function closeAlert() {
+        document.getElementById("alert").style.opacity = "0";
+        setTimeout(function () {
+            document.getElementById("alert").style.display = "none";
+        }, 500);
+    }
+</script>
+
+</body>
+</html>
+
+<footer style="position: absolute; bottom: 0; width: 100%;">
+    <div style="text-align: right; padding: 10px;">
+        Copyright © 2023
+    </div>
+</footer>

@@ -1,0 +1,126 @@
+{
+  "Jobs": [
+    {
+      "id":1 ,
+      "JobBoardID":1 ,
+      "CompName":"Aldi" ,
+      "PositionName":"IT Intern",
+      "AppliedDate": "2023-01-22",
+      "StatusID":1 ,
+      "InterviewRound":0 ,
+      "InterestLevel":3
+    },
+    {
+      "id":2 ,
+      "JobBoardID":1 ,
+      "CompName": "Aldi",
+      "PositionName":"IT-Purchase Applications",
+      "AppliedDate": "2023-01-23",
+      "StatusID": 1,
+      "InterviewRound": 0,
+      "InterestLevel":1
+    },
+    {
+      "id":3 ,
+      "JobBoardID":2 ,
+      "CompName": "Cisco",
+      "PositionName":"SWE Intern",
+      "AppliedDate": "2023-01-30" ,
+      "StatusID":1 ,
+      "InterviewRound":0 ,
+      "InterestLevel":3
+    },
+    {
+      "id":4 ,
+      "JobBoardID":2 ,
+      "CompName": "AT&T",
+      "PositionName":"SWE Intern",
+      "AppliedDate": "2023-02-10" ,
+      "StatusID":1 ,
+      "InterviewRound":0 ,
+      "InterestLevel":2
+    },
+    {
+      "id":5 ,
+      "JobBoardID":2 ,
+      "CompName": "Walgreens",
+      "PositionName":"SWE Level 1",
+      "AppliedDate": "2023-02-09" ,
+      "StatusID":1 ,
+      "InterviewRound":0 ,
+      "InterestLevel":2
+    },
+    {
+      "id":6 ,
+      "JobBoardID":2 ,
+      "CompName": "Walgreens",
+      "PositionName":"SWE Level 1",
+      "AppliedDate": "2023-02-09" ,
+      "StatusID":1 ,
+      "InterviewRound":0 ,
+      "InterestLevel":2
+    }
+  ],
+  "JobBoards": [
+    {
+      "JobBoardID": 1,
+      "UserId": 303,
+      "CreateDate":"2023-01-23" ,
+      "LastUpdated":"2023-01-15"
+    },
+    {
+      "JobBoardID": 2,
+      "UserId": 303,
+      "CreateDate": "2023-01-24",
+      "LastUpdated":"2023-01-30"
+    }
+  ],
+  "InterestLevel": [
+    {
+      "InterestLevelID": 1,
+      "Name":"Low"
+    },
+    {
+      "InterestLevelID": 2,
+      "Name":"Medium"
+    },
+    {
+      "InterestLevelID":3 ,
+      "Name":"High"
+    }
+  ],
+  "JobStatus": [
+    {
+      "StatusID":1 ,
+      "Name":"Applied"
+    },
+    {
+      "StatusID":2 ,
+      "Name":"Interviewing"
+    },
+    {
+      "StatusID":3 ,
+      "Name":"Declined"
+    }
+  ],
+  "User": [
+    {
+      "UserName":"Maur32" ,
+      "PSWD":"ValldLog"
+    },
+    {
+      "UserName":"RoberM21" ,
+      "PSWD":"ValldLog"
+    }
+  ],
+  "BoxCard" : [
+    {"BoxCardId" :  1, "BoxCardName" : "Resumes" },
+    {"BoxCardId" :  2, "BoxCardName" : "Cover Letters" },
+    {"BoxCardId" :  3, "BoxCardName" : "Recommendations" },
+    {"BoxCardId" :  4, "BoxCardName" : "Behavioral Questions" },
+    {"BoxCardId" :  5, "BoxCardName" : "Technical Question" },
+    {"BoxCardId" :  6, "BoxCardName" : "Certifications" },
+    {"BoxCardId" :  7, "BoxCardName" : "Awards" },
+    {"BoxCardId" :  8, "BoxCardName" : "Other Documents" }
+  ]
+}
