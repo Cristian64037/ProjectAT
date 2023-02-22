@@ -1,13 +1,11 @@
 /*Document Page Styles*/
 .doc-container {
-    width: 20%;
+    width: 18%;
     height: 200px;
     float: left;
-    margin: 10px;
+    margin: 80px 10px 10px 60px;
     border: 1px solid black;
     text-align: center;
-    margin-left: 60px;
-    margin-top: 80px;
 }
 
 .doc-box-container {
