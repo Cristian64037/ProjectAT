@@ -10,7 +10,6 @@ app.use(bodyParser.json());
 app.use('/api', require('./routes/api'));
 
 //Listen for requests
-const port = process.env.port;
-app.listen(port, () => {
-    console.log(`Listening on http://localhost:${port}`);
+app.listen(process.env.port, () => {
+    console.log(`Listening on http://localhost:${process.env.port}`);
 });
