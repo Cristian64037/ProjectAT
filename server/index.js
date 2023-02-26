@@ -10,7 +10,7 @@ app.use(bodyParser.json());
 app.use('/api', require('./routes/api'));
 
 //Listen for requests
-const port = 4000;
-app.listen(process.env.port || port, () => {
+const port = process.env.port;
+app.listen(port, () => {
     console.log(`Listening on http://localhost:${port}`);
 });
