@@ -1,5 +1,5 @@
 import NavBar from './NavBar2';
-import FootEnd from './FootEnd';
+import FootEnd from './FootEnd2';
 import {BrowserRouter as Router, Route, Routes} from "react-router-dom";
 import Documents from "./Documents";
 import Boards from "./Boards";
