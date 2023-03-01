@@ -5,3 +5,4 @@ node_modules/dayjs/.editorconfig
 project_at/package-lock.json
 project_at/package-lock.json
 project_at/package.json
+.env
