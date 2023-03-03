@@ -5,7 +5,7 @@ const JobApplicationForm=()=>{
         <div className="app-container">
             <header>Application Form</header>
 
-            <form action="#">
+            <form action="client/src/components/job/JobApplicationForm#">
                 <div className="form first">
                     <div className="details Job">
                         <span className="title">Job Details</span>

@@ -18,7 +18,7 @@ const Login=()=>{
                 </form>
             </div>
             <div className="log-image">
-                <img src="./JT.png"/>
+                <img src="../../JT.png"/>
             </div>
         </div>
     );

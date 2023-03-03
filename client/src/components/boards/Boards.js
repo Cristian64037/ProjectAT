@@ -1,7 +1,7 @@
-import useFetch from "./useFetch";
+import useFetch from "../../hooks/useFetch";
 import {useNavigate} from "react-router";
 
-const Boardss = () => {
+const Boards = () => {
     let navigate = useNavigate();
     const {data: jobs, isPending, error} = useFetch("http://localhost:8000/Jobs");
 
@@ -140,4 +140,4 @@ const Boardss = () => {
 
     );
 };
-export default Boardss;
+export default Boards;

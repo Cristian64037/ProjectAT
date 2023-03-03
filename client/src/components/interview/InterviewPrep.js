@@ -1,4 +1,4 @@
-import useFetch from './useFetch';
+import useFetch from '../../hooks/useFetch';
 import {useState} from "react";
 import JobDetails from "./JobDetails";
 function InterviewPrep(){
