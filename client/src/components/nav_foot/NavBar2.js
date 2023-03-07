@@ -5,7 +5,7 @@ import NavDropdown from 'react-bootstrap/NavDropdown';
 
 function CollapsibleExample() {
   return (
-    <Navbar sticky="top" collapseOnSelect expand="lg">
+    <Navbar className="navbar-items" sticky="top" collapseOnSelect expand="lg">
       <Container>
         <Navbar.Brand href="/boards">ProjectAt</Navbar.Brand>
         <Navbar.Toggle aria-controls="responsive-navbar-nav" />

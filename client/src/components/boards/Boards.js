@@ -1,9 +1,14 @@
 import useFetch from "../../hooks/useFetch";
 import {useNavigate} from "react-router";
+import {useEffect} from "react";
 
 const Boards = () => {
     let navigate = useNavigate();
     const {data: jobs, isPending, error} = useFetch("http://localhost:8000/Jobs");
+
+    useEffect(() => {
+       jobs && FormatTable();
+    }, [jobs]);
 
     function FormatTable() {
         new window.simpleDatatables.DataTable("table", {
@@ -26,7 +31,7 @@ const Boards = () => {
 
                 const filterHeaders = {
                     nodeName: "TR",
-                    childNodes: tHead.childNodes[0].childNodes.slice(0,6).map(
+                    childNodes: tHead.childNodes[0].childNodes.slice(0, 6).map(
                         (_th, index) => ({
                             nodeName: "TH",
                             childNodes: [
@@ -74,19 +79,18 @@ const Boards = () => {
             <div className="card-header">
                 <i className="fas fa-table me-2 fs-4"/>
                 <span style={{fontSize: '28px'}}>Applications</span>
+
                 {/* Button to open the pop-up notepad */}
                 <button id="openBtn" className="float-lg-end  btn btn-outline-dark" onClick={OpenPad}>Open Notepad
                 </button>
                 <span className="float-lg-end">&nbsp;&nbsp;&nbsp;</span>
+
                 {/* Button to open the job form */}
                 <button id="myButton" className="float-lg-end  btn btn-outline-dark submit-button"
                         onClick={GoToAppAdder}>Documents
                     Application
                 </button>
-                {/*Format Table*/}
-                <button id="myButton" className="float-lg-end  btn btn-outline-dark submit-button"
-                        onClick={FormatTable}>Format
-                </button>
+
                 {/* The overlay */}
                 <div className="overlay">
                     {/* The pop-up notepad */}
@@ -102,7 +106,6 @@ const Boards = () => {
                 {isPending && <div> Loading...</div>}
                 <table className="table">
                     <thead>
-
                     <tr>
                         <th>Company Name</th>
                         <th>Position</th>
@@ -129,15 +132,10 @@ const Boards = () => {
                             </tr>
                         )
                     })}
-
                     </tbody>
                 </table>
-
-
             </div>
-
         </div>
-
     );
 };
 export default Boards;
