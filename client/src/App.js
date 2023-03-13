@@ -1,7 +1,7 @@
 import NavBar from './components/nav_foot/NavBar2';
 import FootEnd from './components/nav_foot/FootEnd2';
 import {BrowserRouter as Router, Route, Routes} from "react-router-dom";
-import Documents from "./components/documents/Documents";
+import Documents from "./components/documents/Documents2";
 import InterviewPrep from "./components/interview/InterviewPrep";
 import JobApplicationForm from "./components/job/JobApplicationForm"
 import CreateBoard from "./components/boards/CreateBoard";
