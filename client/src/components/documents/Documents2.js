@@ -7,7 +7,7 @@ const Documents = () => {
     console.log(boxes);
 
     return (
-        <div>
+        <div style={{marginBottom:400,marginTop:10}}>
 
             <form action="save_file.php" encType="multipart/form-data" method="post">
                 <div className="row row-cols-1 row-cols-md-4 vh-100 ">
@@ -16,7 +16,7 @@ const Documents = () => {
                 {boxes && boxes.map((box) => (
                     <div className="col"style={{marginBottom:5,marginTop:5}}>
                     <div className="card" style={{width:"18rem"}} key={box.BoxCardId}>
-                        <img src={"JT.png"} className={"card-img-top"} alt={"Images"}/>
+                        <img src={"Documents.png"} className={"card-img-top"} alt={"Images"}/>
 
                         <div className="card-body">
                             <h5 className="card-title">{box.BoxCardName}</h5>
