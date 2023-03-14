@@ -1,6 +1,5 @@
 const express = require('express');
 const router = express.Router();
-const sql = require('mysql');
 
 //Initialize DB
 const connection = require('../database/connection');
@@ -13,11 +12,11 @@ const connection = require('../database/connection');
 router.get('/jobs', (req, res) => {
     const test = () => new Promise((resolve, reject) => {
         connection.query("Select * from Persons", function (err, result) {
-            if(!err) {
-                console.log("Query Successful: /jobs ...");
+            if (!err) {
+                console.log("GET Successful: /jobs ...");
                 resolve(result);
             } else {
-                console.log(`Query Error ...`);
+                console.log(`GET Error: /jobs ...`);
                 console.log("===============");
                 console.log(err);
             }
@@ -61,11 +60,11 @@ router.get('/login', (req, res) => {
         let password = req.body.Pass;
 
         connection.query(`Select * from LogIn where UserName=? and PSWD=?`, [username, password], function (err, result) {
-            if(!err) {
-                console.log("Query Successful: /login ...");
+            if (!err) {
+                console.log("GET Successful: /login ...");
                 resolve(result);
             } else {
-                console.log(`Query Error ...`);
+                console.log(`GET Error: /login ...`);
                 console.log("===============");
                 console.log(err);
             }
@@ -83,12 +82,26 @@ router.get('/login', (req, res) => {
 
 //Add a job to a job board for a specific user
 router.post('/jobs', (req, res) => {
+    const occupation = require("./post/jobs").addJob(req, res, connection);
 
+    Promise.all([occupation]).then((data) => {
+        res.send({
+            state: "Success",
+            data
+        });
+    });
 });
 
 //Add a user for login
 router.post('/login', (req, res) => {
+    const newUser = require("./post/login").addLogin(req, res, connection);
 
+    Promise.all([newUser]).then((data) => {
+        res.send({
+            state: "Success",
+            data
+        });
+    });
 });
 
 //Add a document for a specific user in a specific box card
