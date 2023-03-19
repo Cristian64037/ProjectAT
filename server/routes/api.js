@@ -53,55 +53,92 @@ router.get('/board', (req, res) => {
     res.send({Type: "GET6"});
 });
 
-//Gets the specific user to validate if credential are correct (informs login UI)
-router.get('/login', (req, res) => {
-    const login = () => new Promise((resolve, reject) => {
-        let username = req.body.User;
-        let password = req.body.Pass;
-
-        connection.query(`Select * from LogIn where UserName=? and PSWD=?`, [username, password], function (err, result) {
-            if (!err) {
-                console.log("GET Successful: /login ...");
-                resolve(result);
-            } else {
-                console.log(`GET Error: /login ...`);
-                console.log("===============");
-                console.log(err);
-            }
-        });
-    });
-
-    Promise.all([login()]).then((data) => {
-        res.send({data});
-    });
-});
-
 /*==============
 ==POST Requests==
 ==============*/
 
+//Gets the specific user to validate if credential are correct (informs login UI)
+router.post('/auth', (req, res) => {
+    const sql = `Select * from LogIn where UserName=? and PSWD=?`;
+    const fields = [
+        req.body.User,
+        req.body.Pass
+    ];
+
+    require("./queryDB").request(sql, fields, connection)
+        .then(
+            (data) => {
+                console.log(data);
+                if (data.length == 0) {
+                    res.status(404).send("User name or password is invalid");
+                } else {
+                    res.status(200).send("Logging in...");
+                }
+            },
+            (err) => {
+                res.status(400).send(err);
+                console.log(err);
+            }
+        );
+});
+
 //Add a job to a job board for a specific user
 router.post('/jobs', (req, res) => {
-    const occupation = require("./post/jobs").addJob(req, res, connection);
+    const sql = `Insert into Jobs(JobBoardID, CompName, PositionName,
+            AppliedDate, StatusID, InterviewRound, InterestLevel,
+            CoreValues, MissionStatement, WebUrl, Awards, ExpectSalary,
+            ImportantSkills, InterviewNotes)
+            values(?,?,?,?,?,?,?,?,?,?,?,?,?,?)`;
+    const fields = [
+        req.body.board,
+        req.body.company,
+        req.body.posName,
+        req.body.appDate,
+        req.body.jobStatus,
+        req.body.interviewRound,
+        req.body.interest,
+        req.body.coreValues,
+        req.body.mission,
+        req.body.webLink,
+        req.body.awards,
+        req.body.salary,
+        req.body.skills,
+        req.body.notes
+    ];
 
-    Promise.all([occupation]).then((data) => {
-        res.send({
-            state: "Success",
-            data
-        });
-    });
+    require("./queryDB").request(sql, fields, connection)
+        .then(
+            (data) => {
+                console.log(data)
+                res.status(201).send("Job Added Succesfully");
+            },
+            (err) => {
+                res.status(400).send(err);
+                console.log(err);
+            }
+        );
 });
 
 //Add a user for login
 router.post('/login', (req, res) => {
-    const newUser = require("./post/login").addLogin(req, res, connection);
+    const sql = `Insert into LogIn(UserName, PSWD, RecoverEmail) values(?,?,?)`;
+    const fields = [
+        req.body.username,
+        req.body.password,
+        req.body.recover
+    ];
 
-    Promise.all([newUser]).then((data) => {
-        res.send({
-            state: "Success",
-            data
-        });
-    });
+    require("./queryDB").request(sql, fields, connection)
+        .then(
+            (data) => {
+                console.log(data)
+                res.status(201).send("Account Created Successfully");
+            },
+            (err) => {
+                res.status(400).send(err);
+                console.log(err);
+            }
+        );
 });
 
 //Add a document for a specific user in a specific box card
