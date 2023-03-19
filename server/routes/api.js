@@ -10,22 +10,25 @@ const connection = require('../database/connection');
 
 //Get a list of jobs based on the user's identification and Job Board identification (populates Job Tracker UI)
 router.get('/jobs', (req, res) => {
-    const test = () => new Promise((resolve, reject) => {
-        connection.query("Select * from Persons", function (err, result) {
-            if (!err) {
-                console.log("GET Successful: /jobs ...");
-                resolve(result);
-            } else {
-                console.log(`GET Error: /jobs ...`);
-                console.log("===============");
+    const sql = `Select CompName, PositionName, AppliedDate, StatusID, InterviewRound, InterestLevel
+                 from Jobs where JobBoardID = (Select CurrentBoard from User where LogInId=?)`;
+    const fields = [req.body.userId];
+
+    require("./queryDB").request(sql, fields, connection)
+        .then(
+            (data) => {
+                console.log(data);
+                if (data.length == 0) {
+                    res.status(404).send("No JobBoards found for User");
+                } else {
+                    res.status(200).send("Jobs found");
+                }
+            },
+            (err) => {
+                res.status(400).send(err);
                 console.log(err);
             }
-        });
-    });
-
-    Promise.all([test()]).then((data) => {
-        res.send({data});
-    });
+        );
 });
 
 //Get a specific job so a user can edit its details (populates Edit Job Form UI)
@@ -83,6 +86,9 @@ router.post('/auth', (req, res) => {
 });
 
 //Add a job to a job board for a specific user
+//**********************************************************************
+//*****************TO DO: Map jobstatus and interest********************
+//**********************************************************************
 router.post('/jobs', (req, res) => {
     const sql = `Insert into Jobs(JobBoardID, CompName, PositionName,
             AppliedDate, StatusID, InterviewRound, InterestLevel,
