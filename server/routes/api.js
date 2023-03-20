@@ -63,7 +63,7 @@ router.get('/board', (req, res) => {
 //Gets the specific user to validate if credential are correct (informs login UI)
 router.post('/auth', (req, res) => {
     const sql = `Select * from LogIn where UserName=? and PSWD=?`;
-    console.log(req)
+    console.log(req.body);
     const fields = [
         req.body.User,
         req.body.Pass

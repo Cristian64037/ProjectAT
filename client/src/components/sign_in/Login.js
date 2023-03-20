@@ -1,48 +1,32 @@
-import {useState} from "react";
 import {Link} from "react-router-dom";
-import axios from "axios";
 
 const Login=()=>{
-    const [User,setEmail]= useState("");
-    const [Pass,setPassword]= useState("");
-    const [response,setResponse]= useState("");
+    function handleSubmit(e) {
+        e.preventDefault();
+        const user = document.getElementById("User").value;
+        const password = document.getElementById("Pass").value;
 
-    const handleSubmit = async event => {
-        /*event.preventDefault();*/
-
-        console.log("SUBM");
-       /* await axios({
+        fetch("http://localhost:3306/api/auth", {
             method: 'POST',
-            url: 'http://localhost:3306/api/auth',
-            data: {
-                User: User,
-                Pass: Pass
+            headers: {
+                'content-type':'application/json'
             },
-            withCredentials: true
-        })*/
-
-       /* fetch('http://localhost:3306/api/login', {
-            method: 'post',
-            body: {
-                id: "768",
-            },
-        })
-            .then((response) => response.json())
-            .catch((error) => {
-                console.error(error);
-            });*/
-
+            body: JSON.stringify({
+                "User" : user,
+                "Pass" : password
+            })
+        }).then((data) => {
+            console.log(data);
+        });
     }
 
     return(
         <div className="log-container">
             <div className="log-form">
-                <form action={"http://localhost:3306/api/auth"} method={"POST"}>
+                <form onSubmit={handleSubmit}>
                     <h2>LOGIN</h2>
-                    <input type="text" placeholder="User Name" name={"User"}
-                    onChange={(e)=>setEmail(e.target.value)} value={User}/>
-                    <input type="password" placeholder="Password" name={"Pass"}
-                           onChange={(e)=>setPassword(e.target.value)} value={Pass}/>
+                    <input type="text" placeholder="User Name" id="User"/>
+                    <input type="password" placeholder="Password" id="Pass"/>
                     <div className="form-actions">
                         <button type="submit"  >Login</button>
                         <Link to={"/account"}><button type="button"> <Link to={"/account"}/>Create Account</button></Link>
