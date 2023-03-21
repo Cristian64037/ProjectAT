@@ -128,25 +128,77 @@ router.post('/jobs', (req, res) => {
 
 //Add a user for login
 router.post('/login', (req, res) => {
+    let insertId="";
     const sql = `Insert into LogIn(UserName, PSWD, RecoverEmail) values(?,?,?)`;
     const fields = [
         req.body.username,
         req.body.password,
-        req.body.recover
+        req.body.email
     ];
+    const sql2 = `Insert into User(LogInId, FName, LName, Email) values(?,?,?,?)`;
 
-    require("./queryDB").request(sql, fields, connection)
+    const checkIfUserNameExists=`Select * from LogIn where UserName=?`;
+    const userName=req.body.username
+
+
+    require("./queryDB").request(checkIfUserNameExists, userName, connection)
         .then(
             (data) => {
-                console.log(data)
-                res.status(201).send("Account Created Successfully");
+                if(data.length>0){
+                    res.status(400).send("User Name Exists");
+                }else {
+
+                    require("./queryDB").request(sql, fields, connection)
+                        .then(
+                            (data) => {
+
+                                insertId=data.insertId;
+                                const fields2 = [
+                                    data.insertId,
+                                    req.body.firstName,
+                                    req.body.lastName,
+                                    req.body.email
+                                ];
+
+                                require("./queryDB").request(sql2, fields2, connection)
+                                    .then(
+                                        (data) => {
+
+
+                                            res.status(201).send("Account Created Successfully");
+                                        },
+                                        (err) => {
+                                            res.status(400).send(err);
+                                            console.log(err);
+                                        }
+                                    );
+
+                            },
+                            (err) => {
+                                res.status(400).send(err);
+                                console.log(err);
+                            }
+                        );
+                }
+
             },
+
+
             (err) => {
                 res.status(400).send(err);
                 console.log(err);
             }
         );
+
+
+
+
+    console.log(insertId);
+
+
+
 });
+
 
 //Add a document for a specific user in a specific box card
 router.post('/documents', (req, res) => {
