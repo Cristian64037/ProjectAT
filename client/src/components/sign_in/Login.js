@@ -1,34 +1,50 @@
 import {Link} from "react-router-dom";
+import {useState} from "react";
 
 const Login=()=>{
-    function handleSubmit(e) {
+    const [User,setUser]= useState("");
+    const [Password,setPass]= useState("");
+    const [result,setResult]= useState("");
+    async function handleSubmit(e) {
         e.preventDefault();
-        const user = document.getElementById("User").value;
-        const password = document.getElementById("Pass").value;
 
-        fetch("http://localhost:3306/api/auth", {
+        await fetch("http://localhost:3306/api/auth", {
             method: 'POST',
             headers: {
-                'content-type':'application/json'
+                'content-type': 'application/json'
             },
             body: JSON.stringify({
-                "User" : user,
-                "Pass" : password
+                "User": User,
+                "Pass": Password
             })
         }).then((data) => {
-            console.log(data);
+            setResult(data.statusText);
+            if(data.statusText==="Not Found"){
+                alert("Invalid Log In");
+            }else {
+                alert("Success")
+            }
         });
     }
 
+
+
     return(
         <div className="log-container">
+
+
+
             <div className="log-form">
                 <form onSubmit={handleSubmit}>
                     <h2>LOGIN</h2>
-                    <input type="text" placeholder="User Name" id="User"/>
-                    <input type="password" placeholder="Password" id="Pass"/>
+                    <input type="text" placeholder="User Name" onChange={e =>(
+                        setUser(e.target.value)
+                    ) }
+                    />
+                    <input type="password" placeholder="Password" onChange={e =>(
+                        setPass(e.target.value))}/>
                     <div className="form-actions">
-                        <button type="submit"  >Login</button>
+                        <button type="submit" >Login</button>
                         <Link to={"/account"}><button type="button"> <Link to={"/account"}/>Create Account</button></Link>
                         <Link to={"/password"}><button type="button"> Forgot Password?</button></Link>
                     </div>
