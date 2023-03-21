@@ -1,6 +1,9 @@
 const express = require('express');
 const router = express.Router();
 
+const jwt = require('jsonwebtoken');
+const bcrypts = require('bcrypt');
+
 //Initialize DB
 const connection = require('../database/connection');
 
@@ -127,12 +130,15 @@ router.post('/jobs', (req, res) => {
 });
 
 //Add a user for login
-router.post('/login', (req, res) => {
+router.post('/login', async (req, res) => {
+
     let insertId="";
     const sql = `Insert into LogIn(UserName, PSWD, RecoverEmail) values(?,?,?)`;
+    let hashedPassword =  await bcrypts.hash(req.body.password, 8);
+    console.log(hashedPassword);
     const fields = [
         req.body.username,
-        req.body.password,
+        hashedPassword,
         req.body.email
     ];
     const sql2 = `Insert into User(LogInId, FName, LName, Email) values(?,?,?,?)`;
@@ -163,8 +169,6 @@ router.post('/login', (req, res) => {
                                 require("./queryDB").request(sql2, fields2, connection)
                                     .then(
                                         (data) => {
-
-
                                             res.status(201).send("Account Created Successfully");
                                         },
                                         (err) => {
