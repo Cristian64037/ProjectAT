@@ -1,8 +1,10 @@
-import {useNavigate} from "react-router";
+import { useNavigate } from 'react-router-dom';
 import {useState} from "react";
 
+
+
 const CreateAccount = () => {
-    const nav = useNavigate();
+    const navigate = useNavigate();
     const [Username,setUsername]= useState("");
     const [Password,setPassword]= useState("");
     const [email,setEmail]= useState("");
@@ -28,7 +30,8 @@ const CreateAccount = () => {
         }).then((data) => {
             console.log(data)
             if(data.status===201){
-                alert("Successful Creation of Account")
+                alert("Successful Creation of Account");
+                navigate('/');
 
 
             }else {

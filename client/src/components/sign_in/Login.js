@@ -1,7 +1,10 @@
-import {Link} from "react-router-dom";
+import {Link, redirect} from "react-router-dom";
 import {useState} from "react";
+import { useNavigate } from 'react-router-dom';
+
 
 const Login=()=>{
+    const navigate = useNavigate();
     const [User,setUser]= useState("");
     const [Password,setPass]= useState("");
     const [result,setResult]= useState("");
@@ -22,7 +25,8 @@ const Login=()=>{
             if(data.statusText==="Not Found"){
                 alert("Invalid Log In");
             }else {
-                alert("Success")
+                alert("Success");
+                navigate('/boards');
             }
         });
     }
