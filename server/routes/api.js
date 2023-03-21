@@ -27,6 +27,7 @@ router.get('/jobs', (req, res) => {
                     res.status(200).send("Jobs found");
                 }
             },
+
             (err) => {
                 res.status(400).send(err);
                 console.log(err);
@@ -65,22 +66,29 @@ router.get('/board', (req, res) => {
 
 //Gets the specific user to validate if credential are correct (informs login UI)
 router.post('/auth', (req, res) => {
-    const sql = `Select * from LogIn where UserName=? and PSWD=?`;
-    console.log(req.body);
+    const findUser = `Select PSWD from LogIn where UserName=?`;
     const fields = [
         req.body.User,
         req.body.Pass
     ];
 
-    require("./queryDB").request(sql, fields, connection)
+    require("./queryDB").request(findUser, fields[0], connection)
         .then(
             (data) => {
-                console.log(data);
-                if (data.length == 0) {
-                    res.status(404).send("User name or password is invalid");
-                } else {
-                    res.status(200).send("Logging in...");
-                }
+                if(data.length === 0){
+                    res.status(400).send("User Name Does Not Exist");
+                }else bcrypts.compare(fields[1], data[0].PSWD, function (err, result) {
+
+                    if (result === true) {
+                        console.log("'yes'")
+                        res.status(201).send("YOu In");
+                    } else {
+                        console.log("NO")
+                        res.status(400).send("Incorrect Password");
+                    }
+
+                })
+
             },
             (err) => {
                 res.status(400).send(err);

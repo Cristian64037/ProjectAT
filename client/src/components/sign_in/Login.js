@@ -21,13 +21,19 @@ const Login=()=>{
                 "User": User,
                 "Pass": Password
             })
-        }).then((data) => {
-            setResult(data.statusText);
-            if(data.statusText==="Not Found"){
-                alert("Invalid Log In");
+
+        }).then(async (data) => {
+            var body = await data.text();
+
+            console.log(body)
+
+            if(data.status===201){
+                alert("Successful Log in");
+                navigate('/');
+
+
             }else {
-                alert("Success");
-                navigate('/boards');
+                alert(body);
             }
         });
     }

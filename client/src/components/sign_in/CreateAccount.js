@@ -27,15 +27,15 @@ const CreateAccount = () => {
                 "lastName": lastName,
                 "email": email,
             })
-        }).then((data) => {
-            console.log(data)
+        }).then(async (data) => {
+            var body = await data.text();
             if(data.status===201){
                 alert("Successful Creation of Account");
                 navigate('/');
 
 
             }else {
-                alert("Username is already in use");
+                alert(body);
             }
         });
     }
