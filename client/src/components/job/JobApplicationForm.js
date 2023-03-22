@@ -1,5 +1,19 @@
+import {useNavigate} from "react-router-dom";
+import {useState} from "react";
 
 const JobApplicationForm=()=>{
+    const navigate = useNavigate();
+    const [CompanyName,setCompanyName]= useState("");
+    const [ApplyDate,setApplyDate]= useState("");
+    const [JobTitle,setJobTitle]= useState("");
+    const [JobStatus,setJobStatus]= useState("");
+    const [InterviewRound,setInterviewRound]= useState("");
+    const [Website,setWebsite]= useState("");
+    const [MissionStatement,setMissionStatement]= useState("");
+    const [Awards,setAwards]= useState("");
+    const [ExpectedSalary,setExpectedSalary]= useState("");
+    const [CoreValues,setCoreValues]= useState("");
+    const [Notes,setNotes]= useState("");
 
     return(
         <div className="app-container">
