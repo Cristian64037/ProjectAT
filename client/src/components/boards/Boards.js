@@ -4,34 +4,26 @@ import {useEffect, useState} from "react";
 
 const Boards = () => {
     let navigate = useNavigate();
-    const [jobs,setjobs]= useState("");
-    const [isPending,setIspending]= useState(false)
-    const [JobStatFromDb,setJobStatFromDb]= useState([])
+    const [jobs, setjobs] = useState("");
+    const [isPending, setIspending] = useState(false)
+    const [JobStatFromDb, setJobStatFromDb] = useState([]);
+
+    async function fetchData() {
+        await fetch("http://localhost:3306/api/jobs/3", {
+            method: 'Get',
+            headers: {
+                'content-type': 'application/json'
+            }
+        }).then(async (data) => {
+            var body = await data.json();
+            setjobs(body);
+            setIspending(true)
+        });
+    }
 
     useEffect(() => {
-
         fetchData();
-        async function fetchData(){
-            await fetch("http://localhost:3306/api/jobs/3", {
-                method: 'Get',
-                headers: {
-                    'content-type': 'application/json'
-                }
-            }).then(async (data) => {
-                var body = await data.json();
-                setjobs(body);
-                setIspending(true)
-
-
-
-            });
-
-
-
-
-        }
-
-            jobs && FormatTable();
+        jobs && FormatTable();
     }, [isPending]);
 
     function FormatTable() {

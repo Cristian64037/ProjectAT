@@ -16,7 +16,7 @@ const connection = require('../database/connection');
 
 //Get a list of jobs based on the user's identification and Job Board identification (populates Job Tracker UI)
 router.get('/jobs/:id', (req, res) => {
-    const sql = `Select CompName, PositionName, AppliedDate, StatusID, InterviewRound, InterestLevel
+    const sql = `Select CompName, PositionName, AppliedDate, StatusID, InterviewRound, InterestLevel, ExpectSalary
                  from Jobs where JobBoardID = (Select CurrentBoard from User where LogInId=?)`;
     const fields = [req.params.id];
 
