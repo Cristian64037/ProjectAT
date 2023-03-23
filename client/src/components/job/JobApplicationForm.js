@@ -1,5 +1,7 @@
 import {useNavigate} from "react-router-dom";
 import {useEffect, useState} from "react";
+import DatePicker from "react-datepicker";
+import App from "../../App";
 
 const JobApplicationForm=()=>{
     const navigate = useNavigate();
@@ -75,7 +77,8 @@ const JobApplicationForm=()=>{
 
                             <div className="input-field">
                                 <label>Apply Date</label>
-                                <input type="date" placeholder="Enter Apply date" required onChange={e => (
+
+                               <input type="date" placeholder="yyyy-mm-dd"  required onChange={e => (
                                     setApplyDate(e.target.value))} value={ApplyDate}
 
                                 />
@@ -91,11 +94,12 @@ const JobApplicationForm=()=>{
 
                             <div className="input-field">
                                 <label>Status</label>
-                                <select required>
+                                <select required onChange={e => (
+                                    setJobStatus(e.target.value))}>
 
                                     <option disabled selected>Select Status</option>
                                     {JobStatFromDb.map(e => (
-                                        <option value={e.StatusID}>{e.Name}</option>
+                                        <option value={e.StatusID} >{e.Name}</option>
                                         )
                                     )
                                     }
@@ -106,17 +110,23 @@ const JobApplicationForm=()=>{
 
                             <div className="input-field">
                                 <label>Interview Round</label>
-                                <input type="number" placeholder="Enter Interview Round" required/>
+                                <input type="number" placeholder="Enter Interview Round" required onChange={e => (
+                                    setInterviewRound(e.target.value))}
+
+
+                                />
                             </div>
-                            <div className="input-field">
+                            <div className="input-field" id={"InterestLevel"}>
                                 <label>Interest Level</label>
-                                <select required>
+                                <select required onChange={e => (
+                                    setInterestLevel(e.target.value))} >
                                     <option disabled selected>Select Interest Level</option>
                                     {InterestLevelFromDb.map(e => (
-                                    <option value={e.InterestLevelID}>{e.Name}</option>
+                                    <option value={e.InterestLevelID} >{e.Name}</option>
                                         )
                                     )
                                     }
+
                                 </select>
                             </div>
                         </div>
@@ -128,32 +138,46 @@ const JobApplicationForm=()=>{
                         <div className="fields">
                             <div className="input-field">
                                 <label>Website</label>
-                                <input type="text" placeholder="Enter URL" required/>
+                                <input type="text" placeholder="Enter URL" required onChange={e => (
+                                    setWebsite(e.target.value))}
+
+                                />
                             </div>
 
                             <div className="input-field">
                                 <label>Mission Statement</label>
-                                <input type="text" placeholder="Enter Mission Statement" required/>
+                                <input type="text" placeholder="Enter Mission Statement" required onChange={e => (
+                                    setMissionStatement(e.target.value))}
+
+                                />
                             </div>
 
                             <div className="input-field">
                                 <label>Core Values</label>
-                                <input type="text" placeholder="Enter Core Values" required/>
+                                <input type="text" placeholder="Enter Core Values" required onChange={e => (
+                                    setCoreValues(e.target.value))}
+                                />
                             </div>
 
                             <div className="input-field">
                                 <label>Awards</label>
-                                <input type="text" placeholder="Enter Awards" required/>
+                                <input type="text" placeholder="Enter Awards" required onChange={e => (
+                                    setAwards(e.target.value))}
+                                />
                             </div>
 
                             <div className="input-field">
                                 <label>Expected Salary</label>
-                                <input type="number" placeholder="Enter Expected Salary" required/>
+                                <input type="number" placeholder="Enter Expected Salary" required onChange={e => (
+                                    setExpectedSalary(e.target.value))}
+                                />
                             </div>
 
                             <div className="input-field">
                                 <label>Notes</label>
-                                <input type="text" placeholder="Enter Notes" required/>
+                                <input type="text" placeholder="Enter Notes" required onChange={e => (
+                                    setNotes(e.target.value))}
+                                />
                             </div>
                         </div>
 
