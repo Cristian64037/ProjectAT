@@ -157,10 +157,10 @@ const Boards = () => {
                             <tr key={job.id}>
                                 <td>{job.CompName}</td>
                                 <td>{job.PositionName}</td>
-                                <td> getNodeByID{job.StatusID}</td>
+                                <td> {job.Name}</td>
                                 <td>{job.InterviewRound}</td>
                                 <td>{job.AppliedDate}</td>
-                                <td>{job.InterestLevel}</td>
+                                <td>{job.ExpectSalary}</td>
                                 <td>
                                     <button style={{backgroundColor: '#191c1f', color: 'white'}}>Edit Job</button>
                                 </td>

@@ -52,6 +52,40 @@ const JobApplicationForm=()=>{
     }, []);
 
 
+    async function handleSubmit(e) {
+        e.preventDefault();
+
+        await fetch("http://localhost:3306/api/jobs", {
+            method: 'POST',
+            headers: {
+                'content-type': 'application/json'
+            },
+            body: JSON.stringify({
+                "board": 7,
+                "company": CompanyName,
+                "posName": JobTitle,
+                "appDate": ApplyDate,
+                "jobStatus": JobStatus,
+                "interviewRound": InterviewRound,
+                "interest": InterestLevel,
+                "coreValues": CoreValues,
+                "mission": MissionStatement,
+                "webLink": Website,
+                "awards": Awards,
+                "salary": ExpectedSalary,
+                "notes": Notes,
+
+            })
+        }).then(async (data) => {
+            var body = await data.text();
+            if(data.status===201){
+                alert("Successful Job Input");
+            }else {
+                alert(body);
+            }
+        });
+    }
+
 
 
 
@@ -61,7 +95,7 @@ const JobApplicationForm=()=>{
         <div className="app-container">
             <header>Application Form</header>
 
-            <form action="client/src/components/job/JobApplicationForm#">
+            <form>
                 <div className="form first">
                     <div className="details Job">
                         <span className="title">Job Details</span>
@@ -182,8 +216,7 @@ const JobApplicationForm=()=>{
                         </div>
 
                         <button className="nextBtn">
-                            <span className="btnText">Submit</span>
-                            <i className="uil uil-navigator"/>
+                            <button type="submit" onClick={handleSubmit}>Submit</button>
                         </button>
                     </div>
                 </div>
