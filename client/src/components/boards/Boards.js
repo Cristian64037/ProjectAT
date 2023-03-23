@@ -2,6 +2,8 @@ import useFetch from "../../hooks/useFetch";
 import {useNavigate} from "react-router";
 import {useEffect, useState} from "react";
 
+import Moment from 'moment';
+
 const Boards = () => {
     let navigate = useNavigate();
     const [jobs, setjobs] = useState("");
@@ -140,7 +142,7 @@ const Boards = () => {
                                 <td>{job.PositionName}</td>
                                 <td> {job.Name}</td>
                                 <td>{job.InterviewRound}</td>
-                                <td>{job.AppliedDate}</td>
+                                <td>{Moment(job.AppliedDate).format('MM-DD-YYYY')}</td>
                                 <td>{job.ExpectSalary}</td>
                                 <td>
                                     <button style={{backgroundColor: '#191c1f', color: 'white'}}>Edit Job</button>
