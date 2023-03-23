@@ -42,7 +42,7 @@ const JobApplicationForm=()=>{
             }).then(async (data) => {
                 var body = await data.json();
                 setInterestLevelFromDb(body);
-                console.log(InterestLevelFromDb)
+
 
             });
 
@@ -112,9 +112,11 @@ const JobApplicationForm=()=>{
                                 <label>Interest Level</label>
                                 <select required>
                                     <option disabled selected>Select Interest Level</option>
-                                    <option>Low</option>
-                                    <option>Medium</option>
-                                    <option>High</option>
+                                    {InterestLevelFromDb.map(e => (
+                                    <option value={e.InterestLevelID}>{e.Name}</option>
+                                        )
+                                    )
+                                    }
                                 </select>
                             </div>
                         </div>
