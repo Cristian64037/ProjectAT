@@ -63,6 +63,45 @@ router.get('/board', (req, res) => {
     res.send({Type: "GET6"});
 });
 
+router.get('/JobStatus', (req, res) => {
+    const sql = `Select * from JobStatus`;
+    const fields=[]
+
+    require("./queryDB").request(sql,fields, connection)
+        .then(
+            (data) => {
+                console.log(data);
+
+                    res.status(200).send(data);
+
+            },
+
+            (err) => {
+                res.status(400).send(err);
+                console.log(err);
+            }
+        );
+});
+
+router.get('/InterestLevel', (req, res) => {
+    const sql = `Select * from InterestLevel`;
+    const fields=[]
+
+    require("./queryDB").request(sql,fields, connection)
+        .then(
+            (data) => {
+                console.log(data);
+
+                res.status(200).send(data);
+
+            },
+
+            (err) => {
+                res.status(400).send(err);
+                console.log(err);
+            }
+        );
+});
 /*==============
 ==POST Requests==
 ==============*/

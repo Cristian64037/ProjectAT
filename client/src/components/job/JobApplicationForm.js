@@ -15,34 +15,27 @@ const JobApplicationForm=()=>{
     const [ExpectedSalary,setExpectedSalary]= useState("");
     const [CoreValues,setCoreValues]= useState("");
     const [Notes,setNotes]= useState("");
-    const JobStatFromDb=[];
+    const [JobStatFromDb,setJobStatFromDb]= useState([])
+
     const InterestLevelFromDb=[];
-    useEffect(async () => {
+    useEffect(() => {
         // Update the document title using the browser API
+        fetchData();
+        async function fetchData(){
         await fetch("http://localhost:3306/api/JobStatus", {
-            method: 'POST',
+            method: 'Get',
             headers: {
                 'content-type': 'application/json'
-            },
-            body: JSON.stringify({
-                "username": Username,
-                "password": Password,
-                "firstName": firstName,
-                "lastName": lastName,
-                "email": email,
-            })
-        }).then(async (data) => {
-            var body = await data.text();
-            if(data.status===201){
-                alert("Successful Creation of Account");
-                navigate('/');
-
-
-            }else {
-                alert(body);
             }
+        }).then(async (data) => {
+            var body = await data.json();
+            setJobStatFromDb(body);
+
+            console.log(JobStatFromDb)
+
         });
 
+    }
     });
 
 
@@ -88,13 +81,14 @@ const JobApplicationForm=()=>{
                             <div className="input-field">
                                 <label>Status</label>
                                 <select required>
+
                                     <option disabled selected>Select Status</option>
-                                    <option>Applied</option>
-                                    <option>Interview</option>
-                                    <option>Accept</option>
-                                    <option>Denied</option>
-                                    <option>Rejected</option>
-                                    <option>Response Pending</option>
+                                    {JobStatFromDb.map(e => (
+                                        <option value={e.StatusID}>{e.Name}</option>
+                                        )
+                                    )
+                                    }
+
 
                                 </select>
                             </div>
