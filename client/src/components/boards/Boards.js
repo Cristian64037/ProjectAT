@@ -1,13 +1,30 @@
 import useFetch from "../../hooks/useFetch";
 import {useNavigate} from "react-router";
-import {useEffect} from "react";
+import {useEffect, useState} from "react";
 
 const Boards = () => {
     let navigate = useNavigate();
-    const {data: jobs, isPending, error} = useFetch("http://localhost:8000/Jobs");
+    const [jobs,setjobs]= useState("");
+    const [isPending,setIspending]= useState(false)
 
     useEffect(() => {
-       jobs && FormatTable();
+
+        fetchData();
+        async function fetchData(){
+            await fetch("http://localhost:3306/api/Jobs/3", {
+                method: 'Get',
+                headers: {
+                    'content-type': 'application/json'
+                }
+            }).then(async (data) => {
+                var body = await data.json();
+                setjobs(body);
+                setIspending(true);
+
+
+            });}
+
+            jobs && FormatTable();
     }, [jobs]);
 
     function FormatTable() {
