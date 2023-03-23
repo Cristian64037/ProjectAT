@@ -6,12 +6,13 @@ const Boards = () => {
     let navigate = useNavigate();
     const [jobs,setjobs]= useState("");
     const [isPending,setIspending]= useState(false)
+    const [JobStatFromDb,setJobStatFromDb]= useState([])
 
     useEffect(() => {
 
         fetchData();
         async function fetchData(){
-            await fetch("http://localhost:3306/api/Jobs/3", {
+            await fetch("http://localhost:3306/api/jobs/3", {
                 method: 'Get',
                 headers: {
                     'content-type': 'application/json'
@@ -19,13 +20,30 @@ const Boards = () => {
             }).then(async (data) => {
                 var body = await data.json();
                 setjobs(body);
+
+
+
+            });
+            await fetch("http://localhost:3306/api/JobStatus", {
+                method: 'Get',
+                headers: {
+                    'content-type': 'application/json'
+                }
+            }).then(async (data) => {
+                var body = await data.json();
+                setJobStatFromDb(body);
+                console.log(JobStatFromDb.find(3));
                 setIspending(true);
 
 
-            });}
+            });
+
+
+
+        }
 
             jobs && FormatTable();
-    }, [jobs]);
+    }, [isPending]);
 
     function FormatTable() {
         new window.simpleDatatables.DataTable("table", {
@@ -139,7 +157,7 @@ const Boards = () => {
                             <tr key={job.id}>
                                 <td>{job.CompName}</td>
                                 <td>{job.PositionName}</td>
-                                <td>{job.StatusID}</td>
+                                <td> getNodeByID{job.StatusID}</td>
                                 <td>{job.InterviewRound}</td>
                                 <td>{job.AppliedDate}</td>
                                 <td>{job.InterestLevel}</td>

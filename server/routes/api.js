@@ -28,7 +28,7 @@ router.get('/jobs/:id', (req, res) => {
                 if (data.length == 0) {
                     res.status(404).send("No JobBoards found for User");
                 } else {
-                    res.status(200).send("Jobs found");
+                    res.status(200).send(data);
                 }
             },
 
