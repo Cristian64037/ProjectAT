@@ -19,7 +19,6 @@ router.get('/jobs/:id', (req, res) => {
     const sql = `Select CompName, PositionName, AppliedDate, StatusID, InterviewRound, InterestLevel
                  from Jobs where JobBoardID = (Select CurrentBoard from User where LogInId=?)`;
     const fields = [req.params.id];
-    console.log(fields)
 
     require("./queryDB").request(sql, fields, connection)
         .then(
@@ -31,7 +30,6 @@ router.get('/jobs/:id', (req, res) => {
                     res.status(200).send(data);
                 }
             },
-
             (err) => {
                 res.status(400).send(err);
                 console.log(err);
@@ -40,13 +38,50 @@ router.get('/jobs/:id', (req, res) => {
 });
 
 //Get a specific job so a user can edit its details (populates Edit Job Form UI)
-router.get('/jobs/edit', (req, res) => {
-    res.send({Type: "GET2"});
+router.get('/jobs/edit/:id', (req, res) => {
+    const sql = `Select CompName, PositionName,
+            AppliedDate, StatusID, InterviewRound, InterestLevel,
+            CoreValues, MissionStatement, WebUrl, Awards, ExpectSalary,
+            ImportantSkills, InterviewNotes from Jobs where JobsID = ?`;
+    const fields = [req.params.id];
+
+    require("./queryDB").request(sql, fields, connection)
+        .then(
+            (data) => {
+                console.log(data);
+                if (data.length == 0) {
+                    res.status(404).send("Job not found");
+                } else {
+                    res.status(200).send(data);
+                }
+            },
+            (err) => {
+                res.status(400).send(err);
+                console.log(err);
+            }
+        );
 });
 
 //Get a list of jobs in the interview stage and documents to support the user (populates drop-down and documents in the interview UI)
-router.get('/interview', (req, res) => {
-    res.send({Type: "GET3"});
+router.get('/interview/:id', (req, res) => {
+    const sql = `Select CompName, PositionName from Jobs where (JobBoardID = (Select CurrentBoard from User where LogInId=?) and StatusID = 2)`;
+    const fields = [req.params.id];
+
+    require("./queryDB").request(sql, fields, connection)
+        .then(
+            (data) => {
+                console.log(data);
+                if (data.length == 0) {
+                    res.status(404).send("Interview Jobs not found");
+                } else {
+                    res.status(200).send(data);
+                }
+            },
+            (err) => {
+                res.status(400).send(err);
+                console.log(err);
+            }
+        );
 });
 
 //Get a specific job in the interview stage (populates job details in the interview UI)
@@ -171,7 +206,7 @@ router.post('/jobs', (req, res) => {
         .then(
             (data) => {
                 console.log(data)
-                res.status(201).send("Job Added Succesfully");
+                res.status(201).send(data);
             },
             (err) => {
                 res.status(400).send(err);
