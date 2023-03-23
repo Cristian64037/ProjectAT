@@ -20,23 +20,12 @@ const Boards = () => {
             }).then(async (data) => {
                 var body = await data.json();
                 setjobs(body);
+                setIspending(true)
 
 
 
             });
-            await fetch("http://localhost:3306/api/JobStatus", {
-                method: 'Get',
-                headers: {
-                    'content-type': 'application/json'
-                }
-            }).then(async (data) => {
-                var body = await data.json();
-                setJobStatFromDb(body);
-                console.log(JobStatFromDb.find(3));
-                setIspending(true);
 
-
-            });
 
 
 
