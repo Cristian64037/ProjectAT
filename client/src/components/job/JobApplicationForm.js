@@ -1,5 +1,5 @@
 import {useNavigate} from "react-router-dom";
-import {useState} from "react";
+import {useEffect, useState} from "react";
 
 const JobApplicationForm=()=>{
     const navigate = useNavigate();
@@ -7,6 +7,7 @@ const JobApplicationForm=()=>{
     const [ApplyDate,setApplyDate]= useState("");
     const [JobTitle,setJobTitle]= useState("");
     const [JobStatus,setJobStatus]= useState("");
+    const [InterestLevel,setInterestLevel]= useState("");
     const [InterviewRound,setInterviewRound]= useState("");
     const [Website,setWebsite]= useState("");
     const [MissionStatement,setMissionStatement]= useState("");
@@ -14,6 +15,41 @@ const JobApplicationForm=()=>{
     const [ExpectedSalary,setExpectedSalary]= useState("");
     const [CoreValues,setCoreValues]= useState("");
     const [Notes,setNotes]= useState("");
+    const JobStatFromDb=[];
+    const InterestLevelFromDb=[];
+    useEffect(async () => {
+        // Update the document title using the browser API
+        await fetch("http://localhost:3306/api/JobStatus", {
+            method: 'POST',
+            headers: {
+                'content-type': 'application/json'
+            },
+            body: JSON.stringify({
+                "username": Username,
+                "password": Password,
+                "firstName": firstName,
+                "lastName": lastName,
+                "email": email,
+            })
+        }).then(async (data) => {
+            var body = await data.text();
+            if(data.status===201){
+                alert("Successful Creation of Account");
+                navigate('/');
+
+
+            }else {
+                alert(body);
+            }
+        });
+
+    });
+
+
+
+
+
+
 
     return(
         <div className="app-container">
@@ -26,18 +62,26 @@ const JobApplicationForm=()=>{
 
                         <div className="fields">
                             <div className="input-field">
-                                <label>Comapny Name</label>
-                                <input type="text" placeholder="Enter Company name" required/>
+                                <label>Company Name</label>
+                                <input type="text" placeholder="Enter Company name" required onChange={e => (
+                                    setCompanyName(e.target.value))} value={CompanyName}
+                                />
                             </div>
+
 
                             <div className="input-field">
                                 <label>Apply Date</label>
-                                <input type="date" placeholder="Enter Apply date" required/>
+                                <input type="date" placeholder="Enter Apply date" required onChange={e => (
+                                    setApplyDate(e.target.value))} value={ApplyDate}
+
+                                />
                             </div>
 
                             <div className="input-field">
                                 <label>Job Title</label>
-                                <input type="text" placeholder="Enter Job Title" required/>
+                                <input type="text" placeholder="Enter Job Title" required  onChange={e => (
+                                    setJobTitle(e.target.value))} value={JobTitle}
+                                />
                             </div>
 
 
