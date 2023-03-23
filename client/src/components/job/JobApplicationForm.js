@@ -16,8 +16,9 @@ const JobApplicationForm=()=>{
     const [CoreValues,setCoreValues]= useState("");
     const [Notes,setNotes]= useState("");
     const [JobStatFromDb,setJobStatFromDb]= useState([])
+    const [InterestLevelFromDb,setInterestLevelFromDb]= useState([])
 
-    const InterestLevelFromDb=[];
+
     useEffect(() => {
         // Update the document title using the browser API
         fetchData();
@@ -31,12 +32,22 @@ const JobApplicationForm=()=>{
             var body = await data.json();
             setJobStatFromDb(body);
 
-            console.log(JobStatFromDb)
 
         });
+        await fetch("http://localhost:3306/api/InterestLevel", {
+                method: 'Get',
+                headers: {
+                    'content-type': 'application/json'
+                }
+            }).then(async (data) => {
+                var body = await data.json();
+                setInterestLevelFromDb(body);
+                console.log(InterestLevelFromDb)
+
+            });
 
     }
-    });
+    }, []);
 
 
 
