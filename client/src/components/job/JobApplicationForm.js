@@ -24,7 +24,9 @@ const JobApplicationForm=()=>{
     useEffect(() => {
         // Update the document title using the browser API
         fetchData();
-        async function fetchData(){
+        }, []);
+
+    async function fetchData(){
         await fetch("http://localhost:3306/api/JobStatus", {
             method: 'Get',
             headers: {
@@ -37,19 +39,18 @@ const JobApplicationForm=()=>{
 
         });
         await fetch("http://localhost:3306/api/InterestLevel", {
-                method: 'Get',
-                headers: {
-                    'content-type': 'application/json'
-                }
-            }).then(async (data) => {
-                var body = await data.json();
-                setInterestLevelFromDb(body);
+            method: 'Get',
+            headers: {
+                'content-type': 'application/json'
+            }
+        }).then(async (data) => {
+            var body = await data.json();
+            setInterestLevelFromDb(body);
 
 
-            });
+        });
 
     }
-    }, []);
 
 
     async function handleSubmit(e) {
