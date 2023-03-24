@@ -3,7 +3,8 @@ import {useEffect, useState} from "react";
 
 const JobDetails = (JobId) => {
     const [job, setJob] = useState("");
-    const [isPending, setIsPending] = useState(false);
+    const [isPending, setIsPending] = useState(true);
+    console.log(JobId);
 
     async function fetchData(){
         await fetch('http://localhost:3306/api/interview/job/' + JobId.JobId, {
@@ -14,7 +15,8 @@ const JobDetails = (JobId) => {
         }).then(async (data) => {
             var body = await data.json();
             setJob(body);
-            setIsPending(true);
+            console.log(job)
+            setIsPending(false);
         });
     }
 
@@ -28,12 +30,12 @@ const JobDetails = (JobId) => {
             { isPending && <div>Loading...</div> }
             { job && (
                 <div className="blog-preview" key={job.JobsID}>
-                    <h2>{job.CompName}</h2>
-                    <p> Position Name {job.PositionName} </p>
-                    <p> Applied Date {job.AppliedDate} </p>
-                    <p> Status {job.StatusID} </p>
-                    <p> Interview Round {job.InterviewRound} </p>
-                    <p> Interest Level {job.InterestLevel} </p>
+                    <h2>{job[0].CompName}</h2>
+                    <p> Position Name {job[0].PositionName} </p>
+                    <p> Applied Date {job[0].AppliedDate} </p>
+                    <p> Status {job[0].StatusID} </p>
+                    <p> Interview Round {job[0].InterviewRound} </p>
+                    <p> Interest Level {job[0].InterestLevel} </p>
                 </div>
             )}
         </div>

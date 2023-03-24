@@ -7,12 +7,11 @@ function InterviewPrep(){
     const [Selected,SetSelected]=useState(false);
     const [searchItem,setSearchItem]=useState("");
 
-    function showMeAvailable(v) {
-        console.log(v.target.value);
 
+    function showMeAvailable(v) {
         setSearchItem(v.target.value);
+
         SetSelected(true);
-        console.log(searchItem);
     }
 
     async function fetchData(){
@@ -25,6 +24,7 @@ function InterviewPrep(){
             var body = await data.json();
             setJobs(body);
             setIsPending(true);
+
         });
     }
 
@@ -42,7 +42,6 @@ function InterviewPrep(){
                         corresponding information on the right side</p>
                     <label htmlFor="Items">Choose an Item:</label>
                     {jobs && <select name="Items" id="Items" onChange={showMeAvailable} >
-                        <option> </option>
                         {jobs.map((jobs) => (
                             <option value={jobs.JobsID} key={jobs.JobsID}> {`${jobs.CompName} (${jobs.PositionName})`}</option>
                         ))}
