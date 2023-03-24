@@ -343,7 +343,7 @@ router.put('/jobs/edit/:id', (req, res) => {
 });
 
 //Edit the current board a specific user
-router.put('/login', (req, res) => {
+router.put('/board', (req, res) => {
 
 });
 

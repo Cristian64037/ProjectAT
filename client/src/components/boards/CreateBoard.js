@@ -2,7 +2,7 @@ import {useEffect, useState} from "react";
 
 const CreateBoard = () =>{
 
-    const [boards, setBoards] = useState("");
+    const [boards, setBoards] = useState([]);
     const [newBoard, setNewBoard] = useState("");
 
     async function fetchData() {
@@ -22,10 +22,21 @@ const CreateBoard = () =>{
 
     }, []);
 
+
     function handleBoardChange(newBoard) {
         setNewBoard(newBoard)
         console.log(newBoard);
         alert(`Changed:${newBoard}`)
+        const isFound = boards.some(e => {
+            console.log(e.JobBoardID)
+            console.log(newBoard.valueOf())
+            return e.JobBoardID === parseInt(newBoard);
+        });
+        if(isFound){
+            alert("Hitting DB RN")
+        }else{
+            alert("Inspect Elemnt Detected Please Refresh")
+        }
     }
 
     return(
