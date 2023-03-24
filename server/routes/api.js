@@ -95,8 +95,24 @@ router.get('/documents', (req, res) => {
 });
 
 //Gets the list of boards by the specific user (populates dropdown in Board UI)
-router.get('/board', (req, res) => {
-    res.send({Type: "GET6"});
+router.get('/board/:LoginID', (req, res) => {
+    const sql = `Select JobBoardID from JobBoards where UserID = (Select UserID from User where LogInId=?)`;
+    const fields = [req.params.LoginID];
+    require("./queryDB").request(sql, fields, connection)
+        .then(
+            (data) => {
+                console.log(data);
+                if (data.length == 0) {
+                    res.status(200).send("");
+                } else {
+                    res.status(200).send(data);
+                }
+            },
+            (err) => {
+                res.status(400).send(err);
+                console.log(err);
+            }
+        );
 });
 
 router.get('/JobStatus', (req, res) => {

@@ -8,6 +8,7 @@ function InterviewPrep(){
     function showMeAvailable(v) {
         setSearchItem(v.target.value);
         SetSelected(true);
+        console.log(searchItem);
     }
     return(
         <div className="container-fluid height-full " >
