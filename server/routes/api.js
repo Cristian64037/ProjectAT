@@ -113,7 +113,7 @@ router.get('/documents', (req, res) => {
 
 //Gets the list of boards by the specific user (populates dropdown in Board UI)
 router.get('/board/:LoginID', (req, res) => {
-    const sql = `Select JobBoardID from JobBoards where UserID = (Select UserID from User where LogInId=?)`;
+    const sql = `Select JobBoardID,BoardName from JobBoards where UserID = (Select UserID from User where LogInId=?)`;
     const fields = [req.params.LoginID];
     require("./queryDB").request(sql, fields, connection)
         .then(

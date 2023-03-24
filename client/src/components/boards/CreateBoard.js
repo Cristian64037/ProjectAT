@@ -22,10 +22,10 @@ const CreateBoard = () =>{
 
     }, []);
 
-    function handleBoardChange(neboard) {
-        setNewBoard(neboard)
+    function handleBoardChange(newBoard) {
+        setNewBoard(newBoard)
         console.log(newBoard);
-        alert("Changed")
+        alert(`Changed:${newBoard}`)
     }
 
     return(
@@ -41,7 +41,7 @@ const CreateBoard = () =>{
                 <select className={"btn"} required onChange={e => (handleBoardChange(e.target.value))}>
                     <option disabled selected>Previous Boards</option>
                     {boards.length ? boards.map(e => (
-                        <option value={e.JobBoardID} key={e.JobBoardID}>{e.JobBoardID}  </option> )): ""}
+                        <option value={e.JobBoardID} key={e.JobBoardID}>{e.BoardName}  </option> )): ""}
                 </select>
 
 
