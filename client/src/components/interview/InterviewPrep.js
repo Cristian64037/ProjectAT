@@ -42,6 +42,7 @@ function InterviewPrep(){
                         corresponding information on the right side</p>
                     <label htmlFor="Items">Choose an Item:</label>
                     {jobs && <select name="Items" id="Items" onChange={showMeAvailable} >
+                        <option>Select Job</option>
                         {jobs.map((jobs) => (
                             <option value={jobs.JobsID} key={jobs.JobsID}> {`${jobs.CompName} (${jobs.PositionName})`}</option>
                         ))}
