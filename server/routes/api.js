@@ -64,7 +64,7 @@ router.get('/jobs/edit/:id', (req, res) => {
 
 //Get a list of jobs in the interview stage and documents to support the user (populates drop-down and documents in the interview UI)
 router.get('/interview/:id', (req, res) => {
-    const sql = `Select CompName, PositionName from Jobs where (JobBoardID = (Select CurrentBoard from User where LogInId=?) and StatusID = 2)`;
+    const sql = `Select JobsID, CompName, PositionName from Jobs where (JobBoardID = (Select CurrentBoard from User where LogInId=?) and StatusID = 2)`;
     const fields = [req.params.id];
 
     require("./queryDB").request(sql, fields, connection)
@@ -85,8 +85,25 @@ router.get('/interview/:id', (req, res) => {
 });
 
 //Get a specific job in the interview stage (populates job details in the interview UI)
-router.get('/interview/job', (req, res) => {
-    res.send({Type: "GET4"});
+router.get('/interview/job/:id', (req, res) => {
+    const sql = `Select JobsID, CompName, PositionName, AppliedDate, StatusID, InterviewRound, InterestLevel from Jobs where JobsID = ?`;
+    const fields = [req.params.id];
+
+    require("./queryDB").request(sql, fields, connection)
+        .then(
+            (data) => {
+                console.log(data);
+                if (data.length == 0) {
+                    res.status(404).send("Interview Jobs not found");
+                } else {
+                    res.status(200).send(data);
+                }
+            },
+            (err) => {
+                res.status(400).send(err);
+                console.log(err);
+            }
+        );
 });
 
 //Gets the box cards and the documents within each for a specific user (populates documents UI)

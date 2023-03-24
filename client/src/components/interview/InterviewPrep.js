@@ -1,15 +1,38 @@
 import useFetch from '../../hooks/useFetch';
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import JobDetails from "./JobDetails";
 function InterviewPrep(){
-    const {data : Jobs, isPending, error } = useFetch('http://localhost:8000/Jobs');
+    const [jobs, setJobs] = useState("");
+    const [isPending, setIsPending] = useState(false)
     const [Selected,SetSelected]=useState(false);
     const [searchItem,setSearchItem]=useState("");
+
     function showMeAvailable(v) {
+        console.log(v.target.value);
+
         setSearchItem(v.target.value);
         SetSelected(true);
         console.log(searchItem);
     }
+
+    async function fetchData(){
+        await fetch('http://localhost:3306/api/interview/3', {
+            method: 'Get',
+            headers: {
+                'content-type': 'application/json'
+            }
+        }).then(async (data) => {
+            var body = await data.json();
+            setJobs(body);
+            setIsPending(true);
+        });
+    }
+
+    useEffect(() => {
+        // Update the document title using the browser API
+        fetchData();
+    }, [isPending]);
+
     return(
         <div className="container-fluid height-full " >
             <div className="row">
@@ -18,10 +41,10 @@ function InterviewPrep(){
                     <p> Please select a job from the dropdown. On submission, a table will populate with
                         corresponding information on the right side</p>
                     <label htmlFor="Items">Choose an Item:</label>
-                    {Jobs && <select name="Items" id="Items" onChange={showMeAvailable} >
+                    {jobs && <select name="Items" id="Items" onChange={showMeAvailable} >
                         <option> </option>
-                        {Jobs.map((jobs) => (
-                            <option value={jobs.id} key={jobs.id}> {jobs.CompName}</option>
+                        {jobs.map((jobs) => (
+                            <option value={jobs.JobsID} key={jobs.JobsID}> {`${jobs.CompName} (${jobs.PositionName})`}</option>
                         ))}
                     </select>
                     }
