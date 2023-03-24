@@ -1,27 +1,39 @@
 import useFetch from "../../hooks/useFetch";
-import {useState} from "react";
+import {useEffect, useState} from "react";
 
 const JobDetails = (JobId) => {
-    const newJob =JobId.JobId;
+    const [job, setJob] = useState("");
+    const [isPending, setIsPending] = useState(false);
 
-    console.log(newJob);
+    async function fetchData(){
+        await fetch('http://localhost:3306/api/interview/job/' + JobId.JobId, {
+            method: 'Get',
+            headers: {
+                'content-type': 'application/json'
+            }
+        }).then(async (data) => {
+            var body = await data.json();
+            setJob(body);
+            setIsPending(true);
+        });
+    }
 
-    const { data: jobs, error, isPending } = useFetch('http://localhost:8000/Jobs/' + newJob);
-
+    useEffect(() => {
+        // Update the document title using the browser API
+        fetchData();
+    }, [isPending]);
 
     return (
         <div className="blog-details">
             { isPending && <div>Loading...</div> }
-            { error && <div>{ error }</div> }
-            { jobs && (
-                <div className="blog-preview" key={jobs.id}>
-                    <h2>{jobs.CompName}</h2>
-                    <p> Position Name {jobs.PositionName} </p>
-                    <p> Applied Date {jobs.AppliedDate} </p>
-                    <p> Status {jobs.StatusID} </p>
-                    <p> Interview Round {jobs.InterviewRound} </p>
-                    <p> Interest Level {jobs.InterestLevel} </p>
-
+            { job && (
+                <div className="blog-preview" key={job.JobsID}>
+                    <h2>{job.CompName}</h2>
+                    <p> Position Name {job.PositionName} </p>
+                    <p> Applied Date {job.AppliedDate} </p>
+                    <p> Status {job.StatusID} </p>
+                    <p> Interview Round {job.InterviewRound} </p>
+                    <p> Interest Level {job.InterestLevel} </p>
                 </div>
             )}
         </div>
