@@ -8,8 +8,9 @@ const Boards = () => {
     let navigate = useNavigate();
     const [BoardName,setBoardName]= useState(" ");
     const [jobs, setjobs] = useState("");
-    const [isPending, setIspending] = useState(false)
-    const [JobStatFromDb, setJobStatFromDb] = useState([]);
+    const [isPending, setIspending] = useState(false);
+    const [JobBoardId, setJobBoardId] = useState([]);
+    const [boards, setBoards] = useState([]);
 
     async function fetchData() {
         await fetch("http://localhost:3306/api/jobs/4", {
@@ -20,8 +21,27 @@ const Boards = () => {
         }).then(async (data) => {
             var body = await data.json();
             setjobs(body);
+            //console.log(body[0].JobBoardID)
+           setJobBoardId(body[0].JobBoardID);
             setIspending(true)
         });
+
+            await fetch("http://localhost:3306/api/board/4", {
+                method: 'Get',
+                headers: {
+                    'content-type': 'application/json'
+                }
+            }).then(async (data) => {
+                var body = await data.json();
+                setBoards(body);
+                //console.log(body);
+                let number=body.filter(i=> i.JobBoardID===JobBoardId);
+                //console.log(boards)
+                console.log(number[0].BoardName)
+                setBoardName(number[0].BoardName);
+
+            });
+
     }
 
     useEffect(() => {
