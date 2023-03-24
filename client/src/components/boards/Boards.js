@@ -11,7 +11,7 @@ const Boards = () => {
     const [JobStatFromDb, setJobStatFromDb] = useState([]);
 
     async function fetchData() {
-        await fetch("http://localhost:3306/api/jobs/3", {
+        await fetch("http://localhost:3306/api/jobs/4", {
             method: 'Get',
             headers: {
                 'content-type': 'application/json'

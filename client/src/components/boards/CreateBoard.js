@@ -1,12 +1,14 @@
 import {useEffect, useState} from "react";
+import {useNavigate} from "react-router-dom";
 
 const CreateBoard = () =>{
 
     const [boards, setBoards] = useState([]);
     const [newBoard, setNewBoard] = useState("");
+    const navigate = useNavigate();
 
     async function fetchData() {
-        await fetch("http://localhost:3306/api/board/3", {
+        await fetch("http://localhost:3306/api/board/4", {
             method: 'Get',
             headers: {
                 'content-type': 'application/json'
@@ -23,7 +25,7 @@ const CreateBoard = () =>{
     }, []);
 
 
-    function handleBoardChange(newBoard) {
+    async function handleBoardChange(newBoard) {
         setNewBoard(newBoard)
         console.log(newBoard);
         alert(`Changed:${newBoard}`)
@@ -33,7 +35,20 @@ const CreateBoard = () =>{
             return e.JobBoardID === parseInt(newBoard);
         });
         if(isFound){
-            alert("Hitting DB RN")
+            alert("Hitting DB RN");
+            await fetch("http://localhost:3306/api/board", {
+                method: 'PUT',
+                headers: {
+                    'content-type': 'application/json'
+                },
+                body: JSON.stringify({
+                    "LogInID": 4,
+                    "JobBoardID": newBoard,
+                })
+            }).then(async (data) => {
+                var body = await data.text();
+                navigate('/boards');
+            });
         }else{
             alert("Inspect Elemnt Detected Please Refresh")
         }

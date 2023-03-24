@@ -62,7 +62,7 @@ const JobApplicationForm=()=>{
                 'content-type': 'application/json'
             },
             body: JSON.stringify({
-                "board": 7,
+                "LogInID": 4,
                 "company": CompanyName,
                 "posName": JobTitle,
                 "appDate": ApplyDate,

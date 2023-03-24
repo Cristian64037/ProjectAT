@@ -213,13 +213,15 @@ router.post('/auth', (req, res) => {
 //*****************TO DO: Map jobstatus and interest********************
 //**********************************************************************
 router.post('/jobs', (req, res) => {
+    const sqlGetCurBoard=`Select CurrentBoard from User where LogInId=?`
+
     const sql = `Insert into Jobs(JobBoardID, CompName, PositionName,
             AppliedDate, StatusID, InterviewRound, InterestLevel,
             CoreValues, MissionStatement, WebUrl, Awards, ExpectSalary,
             ImportantSkills, InterviewNotes)
             values(?,?,?,?,?,?,?,?,?,?,?,?,?,?)`;
     const fields = [
-        req.body.board,
+        req.body.LogInID,
         req.body.company,
         req.body.posName,
         req.body.appDate,
@@ -234,18 +236,32 @@ router.post('/jobs', (req, res) => {
         req.body.skills,
         req.body.notes
     ];
-
-    require("./queryDB").request(sql, fields, connection)
+    require("./queryDB").request(sqlGetCurBoard, fields.slice(0), connection)
         .then(
             (data) => {
-                console.log(data)
-                res.status(201).send(data);
+
+                fields[0]=data[0].CurrentBoard;
+                require("./queryDB").request(sql, fields, connection)
+                    .then(
+                        (data) => {
+                            console.log(data)
+                            res.status(201).send(data);
+                        },
+                        (err) => {
+                            res.status(400).send(err);
+                            console.log(err);
+                        }
+                    );
+
+
             },
             (err) => {
                 res.status(400).send(err);
                 console.log(err);
             }
         );
+
+
 });
 
 //Add a user for login
@@ -344,6 +360,29 @@ router.put('/jobs/edit/:id', (req, res) => {
 
 //Edit the current board a specific user
 router.put('/board', (req, res) => {
+    const sql = `Update User SET CurrentBoard=? where LogInId=?`;
+    const fields = [
+        req.body.JobBoardID,
+        req.body.LogInID
+
+    ];
+
+
+    require("./queryDB").request(sql, fields, connection)
+        .then(
+            (data) => {
+                console.log(data);
+                if (data.length == 0) {
+                    res.status(404).send("Not Found");
+                } else {
+                    res.status(202).send(data);
+                }
+            },
+            (err) => {
+                res.status(400).send(err);
+                console.log(err);
+            }
+        );
 
 });
 
