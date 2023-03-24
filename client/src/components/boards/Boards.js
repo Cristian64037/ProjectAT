@@ -6,6 +6,7 @@ import Moment from 'moment';
 
 const Boards = () => {
     let navigate = useNavigate();
+    const [BoardName,setBoardName]= useState(" ");
     const [jobs, setjobs] = useState("");
     const [isPending, setIspending] = useState(false)
     const [JobStatFromDb, setJobStatFromDb] = useState([]);
@@ -24,6 +25,7 @@ const Boards = () => {
     }
 
     useEffect(() => {
+
         fetchData();
         jobs && FormatTable();
     }, [isPending]);
@@ -96,7 +98,7 @@ const Boards = () => {
         <div className="card mb-4">
             <div className="card-header">
                 <i className="fas fa-table me-2 fs-4"/>
-                <span style={{fontSize: '28px'}}>Applications</span>
+                <span style={{fontSize: '28px'}}>{BoardName}</span>
 
                 {/* Button to open the pop-up notepad */}
                 <button id="openBtn" className="float-lg-end  btn btn-outline-dark" onClick={OpenPad}>Open Notepad
@@ -136,6 +138,7 @@ const Boards = () => {
                     </thead>
                     <tbody>
                     {jobs && jobs.map((job) => {
+
                         return (
                             <tr key={job.id}>
                                 <td>{job.CompName}</td>
