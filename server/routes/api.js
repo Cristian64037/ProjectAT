@@ -16,8 +16,9 @@ const connection = require('../database/connection');
 
 //Get a list of jobs based on the user's identification and Job Board identification (populates Job Tracker UI)
 router.get('/jobs/:id', (req, res) => {
-    const sql = `Select JobBoardID,CompName, PositionName, AppliedDate, e.Name, InterviewRound, InterestLevel, ExpectSalary
-                 from Jobs INNER JOIN JobStatus e ON Jobs.StatusID = e.StatusID where JobBoardID = (Select CurrentBoard from User where LogInId=?)`;
+    const sql = `Select JobBoardID,CompName, PositionName, AppliedDate, e.Name AS Status, i.Name AS Interest, ExpectSalary
+                 from (Jobs INNER JOIN JobStatus e ON Jobs.StatusID = e.StatusID) INNER JOIN InterestLevel i ON Jobs.InterestLevel = i.InterestLevelID
+                 where JobBoardID = (Select CurrentBoard from User where LogInId=?)`;
     const fields = [req.params.id];
 
     require("./queryDB").request(sql, fields, connection)
@@ -94,7 +95,7 @@ router.get('/interview/job/:id', (req, res) => {
             (data) => {
                 //console.log(data);
                 if (data.length == 0) {
-                    res.status(404).send("Interview Jobs not found");
+                    res.status(404).send("Interview Job not found");
                 } else {
                     res.status(200).send(data);
                 }

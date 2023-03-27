@@ -6,14 +6,14 @@ import Moment from 'moment';
 
 const Boards = () => {
     let navigate = useNavigate();
-    const [BoardName,setBoardName]= useState("New Board");
+    const [BoardName, setBoardName] = useState("New Board");
     const [jobs, setjobs] = useState("");
     const [isPending, setIspending] = useState(false);
     const [JobBoardId, setJobBoardId] = useState([]);
     const [boards, setBoards] = useState([]);
-    const[lastUpdateDate,setLastUpdatedDate]=useState("");
+    const [lastUpdateDate, setLastUpdatedDate] = useState("");
 
-    async function getBoardData(){
+    async function getBoardData() {
         await fetch("http://localhost:3306/api/Latestboard/4", {
             method: 'Get',
             headers: {
@@ -23,7 +23,7 @@ const Boards = () => {
             var body = await data.json();
             //setBoards(body);
             console.log("ROB");
-           // let number=body.filter(i=> i.JobBoardID===JobBoardId);
+            // let number=body.filter(i=> i.JobBoardID===JobBoardId);
 
 
             //console.log(number[0].BoardName)
@@ -34,6 +34,7 @@ const Boards = () => {
         });
 
     }
+
     async function fetchData() {
         await fetch("http://localhost:3306/api/jobs/4", {
             method: 'Get',
@@ -47,7 +48,6 @@ const Boards = () => {
             setJobBoardId(body[0].JobBoardID);
             setIspending(true)
         });
-
 
 
     }
@@ -125,31 +125,41 @@ const Boards = () => {
 
     return (
         <div className="card mb-4">
-            <div className="card-header">
-                <i className="fas fa-table me-2 fs-4"/>
-                <span style={{fontSize: '28px'}}>{BoardName} <br/> Last update:{Moment(lastUpdateDate).format('MM-DD-YYYY')}</span>
+            <div className="card-header row">
+                <span className="col-4">
+                    <i className="fas fa-table me-2 fs-4"/>
+                    <span style={{fontSize: '28px'}}>{BoardName}</span>
+                </span>
 
-                {/* Button to open the pop-up notepad */}
-                <button id="openBtn" className="float-lg-end  btn btn-outline-dark" onClick={OpenPad}>Open Notepad
-                </button>
-                <span className="float-lg-end">&nbsp;&nbsp;&nbsp;</span>
+                <span style={{fontSize: '28px'}} className="flex-column text-center col-4">
+                    Last update:{Moment(lastUpdateDate).format('MM-DD-YYYY')}
+                </span>
 
-                {/* Button to open the job form */}
-                <button id="myButton" className="float-lg-end  btn btn-outline-dark submit-button"
-                        onClick={GoToAppAdder}>Documents
-                    Application
-                </button>
 
-                {/* The overlay */}
-                <div className="overlay">
-                    {/* The pop-up notepad */}
-                    <div className="popup">
+                <span className="col-4">
+                    {/* Button to open the pop-up notepad */}
+                    <button id="openBtn" className="float-lg-end  btn btn-outline-dark" onClick={OpenPad}>
+                        Job Search Notes
+                    </button>
+
+                    <span className="float-lg-end">&nbsp;&nbsp;&nbsp;</span>
+
+                    {/* Button to open the job form */}
+                    <button id="myButton" className="float-lg-end  btn btn-outline-dark submit-button" onClick={GoToAppAdder}>
+                        Add New Job
+                    </button>
+
+                    {/* The overlay */}
+                    <div className="overlay">
+                        {/* The pop-up notepad */}
+                        <div className="popup">
                         <textarea id="notepad" rows={16} cols={58} defaultValue={""}/>
                         <br/><br/>
-                        {/* Button to close the pop-up notepad */}
-                        <button id="closeBtn">Close</button>
+                            {/* Button to close the pop-up notepad */}
+                            <button id="closeBtn">Close</button>
+                        </div>
                     </div>
-                </div>
+                </span>
             </div>
             <div className="card-body">
                 {isPending && <div> Loading...</div>}
@@ -159,25 +169,32 @@ const Boards = () => {
                         <th>Company Name</th>
                         <th>Position</th>
                         <th>Status</th>
-                        <th>Stage</th>
-                        <th>Date Applied</th>
+                        <th>Interest Level</th>
                         <th>Salary</th>
-                        <th>Edit</th>
+                        <th>Date Applied</th>
+                        <th></th>
+                        <th></th>
                     </tr>
                     </thead>
                     <tbody>
                     {jobs && jobs.map((job) => {
-
                         return (
                             <tr key={job.id}>
                                 <td>{job.CompName}</td>
                                 <td>{job.PositionName}</td>
-                                <td> {job.Name}</td>
-                                <td>{job.InterviewRound}</td>
-                                <td>{Moment(job.AppliedDate).format('MM-DD-YYYY')}</td>
+                                <td>{job.Status}</td>
+                                <td>{job.Interest}</td>
                                 <td>{job.ExpectSalary}</td>
+                                <td>{Moment(job.AppliedDate).format('MM-DD-YYYY')}</td>
                                 <td>
                                     <button style={{backgroundColor: '#191c1f', color: 'white'}}>Edit Job</button>
+                                </td>
+                                <td>
+                                    {job.Status == "Applied" ? <span/> :
+                                        <button style={{backgroundColor: '#191c1f', color: 'white'}}>
+                                            Interview Notes
+                                        </button>
+                                    }
                                 </td>
                             </tr>
                         )
