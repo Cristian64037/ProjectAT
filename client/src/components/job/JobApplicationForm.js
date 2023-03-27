@@ -81,6 +81,7 @@ const JobApplicationForm=()=>{
             var body = await data.text();
             if(data.status===201){
                 alert("Successful Job Input");
+                navigate("/boards")
             }else {
                 alert(body);
             }

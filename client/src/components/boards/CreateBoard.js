@@ -1,10 +1,12 @@
 import {useEffect, useState} from "react";
 import {useNavigate} from "react-router-dom";
+import Popup from "reactjs-popup";
 
 const CreateBoard = () =>{
 
     const [boards, setBoards] = useState([]);
     const [newBoard, setNewBoard] = useState("");
+    const [newBoardName, setNewBoardName]= useState("");
     const navigate = useNavigate();
 
     async function fetchData() {
@@ -50,15 +52,44 @@ const CreateBoard = () =>{
                 navigate('/boards');
             });
         }else{
-            alert("Inspect Elemnt Detected Please Refresh")
+            alert("Inspect Element Detected Please Refresh")
         }
+    }
+
+    async function handleNewBoard() {
+        alert("Created New Board");
+        await fetch("http://localhost:3306/api/board", {
+            method: 'POST',
+            headers: {
+                'content-type': 'application/json'
+            },
+            body: JSON.stringify({
+                "LogInID": 4,
+                "JobBoardName": newBoardName
+            })
+        }).then(async (data) => {
+            var body = await data.text();
+            //console.log(body)
+            navigate('/boards');
+        });
+        //navigate('/boards');
     }
 
     return(
         <div className="row create-board">
             <div className="col-6 createContainer">
                 <img src="../../JT.png" alt="JT"/>
-                <button className="btn">New Board</button>
+                <Popup trigger=
+                           {<button className={"btn"}> New Board </button>}
+                       position=" right">
+                    <div style={{backgroundColor:"blue"}}>
+                        <div > New Board Name </div>
+                        <input type="text"  required onChange={e => (
+                            setNewBoardName(e.target.value))} value={newBoardName}
+                        />
+                        <button onClick={handleNewBoard}>Submit</button>
+                    </div>
+                </Popup>
             </div>
 
             <div className="col-6 createContainer">

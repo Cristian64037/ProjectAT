@@ -6,11 +6,12 @@ import Moment from 'moment';
 
 const Boards = () => {
     let navigate = useNavigate();
-    const [BoardName,setBoardName]= useState(" ");
+    const [BoardName,setBoardName]= useState("New Board");
     const [jobs, setjobs] = useState("");
     const [isPending, setIspending] = useState(false);
     const [JobBoardId, setJobBoardId] = useState([]);
     const [boards, setBoards] = useState([]);
+    const[lastUpdateDate,setLastUpdatedDate]=useState("");
 
     async function fetchData() {
         await fetch("http://localhost:3306/api/jobs/4", {
@@ -22,7 +23,7 @@ const Boards = () => {
             var body = await data.json();
             setjobs(body);
             //console.log(body[0].JobBoardID)
-           setJobBoardId(body[0].JobBoardID);
+            setJobBoardId(body[0].JobBoardID);
             setIspending(true)
         });
 
@@ -34,11 +35,14 @@ const Boards = () => {
             }).then(async (data) => {
                 var body = await data.json();
                 setBoards(body);
-                //console.log(body);
+                console.log(body);
                 let number=body.filter(i=> i.JobBoardID===JobBoardId);
-                //console.log(boards)
-                console.log(number[0].BoardName)
+
+
+               //console.log(number[0].BoardName)
                 setBoardName(number[0].BoardName);
+                setLastUpdatedDate(number[0].LastUpdated);
+                console.log(number[0].LastUpdated);
 
             });
 
@@ -118,7 +122,7 @@ const Boards = () => {
         <div className="card mb-4">
             <div className="card-header">
                 <i className="fas fa-table me-2 fs-4"/>
-                <span style={{fontSize: '28px'}}>{BoardName}</span>
+                <span style={{fontSize: '28px'}}>{BoardName} <br/> {lastUpdateDate.length>0 ?<> Last update:{Moment(lastUpdateDate).format('MM-DD-YYYY')}</>:<></>}</span>
 
                 {/* Button to open the pop-up notepad */}
                 <button id="openBtn" className="float-lg-end  btn btn-outline-dark" onClick={OpenPad}>Open Notepad

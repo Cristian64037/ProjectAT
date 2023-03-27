@@ -23,7 +23,7 @@ router.get('/jobs/:id', (req, res) => {
     require("./queryDB").request(sql, fields, connection)
         .then(
             (data) => {
-                console.log(data);
+                //console.log(data);
                 if (data.length == 0) {
                     res.status(404).send("No JobBoards found for User");
                 } else {
@@ -32,7 +32,7 @@ router.get('/jobs/:id', (req, res) => {
             },
             (err) => {
                 res.status(400).send(err);
-                console.log(err);
+                //console.log(err);
             }
         );
 });
@@ -48,7 +48,7 @@ router.get('/jobs/edit/:id', (req, res) => {
     require("./queryDB").request(sql, fields, connection)
         .then(
             (data) => {
-                console.log(data);
+                //console.log(data);
                 if (data.length == 0) {
                     res.status(404).send("Job not found");
                 } else {
@@ -57,7 +57,7 @@ router.get('/jobs/edit/:id', (req, res) => {
             },
             (err) => {
                 res.status(400).send(err);
-                console.log(err);
+                //console.log(err);
             }
         );
 });
@@ -70,7 +70,7 @@ router.get('/interview/:id', (req, res) => {
     require("./queryDB").request(sql, fields, connection)
         .then(
             (data) => {
-                console.log(data);
+                //console.log(data);
                 if (data.length == 0) {
                     res.status(404).send("Interview Jobs not found");
                 } else {
@@ -79,7 +79,7 @@ router.get('/interview/:id', (req, res) => {
             },
             (err) => {
                 res.status(400).send(err);
-                console.log(err);
+                //console.log(err);
             }
         );
 });
@@ -92,7 +92,7 @@ router.get('/interview/job/:id', (req, res) => {
     require("./queryDB").request(sql, fields, connection)
         .then(
             (data) => {
-                console.log(data);
+                //console.log(data);
                 if (data.length == 0) {
                     res.status(404).send("Interview Jobs not found");
                 } else {
@@ -101,7 +101,7 @@ router.get('/interview/job/:id', (req, res) => {
             },
             (err) => {
                 res.status(400).send(err);
-                console.log(err);
+                //console.log(err);
             }
         );
 });
@@ -113,12 +113,12 @@ router.get('/documents', (req, res) => {
 
 //Gets the list of boards by the specific user (populates dropdown in Board UI)
 router.get('/board/:LoginID', (req, res) => {
-    const sql = `Select JobBoardID,BoardName from JobBoards where UserID = (Select UserID from User where LogInId=?)`;
+    const sql = `Select LastUpdated,JobBoardID,BoardName from JobBoards where UserID = (Select UserID from User where LogInId=?)`;
     const fields = [req.params.LoginID];
     require("./queryDB").request(sql, fields, connection)
         .then(
             (data) => {
-                console.log(data);
+                //console.log(data);
                 if (data.length == 0) {
                     res.status(200).send("");
                 } else {
@@ -127,7 +127,7 @@ router.get('/board/:LoginID', (req, res) => {
             },
             (err) => {
                 res.status(400).send(err);
-                console.log(err);
+                //console.log(err);
             }
         );
 });
@@ -139,7 +139,7 @@ router.get('/JobStatus', (req, res) => {
     require("./queryDB").request(sql,fields, connection)
         .then(
             (data) => {
-                console.log(data);
+                //console.log(data);
 
                     res.status(200).send(data);
 
@@ -147,7 +147,7 @@ router.get('/JobStatus', (req, res) => {
 
             (err) => {
                 res.status(400).send(err);
-                console.log(err);
+                ////console.log(err);
             }
         );
 });
@@ -159,7 +159,7 @@ router.get('/InterestLevel', (req, res) => {
     require("./queryDB").request(sql,fields, connection)
         .then(
             (data) => {
-                console.log(data);
+               // //console.log(data);
 
                 res.status(200).send(data);
 
@@ -167,7 +167,7 @@ router.get('/InterestLevel', (req, res) => {
 
             (err) => {
                 res.status(400).send(err);
-                console.log(err);
+                ////console.log(err);
             }
         );
 });
@@ -191,10 +191,10 @@ router.post('/auth', (req, res) => {
                 }else bcrypts.compare(fields[1], data[0].PSWD, function (err, result) {
 
                     if (result === true) {
-                        console.log("'yes'")
+                       // //console.log("'yes'")
                         res.status(201).send("YOu In");
                     } else {
-                        console.log("NO")
+                       // //console.log("NO")
                         res.status(400).send("Incorrect Password");
                     }
 
@@ -203,7 +203,7 @@ router.post('/auth', (req, res) => {
             },
             (err) => {
                 res.status(400).send(err);
-                console.log(err);
+                ////console.log(err);
             }
         );
 });
@@ -220,6 +220,8 @@ router.post('/jobs', (req, res) => {
             CoreValues, MissionStatement, WebUrl, Awards, ExpectSalary,
             ImportantSkills, InterviewNotes)
             values(?,?,?,?,?,?,?,?,?,?,?,?,?,?)`;
+
+    const UpdateDate=`Update JobBoards SET LastUpdated=? where JobBoardID=?`;
     const fields = [
         req.body.LogInID,
         req.body.company,
@@ -244,12 +246,30 @@ router.post('/jobs', (req, res) => {
                 require("./queryDB").request(sql, fields, connection)
                     .then(
                         (data) => {
-                            console.log(data)
-                            res.status(201).send(data);
+                            ////console.log(data)
+                            //res.status(201).send(data);
+                            let date_ob = new Date();
+                            const updateFields=[
+
+                                date_ob,
+                                fields[0]
+
+                            ]
+                            require("./queryDB").request(UpdateDate, updateFields, connection)
+                                .then(
+                                    (data) => {
+                                        ////console.log(data)
+                                        res.status(201).send(data);
+                                    },
+                                    (err) => {
+                                        res.status(400).send(err);
+                                        ////console.log(err);
+                                    }
+                                );
                         },
                         (err) => {
                             res.status(400).send(err);
-                            console.log(err);
+                            ////console.log(err);
                         }
                     );
 
@@ -257,7 +277,7 @@ router.post('/jobs', (req, res) => {
             },
             (err) => {
                 res.status(400).send(err);
-                console.log(err);
+                //console.log(err);
             }
         );
 
@@ -270,7 +290,7 @@ router.post('/login', async (req, res) => {
     let insertId="";
     const sql = `Insert into LogIn(UserName, PSWD, RecoverEmail) values(?,?,?)`;
     let hashedPassword =  await bcrypts.hash(req.body.password, 8);
-    console.log(hashedPassword);
+    //console.log(hashedPassword);
     const fields = [
         req.body.username,
         hashedPassword,
@@ -308,14 +328,14 @@ router.post('/login', async (req, res) => {
                                         },
                                         (err) => {
                                             res.status(400).send(err);
-                                            console.log(err);
+                                            //console.log(err);
                                         }
                                     );
 
                             },
                             (err) => {
                                 res.status(400).send(err);
-                                console.log(err);
+                                //console.log(err);
                             }
                         );
                 }
@@ -325,14 +345,14 @@ router.post('/login', async (req, res) => {
 
             (err) => {
                 res.status(400).send(err);
-                console.log(err);
+                //console.log(err);
             }
         );
 
 
 
 
-    console.log(insertId);
+    //console.log(insertId);
 
 
 
@@ -346,6 +366,63 @@ router.post('/documents', (req, res) => {
 
 //Add a job board for a specific user
 router.post('/board', (req, res) => {
+    let date_ob = new Date();
+    const fields = [
+        req.body.LogInID
+    ];
+    const getUserIDSQL=`Select UserID from User where LogInId=?`;
+    const sql=`Insert into JobBoards(CreateDate,LastUpdated,BoardName,UserID) value(?,?,?,?)`;
+    const UpdateUserSQl=`Update User Set CurrentBoard=? where LogInID=?`;
+
+    require("./queryDB").request(getUserIDSQL, fields[0], connection)
+        .then(
+            ( data) => {
+                //console.log(data[0].UserID);
+                fields.push(data[0].UserID);
+
+                const Inserfields=[
+                    date_ob,
+                    date_ob,
+                    req.body.JobBoardName,
+                    data[0].UserID
+
+                ]
+
+
+                require("./queryDB").request(sql, Inserfields, connection)
+                    .then(
+                        (data) => {
+                            //Now we update user
+                            //console.log(data)
+                            const fields2=[
+                                data.insertId,
+                                req.body.LogInID
+                            ]
+                            require("./queryDB").request(UpdateUserSQl, fields2, connection)
+                                .then(
+                                    (data) => {
+
+                                        res.send("Success")
+
+                                    },
+                                    (err) => {
+                                        res.status(400).send(err);
+                                        //console.log(err);
+                                    }
+                                );
+                            //res.send("Success")
+                        },
+                        (err) => {
+                            res.status(400).send(err);
+                            //console.log(err);
+                        }
+                    );
+            },
+            (err) => {
+                res.status(400).send(err);
+                //console.log(err);
+            }
+        );
 
 });
 
@@ -371,7 +448,7 @@ router.put('/board', (req, res) => {
     require("./queryDB").request(sql, fields, connection)
         .then(
             (data) => {
-                console.log(data);
+                //console.log(data);
                 if (data.length == 0) {
                     res.status(404).send("Not Found");
                 } else {
@@ -380,7 +457,7 @@ router.put('/board', (req, res) => {
             },
             (err) => {
                 res.status(400).send(err);
-                console.log(err);
+                //console.log(err);
             }
         );
 
