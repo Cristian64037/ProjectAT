@@ -13,6 +13,27 @@ const Boards = () => {
     const [boards, setBoards] = useState([]);
     const[lastUpdateDate,setLastUpdatedDate]=useState("");
 
+    async function getBoardData(){
+        await fetch("http://localhost:3306/api/Latestboard/4", {
+            method: 'Get',
+            headers: {
+                'content-type': 'application/json'
+            }
+        }).then(async (data) => {
+            var body = await data.json();
+            //setBoards(body);
+            console.log("ROB");
+           // let number=body.filter(i=> i.JobBoardID===JobBoardId);
+
+
+            //console.log(number[0].BoardName)
+            setBoardName(body[0].BoardName);
+            setLastUpdatedDate(body[0].LastUpdated);
+            console.log(body[0].LastUpdated);
+
+        });
+
+    }
     async function fetchData() {
         await fetch("http://localhost:3306/api/jobs/4", {
             method: 'Get',
@@ -27,30 +48,14 @@ const Boards = () => {
             setIspending(true)
         });
 
-            await fetch("http://localhost:3306/api/board/4", {
-                method: 'Get',
-                headers: {
-                    'content-type': 'application/json'
-                }
-            }).then(async (data) => {
-                var body = await data.json();
-                setBoards(body);
-                console.log(body);
-                let number=body.filter(i=> i.JobBoardID===JobBoardId);
 
-
-               //console.log(number[0].BoardName)
-                setBoardName(number[0].BoardName);
-                setLastUpdatedDate(number[0].LastUpdated);
-                console.log(number[0].LastUpdated);
-
-            });
 
     }
 
     useEffect(() => {
 
         fetchData();
+        getBoardData();
         jobs && FormatTable();
     }, [isPending]);
 
@@ -122,7 +127,7 @@ const Boards = () => {
         <div className="card mb-4">
             <div className="card-header">
                 <i className="fas fa-table me-2 fs-4"/>
-                <span style={{fontSize: '28px'}}>{BoardName} <br/> {lastUpdateDate.length>0 ?<> Last update:{Moment(lastUpdateDate).format('MM-DD-YYYY')}</>:<></>}</span>
+                <span style={{fontSize: '28px'}}>{BoardName} <br/> Last update:{Moment(lastUpdateDate).format('MM-DD-YYYY')}</span>
 
                 {/* Button to open the pop-up notepad */}
                 <button id="openBtn" className="float-lg-end  btn btn-outline-dark" onClick={OpenPad}>Open Notepad

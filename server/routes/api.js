@@ -25,7 +25,7 @@ router.get('/jobs/:id', (req, res) => {
             (data) => {
                 //console.log(data);
                 if (data.length == 0) {
-                    res.status(404).send("No JobBoards found for User");
+                    res.status(404).send(data);
                 } else {
                     res.status(200).send(data);
                 }
@@ -108,7 +108,21 @@ router.get('/interview/job/:id', (req, res) => {
 
 //Gets the box cards and the documents within each for a specific user (populates documents UI)
 router.get('/documents', (req, res) => {
-    res.send({Type: "GET5"});
+    const sql=`Select * from BoxCard`;
+    const field=[];
+    require("./queryDB").request(sql, field, connection)
+        .then(
+            (data) => {
+                res.status(200).send(data);
+
+            },
+            (err) => {
+                res.status(400).send(err);
+                //console.log(err);
+            }
+        );
+
+    //res.send({Type: "GET5"});
 });
 
 //Gets the list of boards by the specific user (populates dropdown in Board UI)
@@ -127,6 +141,25 @@ router.get('/board/:LoginID', (req, res) => {
             },
             (err) => {
                 res.status(400).send(err);
+                //console.log(err);
+            }
+        );
+});
+router.get('/Latestboard/:LoginID', (req, res) => {
+    const sql = `Select LastUpdated,JobBoardID,BoardName from JobBoards where UserID = (Select UserID from User where LogInId=?) and JobBoardID=(Select CurrentBoard from User where LogInId=?)`;
+    const fields = [req.params.LoginID,req.params.LoginID];
+    require("./queryDB").request(sql, fields, connection)
+        .then(
+            (data) => {
+                //console.log(data);
+                if (data.length == 0) {
+                    res.status(200).send("");
+                } else {
+                    res.status(200).send(data);
+                }
+            },
+            (err) => {
+                res.status(400).send("Couldn't Do This");
                 //console.log(err);
             }
         );
