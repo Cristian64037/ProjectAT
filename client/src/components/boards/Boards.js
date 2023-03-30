@@ -13,16 +13,19 @@ const Boards = () => {
     const [boards, setBoards] = useState([]);
     const [lastUpdateDate, setLastUpdatedDate] = useState("");
 
+
+
     async function getBoardData() {
         await fetch("http://localhost:3306/api/Latestboard/4", {
             method: 'Get',
             headers: {
-                'content-type': 'application/json'
+                'content-type': 'application/json',
+                "x-access-token" : localStorage.getItem("token")
             }
         }).then(async (data) => {
             var body = await data.json();
             //setBoards(body);
-            console.log("ROB");
+            console.log("INVALID");
             // let number=body.filter(i=> i.JobBoardID===JobBoardId);
 
 
@@ -36,10 +39,12 @@ const Boards = () => {
     }
 
     async function fetchData() {
+        console.log("FETCHIN")
         await fetch("http://localhost:3306/api/jobs/4", {
             method: 'Get',
             headers: {
-                'content-type': 'application/json'
+                'content-type': 'application/json',
+                "x-access-token" : localStorage.getItem("token")
             }
         }).then(async (data) => {
             var body = await data.json();
@@ -52,7 +57,11 @@ const Boards = () => {
 
     }
 
+
+
     useEffect(() => {
+
+
 
         fetchData();
         getBoardData();

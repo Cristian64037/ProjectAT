@@ -13,11 +13,13 @@ const {verify} = require("jsonwebtoken");
 
 const verifyJWT = (req, res, next) => {
     const token = req.headers["x-access-token"]
+    console.log(token)
     if (!token) {
         res.send("Yo, we need a token. Please given it next time");
     } else {
         jwt.verify(token, process.env.token, (err, decoded) => {
            if (err) {
+               console.log("NOOooo Sir")
                console.log(err);
                console.log(token);
                res.json({
@@ -25,6 +27,7 @@ const verifyJWT = (req, res, next) => {
                    message: "You failed to authenticate"
                });
            } else {
+               console.log("YEs Sir")
                req.logId = decoded.id;
                next();
            }
@@ -36,7 +39,7 @@ const verifyJWT = (req, res, next) => {
 ==============*/
 
 //Get a list of jobs based on the user's identification and Job Board identification (populates Job Tracker UI)
-router.get('/jobs/:id', (req, res) => {
+router.get('/jobs/:id', verifyJWT,(req, res) => {
     const sql = `Select JobBoardID,CompName, PositionName, AppliedDate, e.Name AS Status, i.Name AS Interest, ExpectSalary
                  from (Jobs INNER JOIN JobStatus e ON Jobs.StatusID = e.StatusID) INNER JOIN InterestLevel i ON Jobs.InterestLevel = i.InterestLevelID
                  where JobBoardID = (Select CurrentBoard from User where LogInId=?)`;
