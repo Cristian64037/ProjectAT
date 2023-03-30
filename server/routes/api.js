@@ -9,7 +9,28 @@ const UserIdActive=28;
 
 //Initialize DB
 const connection = require('../database/connection');
+const {verify} = require("jsonwebtoken");
 
+const verifyJWT = (req, res, next) => {
+    const token = req.headers["x-access-token"]
+    if (!token) {
+        res.send("Yo, we need a token. Please given it next time");
+    } else {
+        jwt.verify(token, process.env.token, (err, decoded) => {
+           if (err) {
+               console.log(err);
+               console.log(token);
+               res.json({
+                   auth: false,
+                   message: "You failed to authenticate"
+               });
+           } else {
+               req.logId = decoded.id;
+               next();
+           }
+        });
+    }
+}
 /*==============
 ==GET Requests==
 ==============*/
@@ -205,6 +226,11 @@ router.get('/InterestLevel', (req, res) => {
             }
         );
 });
+
+router.get('/isAuth', verifyJWT, (req, res) => {
+   res.send("Yo, you gooooooooooooooooooood!");
+});
+
 /*==============
 ==POST Requests==
 ==============*/
@@ -221,23 +247,32 @@ router.post('/auth', (req, res) => {
         .then(
             (data) => {
                 if(data.length === 0){
-                    res.status(400).send("User Name Does Not Exist");
+                    res.status(400).json({
+                        auth: false,
+                        message: "User does not exist"
+                    });
                 }else bcrypts.compare(fields[1], data[0].PSWD, function (err, result) {
 
                     if (result === true) {
-                       // //console.log("'yes'")
-                        res.status(201).send("YOu In");
+
+                        const id = data[0].LogInID;
+                        const token = jwt.sign({id}, process.env.token, {
+                           expiresIn: 300
+                        });
+                        res.status(200).json({
+                            auth: true,
+                            token: token,
+                            result: data
+                        });
                     } else {
-                       // //console.log("NO")
-                        res.status(400).send("Incorrect Password");
+                        res.status(400).json({
+                            auth: false,
+                            message: "Incorrect Password"
+                        });
                     }
-
                 })
-
-            },
-            (err) => {
+            }, (err) => {
                 res.status(400).send(err);
-                ////console.log(err);
             }
         );
 });
