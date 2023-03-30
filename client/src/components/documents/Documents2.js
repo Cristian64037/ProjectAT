@@ -10,7 +10,8 @@ const Documents = () => {
         await fetch("http://localhost:3306/api/documents", {
             method: 'Get',
             headers: {
-                'content-type': 'application/json'
+                'content-type': 'application/json',
+                "x-access-token" : localStorage.getItem("token")
             }
         }).then(async (data) => {
             var body = await data.json();
