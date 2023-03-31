@@ -39,7 +39,7 @@ const verifyJWT = (req, res, next) => {
 ==============*/
 
 //Get a list of jobs based on the user's identification and Job Board identification (populates Job Tracker UI)
-router.get('/jobs/:id', verifyJWT,(req, res) => {
+router.get('/jobs/:id',(req, res) => {
     const sql = `Select JobBoardID,CompName, PositionName, AppliedDate, e.Name AS Status, i.Name AS Interest, ExpectSalary
                  from (Jobs INNER JOIN JobStatus e ON Jobs.StatusID = e.StatusID) INNER JOIN InterestLevel i ON Jobs.InterestLevel = i.InterestLevelID
                  where JobBoardID = (Select CurrentBoard from User where LogInId=?)`;
@@ -173,6 +173,10 @@ router.get('/board/:LoginID', (req, res) => {
         );
 });
 
+<<<<<<< Updated upstream
+=======
+
+>>>>>>> Stashed changes
 router.get('/Latestboard/:LoginID', (req, res) => {
     const sql = `Select LastUpdated,JobBoardID,BoardName from JobBoards where UserID = (Select UserID from User where LogInId=?) and JobBoardID=(Select CurrentBoard from User where LogInId=?)`;
     const fields = [req.params.LoginID,req.params.LoginID];
@@ -235,7 +239,10 @@ router.get('/InterestLevel', (req, res) => {
 });
 
 router.get('/isAuth', verifyJWT, (req, res) => {
-   res.send("Yo, you gooooooooooooooooooood!");
+   res.json({
+       auth: true,
+       message: "You failed to authenticate"
+   });
 });
 
 /*==============

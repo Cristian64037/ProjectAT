@@ -12,6 +12,7 @@ const Boards = () => {
     const [JobBoardId, setJobBoardId] = useState([]);
     const [boards, setBoards] = useState([]);
     const [lastUpdateDate, setLastUpdatedDate] = useState("");
+    const [auth,setAuth]= useState(false);
 
 
 
@@ -24,12 +25,7 @@ const Boards = () => {
             }
         }).then(async (data) => {
             var body = await data.json();
-            //setBoards(body);
-            console.log("INVALID");
-            // let number=body.filter(i=> i.JobBoardID===JobBoardId);
-
-
-            //console.log(number[0].BoardName)
+            console.log(data);
             setBoardName(body[0].BoardName);
             setLastUpdatedDate(body[0].LastUpdated);
             console.log(body[0].LastUpdated);
@@ -58,14 +54,54 @@ const Boards = () => {
     }
 
 
+    async function checkAuth() {
+        console.log("CHECKING FOR AUTH")
+        await fetch("http://localhost:3306/api/isAuth", {
+            method: 'Get',
+            headers: {
+                'content-type': 'application/json',
+                "x-access-token": localStorage.getItem("token")
+            }
+        }).then(async (data) => {
+            var body = await data.json();
+
+
+
+            setAuth(body.auth);
+            //return(body.auth)
+
+        });
+
+    }
 
     useEffect(() => {
+        checkAuth().then(async (r) =>{
+            await r;
+            console.log(r)
+
+            if ( auth){
+            fetchData();
+            getBoardData();
+            jobs && FormatTable();}
+
+        });
+
+
+        /*const ok=checkAuth();
+        console.log(ok)
+        checkAuth().then(async r=>{
+            console.log("NICK HOW "+auth);
+            console.log(auth);
+            if(auth){
+                fetchData();
+                getBoardData();
+                jobs && FormatTable();
+
+            }
+        })*/
 
 
 
-        fetchData();
-        getBoardData();
-        jobs && FormatTable();
     }, [isPending]);
 
     function FormatTable() {
@@ -133,85 +169,94 @@ const Boards = () => {
     }
 
     return (
-        <div className="card mb-4">
-            <div className="card-header row">
+
+        <div>
+            {auth ?
+                <div className="card mb-4">
+                    <div className="card-header row">
                 <span className="col-4">
                     <i className="fas fa-table me-2 fs-4"/>
                     <span style={{fontSize: '28px'}}>{BoardName}</span>
                 </span>
 
-                <span style={{fontSize: '28px'}} className="flex-column text-center col-4">
+                        <span style={{fontSize: '28px'}} className="flex-column text-center col-4">
                     Last update:{Moment(lastUpdateDate).format('MM-DD-YYYY')}
                 </span>
 
 
-                <span className="col-4">
+                        <span className="col-4">
                     {/* Button to open the pop-up notepad */}
-                    <button id="openBtn" className="float-lg-end  btn btn-outline-dark" onClick={OpenPad}>
+                            <button id="openBtn" className="float-lg-end  btn btn-outline-dark" onClick={OpenPad}>
                         Job Search Notes
                     </button>
 
                     <span className="float-lg-end">&nbsp;&nbsp;&nbsp;</span>
 
-                    {/* Button to open the job form */}
-                    <button id="myButton" className="float-lg-end  btn btn-outline-dark submit-button" onClick={GoToAppAdder}>
+                            {/* Button to open the job form */}
+                            <button id="myButton" className="float-lg-end  btn btn-outline-dark submit-button"
+                                    onClick={GoToAppAdder}>
                         Add New Job
                     </button>
 
-                    {/* The overlay */}
-                    <div className="overlay">
+                            {/* The overlay */}
+                            <div className="overlay">
                         {/* The pop-up notepad */}
-                        <div className="popup">
+                                <div className="popup">
                         <textarea id="notepad" rows={16} cols={58} defaultValue={""}/>
                         <br/><br/>
-                            {/* Button to close the pop-up notepad */}
-                            <button id="closeBtn">Close</button>
+                                    {/* Button to close the pop-up notepad */}
+                                    <button id="closeBtn">Close</button>
                         </div>
                     </div>
                 </span>
-            </div>
-            <div className="card-body">
-                {isPending && <div> Loading...</div>}
-                <table className="table">
-                    <thead>
-                    <tr>
-                        <th>Company Name</th>
-                        <th>Position</th>
-                        <th>Status</th>
-                        <th>Interest Level</th>
-                        <th>Salary</th>
-                        <th>Date Applied</th>
-                        <th></th>
-                        <th></th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    {jobs && jobs.map((job) => {
-                        return (
-                            <tr key={job.id}>
-                                <td>{job.CompName}</td>
-                                <td>{job.PositionName}</td>
-                                <td>{job.Status}</td>
-                                <td>{job.Interest}</td>
-                                <td>{job.ExpectSalary}</td>
-                                <td>{Moment(job.AppliedDate).format('MM-DD-YYYY')}</td>
-                                <td>
-                                    <button style={{backgroundColor: '#191c1f', color: 'white'}}>Edit Job</button>
-                                </td>
-                                <td>
-                                    {job.Status == "Applied" ? <span/> :
-                                        <button style={{backgroundColor: '#191c1f', color: 'white'}}>
-                                            Interview Notes
-                                        </button>
-                                    }
-                                </td>
+                    </div>
+                    <div className="card-body">
+                        {isPending && <div> Loading...</div>}
+                        <table className="table">
+                            <thead>
+                            <tr>
+                                <th>Company Name</th>
+                                <th>Position</th>
+                                <th>Status</th>
+                                <th>Interest Level</th>
+                                <th>Salary</th>
+                                <th>Date Applied</th>
+                                <th></th>
+                                <th></th>
                             </tr>
-                        )
-                    })}
-                    </tbody>
-                </table>
-            </div>
+                            </thead>
+                            <tbody>
+                            {jobs && jobs.map((job) => {
+                                return (
+                                    <tr key={job.id}>
+                                        <td>{job.CompName}</td>
+                                        <td>{job.PositionName}</td>
+                                        <td>{job.Status}</td>
+                                        <td>{job.Interest}</td>
+                                        <td>{job.ExpectSalary}</td>
+                                        <td>{Moment(job.AppliedDate).format('MM-DD-YYYY')}</td>
+                                        <td>
+                                            <button style={{backgroundColor: '#191c1f', color: 'white'}}>Edit Job
+                                            </button>
+                                        </td>
+                                        <td>
+                                            {job.Status == "Applied" ? <span/> :
+                                                <button style={{backgroundColor: '#191c1f', color: 'white'}}>
+                                                    Interview Notes
+                                                </button>
+                                            }
+                                        </td>
+                                    </tr>
+                                )
+                            })}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                :<div> Not Authorized Please Sign IN</div>
+            }
         </div>
+
     );
 };
 export default Boards;
