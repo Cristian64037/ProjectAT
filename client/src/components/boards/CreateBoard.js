@@ -24,12 +24,11 @@ const CreateBoard = () =>{
 
     useEffect(() => {
         fetchData();
-
     }, []);
 
 
     async function handleBoardChange(newBoard) {
-        setNewBoard(newBoard)
+        setNewBoard(newBoard);
         console.log(newBoard);
         alert(`Changed:${newBoard}`)
         const isFound = boards.some(e => {

@@ -135,6 +135,7 @@ router.get('/interview/job/:id', (req, res) => {
 router.get('/documents', (req, res) => {
     const sql=`Select * from BoxCard`;
     const field=[];
+
     require("./queryDB").request(sql, field, connection)
         .then(
             (data) => {
@@ -154,6 +155,7 @@ router.get('/documents', (req, res) => {
 router.get('/board/:LoginID', (req, res) => {
     const sql = `Select LastUpdated,JobBoardID,BoardName from JobBoards where UserID = (Select UserID from User where LogInId=?)`;
     const fields = [req.params.LoginID];
+
     require("./queryDB").request(sql, fields, connection)
         .then(
             (data) => {
@@ -170,9 +172,11 @@ router.get('/board/:LoginID', (req, res) => {
             }
         );
 });
+
 router.get('/Latestboard/:LoginID', (req, res) => {
     const sql = `Select LastUpdated,JobBoardID,BoardName from JobBoards where UserID = (Select UserID from User where LogInId=?) and JobBoardID=(Select CurrentBoard from User where LogInId=?)`;
     const fields = [req.params.LoginID,req.params.LoginID];
+
     require("./queryDB").request(sql, fields, connection)
         .then(
             (data) => {
@@ -445,6 +449,7 @@ router.post('/board', (req, res) => {
     const getUserIDSQL=`Select UserID from User where LogInId=?`;
     const sql=`Insert into JobBoards(CreateDate,LastUpdated,BoardName,UserID) value(?,?,?,?)`;
     const UpdateUserSQl=`Update User Set CurrentBoard=? where LogInID=?`;
+    console.log("================PATH========================");
 
     require("./queryDB").request(getUserIDSQL, fields[0], connection)
         .then(
