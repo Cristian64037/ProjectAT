@@ -19,7 +19,7 @@ const verifyJWT = (req, res, next) => {
     } else {
         jwt.verify(token, process.env.token, (err, decoded) => {
            if (err) {
-               console.log("NOOooo Sir")
+               console.log("============TOKEN FAILED=========")
                console.log(err);
                console.log(token);
                res.json({
@@ -27,9 +27,13 @@ const verifyJWT = (req, res, next) => {
                    message: "You failed to authenticate"
                });
            } else {
-               console.log("YEs Sir")
+               console.log("============TOKEN SUCCEEDED=========")
                req.logId = decoded.id;
                next();
+               res.json({
+                   auth: true,
+                   message: "You are authenticated"
+               });
            }
         });
     }
@@ -173,10 +177,6 @@ router.get('/board/:LoginID', (req, res) => {
         );
 });
 
-<<<<<<< Updated upstream
-=======
-
->>>>>>> Stashed changes
 router.get('/Latestboard/:LoginID', (req, res) => {
     const sql = `Select LastUpdated,JobBoardID,BoardName from JobBoards where UserID = (Select UserID from User where LogInId=?) and JobBoardID=(Select CurrentBoard from User where LogInId=?)`;
     const fields = [req.params.LoginID,req.params.LoginID];
@@ -225,7 +225,7 @@ router.get('/InterestLevel', (req, res) => {
     require("./queryDB").request(sql,fields, connection)
         .then(
             (data) => {
-               // //console.log(data);
+               //console.log(data);
 
                 res.status(200).send(data);
 
@@ -238,12 +238,7 @@ router.get('/InterestLevel', (req, res) => {
         );
 });
 
-router.get('/isAuth', verifyJWT, (req, res) => {
-   res.json({
-       auth: true,
-       message: "You failed to authenticate"
-   });
-});
+router.get('/isAuth', verifyJWT, (req, res) => {});
 
 /*==============
 ==POST Requests==

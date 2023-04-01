@@ -1,4 +1,3 @@
-import useFetch from "../../hooks/useFetch";
 import {useNavigate} from "react-router";
 import {useEffect, useState} from "react";
 
@@ -14,94 +13,69 @@ const Boards = () => {
     const [lastUpdateDate, setLastUpdatedDate] = useState("");
     const [auth,setAuth]= useState(false);
 
-
-
     async function getBoardData() {
-        await fetch("http://localhost:3306/api/Latestboard/4", {
+        const response = await fetch("http://localhost:3306/api/Latestboard/4", {
             method: 'Get',
             headers: {
                 'content-type': 'application/json',
                 "x-access-token" : localStorage.getItem("token")
             }
-        }).then(async (data) => {
-            var body = await data.json();
-            console.log(data);
-            setBoardName(body[0].BoardName);
-            setLastUpdatedDate(body[0].LastUpdated);
-            console.log(body[0].LastUpdated);
-
         });
 
+        if (response) {
+            console.log("============FETCHING BOARDS==============");
+            return await response.json();
+        }
     }
 
     async function fetchData() {
-        console.log("FETCHIN")
-        await fetch("http://localhost:3306/api/jobs/4", {
+        const response = await fetch("http://localhost:3306/api/jobs/4", {
             method: 'Get',
             headers: {
                 'content-type': 'application/json',
                 "x-access-token" : localStorage.getItem("token")
             }
-        }).then(async (data) => {
-            var body = await data.json();
-            setjobs(body);
-            //console.log(body[0].JobBoardID)
-            setJobBoardId(body[0].JobBoardID);
-            setIspending(true)
         });
 
-
-    }
-
-
-    async function checkAuth() {
-        console.log("CHECKING FOR AUTH")
-        await fetch("http://localhost:3306/api/isAuth", {
-            method: 'Get',
-            headers: {
-                'content-type': 'application/json',
-                "x-access-token": localStorage.getItem("token")
-            }
-        }).then(async (data) => {
-            var body = await data.json();
-
-
-
-            setAuth(body.auth);
-            //return(body.auth)
-
-        });
-
+        if (response) {
+            console.log("============FETCHING JOBS==============");
+            return await response.json();
+        }
     }
 
     useEffect(() => {
-        checkAuth().then(async (r) =>{
-            await r;
-            console.log(r)
+        const checkAuth = async () => {
+            const response = await fetch("http://localhost:3306/api/isAuth", {
+                method: 'Get',
+                headers: {
+                    'content-type': 'application/json',
+                    "x-access-token": localStorage.getItem("token")
+                }
+            });
 
-            if ( auth){
-            fetchData();
-            getBoardData();
-            jobs && FormatTable();}
-
-        });
-
-
-        /*const ok=checkAuth();
-        console.log(ok)
-        checkAuth().then(async r=>{
-            console.log("NICK HOW "+auth);
-            console.log(auth);
-            if(auth){
-                fetchData();
-                getBoardData();
-                jobs && FormatTable();
-
+            if (response) {
+                console.log("============AUTHENTICATING==============");
+                return await response.json();
             }
-        })*/
-
-
-
+        }
+        checkAuth().then(body => {
+            console.log(body.auth);
+            if (body.auth) {
+                setAuth(true);
+                fetchData().then(body => {
+                    console.log(body);
+                    setjobs(body);
+                    setJobBoardId(body[0].JobBoardID);
+                    setIspending(true);
+                });
+                getBoardData().then(body => {
+                    console.log(body);
+                    setBoardName(body[0].BoardName);
+                    setLastUpdatedDate(body[0].LastUpdated);
+                    jobs && FormatTable();
+                });
+            };
+        });
     }, [isPending]);
 
     function FormatTable() {
