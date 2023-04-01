@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <link rel="canonical" href="https://getbootstrap.com/docs/5.2/examples/dashboard/">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/simple-datatables@latest/dist/style.css" rel="stylesheet"/>
+  <link href="../CSS%20Files/document.css" rel="stylesheet"/>
+  <script src="https://use.fontawesome.com/releases/v6.1.0/js/all.js" crossorigin="anonymous"></script>
+
+
+</head>
+
+<body>
+<header class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0 shadow">
+  <a class="navbar-brand col-md-3 col-lg-2 me-0 px-3 fs-6" href="home.html">
+    <img src="" alt="JT"/>
+  </a>
+  <div class="navbar-nav">
+    <div class="nav-item text-nowrap">
+      <a class="nav-link px-3" href="home.html">Boards</a>
+    </div>
+  </div>
+  <div class="navbar-nav">
+    <div class="nav-item text-nowrap">
+      <a class="nav-link px-3" href="Documents.html">Documents</a>
+    </div>
+  </div>
+  <div class="navbar-nav">
+    <div class="nav-item text-nowrap">
+      <a class="nav-link px-3" href="INTPrep.html">Interview Prep</a>
+    </div>
+  </div>
+  <div class="navbar-nav">
+    <div class="nav-item text-nowrap logout">
+      <a class="nav-link px-3" href="../Log%20In.html">Sign Out</a>
+    </div>
+  </div>
+</header>
+<main>
+
+
+  <!DOCTYPE html>
+  <html>
+  <head>
+    <style>
+      .container {
+        width: 30%;
+        height: 450px;
+        float: left;
+        margin: 10px;
+        border: 1px solid black;
+        text-align: center;
+        margin-left: 20px;
+        margin-top: 40px;
+
+      }
+      .container2 {
+        width: 65%;
+        height: 450px;
+        float: left;
+        margin: 10px;
+        border: 1px solid black;
+        text-align: center;
+        margin-left: 5px;
+        margin-top: 40px;
+
+      }
+
+
+      .container3 {
+        width: 30%;
+        height: 150px;
+        float: left;
+        margin: 10px;
+        border: 1px solid black;
+        text-align: center;
+        margin-left: 20px;
+        margin-top: 5px;
+
+      }
+      .container4 {
+        width: 65%;
+        height: 150px;
+        float: left;
+        margin: 10px;
+        border: 1px solid black;
+        text-align: center;
+        margin-left: 5px;
+        margin-top: 5px;
+
+      }
+
+
+
+
+
+    </style>
+
+
+  </head>
+  <body>
+  <form action="save_file.php" enctype="multipart/form-data" method="post">
+    <div class="container">
+      <p><b>Overview</b></p>
+
+      <br><br>
+      <form action="save_file.php" enctype="multipart/form-data" method="post"
+            style="display: flex; align-items: center;">
+
+      </form>
+    </div>
+    <style>
+      .scroll-container {
+        height: 150px;
+        overflow-x: scroll;
+        display: flex;
+      }
+
+      .card-wrapper {
+        display: flex;
+      }
+
+      .card {
+        width: 50%;
+        margin: 10px;
+        padding: 20px;
+        background-color: #ddd;
+        border-radius: 10px;
+        display: inline-block;
+        border: 2px solid black;
+      }
+    </style>
+
+    <div class="container2">
+      <p><b>Prep <style>
+        button {
+          float: right;
+        }
+      </style>
+
+        <button type="button">Save</button>
+      </b></p>
+
+
+
+
+
+
+
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <meta charset="UTF-8">
+        <style>
+          form div {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+          }
+
+          form div label {
+            flex-basis: 25%;
+            margin-right: 10px;
+          }
+
+          form div input {
+            flex-basis: 70%;
+          }
+        </style>
+      </head>
+      <body>
+      <form>
+        <div>
+          <label for="date">Date:</label>
+          <input type="date" id="date" name="date">
+          <label for="time">Time:</label>
+          <input type="time" id="time" name="time">
+        </div>
+        <div>
+          <label for="interviewer">Interviewer:</label>
+          <input type="text" id="interviewer" name="interviewer">
+          <label for="location">Location:</label>
+          <input type="text" id="location" name="location">
+        </div>
+      </form>
+      </body>
+      </html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <meta charset="UTF-8">
+        <title>Notepad</title>
+        <style>
+          .notepad-container {
+            width: 850px;
+            height: 310px;
+            border: 1px solid black;
+            padding: 2px;
+            margin-left: 12px;
+            margin-top: 20px;
+          }
+
+          .notepad {
+            width: 100%;
+            height: 100%;
+            border: none;
+            outline: none;
+            font-size: 16px;
+            font-family: Arial, sans-serif;
+            line-height: 1.5;
+            margin-left: 0px;
+          }
+        </style>
+      </head>
+      <body>
+      <div class="notepad-container">
+        <textarea class="notepad"></textarea>
+      </div>
+      <script>
+        const notepad = document.querySelector(".notepad");
+        notepad.addEventListener("input", function() {
+          localStorage.setItem("notepad", notepad.value);
+        });
+        if (localStorage.getItem("notepad")) {
+          notepad.value = localStorage.getItem("notepad");
+        }
+      </script>
+      </body>
+      </html>
+
+
+  </form>
+  </div>
+  <style>
+    .scroll-container {
+      height: 100px;
+      overflow-x: scroll;
+      display: flex;
+    }
+
+    .card-wrapper {
+      display: flex;
+    }
+
+    .card {
+      width: 50%;
+      margin: 10px;
+      padding: 20px;
+      background-color: #ddd;
+      border-radius: 10px;
+      display: inline-block;
+      border: 2px solid black;
+    }
+  </style>
+
+
+  <div class="container3">
+    <p><b>Documents</b></p>
+    <div class="scroll-container">
+      <div class="card-wrapper">
+        <div class="card">
+          <p style="font-size: 12px;">Resume</p>
+        </div>
+        <div class="card">
+          <p style="font-size: 12px;">Resume</p>
+        </div><div class="card">
+        <p style="font-size: 12px;">Resume</p>
+      </div><div class="card">
+        <p style="font-size: 12px;">Resume</p>
+      </div>
+        <div class="card">
+          <p style="font-size: 12px;">Resume</p>
+        </div>
+        <div class="card">
+          <p style="font-size: 12px;">Resume</p>
+        </div>
+        <div class="card">
+          <p style="font-size: 12px;">Resume</p>
+        </div>
+        <div class="card">
+          <p style="font-size: 12px;">Resume</p>
+        </div><div class="card">
+        <p style="font-size: 12px;">Resume</p>
+      </div>
+        <div class="card">
+          <p style="font-size: 12px;">Resume</p>
+        </div><div class="card">
+        <p style="font-size: 12px;">Resume</p>
+      </div>
+
+
+
+
+      </div>
+    </div>
+    <br><br>
+    <form action="save_file.php" enctype="multipart/form-data" method="post"
+          style="display: flex; align-items: center;">
+
+    </form>
+  </div>
+  <style>
+
+
+    .card-wrapper {
+      display: flex;
+    }
+
+
+  </style>
+
+
+  <div class="container4">
+    <p><b>Interview History<style>
+      button {
+        float: right;
+      }
+    </style>
+
+      <button type="button">New Round</button>
+    </b></p></b></p>
+    <div class="scroll-container2">
+      <div class="card-wrapper">
+        <div class="card">
+          <p style="font-size: 12px;">Round 1</p>
+        </div>
+        <div class="card">
+          <p style="font-size: 12px;">Round 2</p>
+        </div>
+        <div class="card">
+          <p style="font-size: 12px;">Round 3</p>
+        </div>
+      </div>
+    </div>
+    <br><br>
+
+  </div>
+  <style>
+    .scroll-container2 {
+      height: 100px;
+      overflow-x: scroll;
+      display: flex;
+    }
+
+    .card-wrapper {
+      display: flex;
+    }
+
+    .card {
+      width: 40%;
+      margin: 10px;
+      padding: 20px;
+      background-color: #ddd;
+      border-radius: 10px;
+      display: inline-block;
+      border: 2px solid black;
+    }
+  </style>
+
+
+
+
+
+
+
+
+
+
+
