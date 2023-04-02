@@ -29,7 +29,7 @@ const CreateBoard = () =>{
     async function handleBoardChange(selectedFromDropDown) {
         try {
             console.log(boards[selectedFromDropDown].JobBoardID);
-            
+
             await fetch("http://localhost:3306/api/board", {
 
                 method: 'PUT',

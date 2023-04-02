@@ -2,9 +2,11 @@ import {useNavigate} from "react-router-dom";
 import {useEffect, useState} from "react";
 import DatePicker from "react-datepicker";
 import App from "../../App";
+import {useLocation} from "react-router";
 
-const JobApplicationForm=()=>{
+const JobApplicationForm=(e)=>{
     const navigate = useNavigate();
+    const [jobId,setJobId]= useState("");
     const [CompanyName,setCompanyName]= useState("");
     const [ApplyDate,setApplyDate]= useState("");
     const [JobTitle,setJobTitle]= useState("");
@@ -19,11 +21,53 @@ const JobApplicationForm=()=>{
     const [Notes,setNotes]= useState("");
     const [JobStatFromDb,setJobStatFromDb]= useState([])
     const [InterestLevelFromDb,setInterestLevelFromDb]= useState([])
+    const { state } = useLocation();
 
+
+    async function fetchSpecificJob(index) {
+        setJobId(index);
+        await fetch("http://localhost:3306/api/jobs/edit/" + index, {
+            method: 'Get',
+            headers: {
+                'content-type': 'application/json',
+                "x-access-token": localStorage.getItem("token")
+            }
+        }).then(async (data) => {
+            var body = await data.json();
+            console.log(body[0]);
+            setCompanyName(body[0].CompName);
+            setApplyDate(body[0].AppliedDate);
+            setAwards(body[0].Awards);
+            setCoreValues(body[0].CoreValues);
+            setExpectedSalary(body[0].ExpectSalary);
+            console.log(body[0].Expectsalary)
+            setMissionStatement(body[0].MissionStatement);
+            setJobTitle(body[0].PositionName);
+            setJobStatus(body[0].StatusID);
+            setWebsite(body[0].WebUrl);
+            setInterestLevel(body[0].InterestLevel);
+            setInterviewRound(body[0].InterviewRound);
+            setNotes(body[0].InterviewNotes)
+
+
+
+
+        });
+
+    }
 
     useEffect(() => {
         // Update the document title using the browser API
         fetchData();
+        try{
+            const { index } = state;
+            fetchSpecificJob(index);
+
+
+        }catch (e) {
+
+        }
+
         }, []);
 
     async function fetchData(){
@@ -133,9 +177,9 @@ const JobApplicationForm=()=>{
                             <div className="input-field">
                                 <label>Status</label>
                                 <select required onChange={e => (
-                                    setJobStatus(e.target.value))}>
+                                    setJobStatus(e.target.value))} value={JobStatus}>
 
-                                    <option disabled selected>Select Status</option>
+                                    <option disabled selected >Select Status</option>
                                     {JobStatFromDb.map(e => (
                                         <option value={e.StatusID} >{e.Name}</option>
                                         )
@@ -150,6 +194,7 @@ const JobApplicationForm=()=>{
                                 <label>Interview Round</label>
                                 <input type="number" placeholder="Enter Interview Round" required onChange={e => (
                                     setInterviewRound(e.target.value))}
+                                       value={InterviewRound}
 
 
                                 />
@@ -157,8 +202,8 @@ const JobApplicationForm=()=>{
                             <div className="input-field" id={"InterestLevel"}>
                                 <label>Interest Level</label>
                                 <select required onChange={e => (
-                                    setInterestLevel(e.target.value))} >
-                                    <option disabled selected>Select Interest Level</option>
+                                    setInterestLevel(e.target.value))} value={InterestLevel}>
+                                    <option disabled selected >Select Interest Level</option>
                                     {InterestLevelFromDb.map(e => (
                                     <option value={e.InterestLevelID} >{e.Name}</option>
                                         )
@@ -177,7 +222,7 @@ const JobApplicationForm=()=>{
                             <div className="input-field">
                                 <label>Website</label>
                                 <input type="text" placeholder="Enter URL" required onChange={e => (
-                                    setWebsite(e.target.value))}
+                                    setWebsite(e.target.value))} value={Website}
 
                                 />
                             </div>
@@ -186,6 +231,7 @@ const JobApplicationForm=()=>{
                                 <label>Mission Statement</label>
                                 <input type="text" placeholder="Enter Mission Statement" required onChange={e => (
                                     setMissionStatement(e.target.value))}
+                                       value={MissionStatement}
 
                                 />
                             </div>
@@ -194,6 +240,7 @@ const JobApplicationForm=()=>{
                                 <label>Core Values</label>
                                 <input type="text" placeholder="Enter Core Values" required onChange={e => (
                                     setCoreValues(e.target.value))}
+                                       value={CoreValues}
                                 />
                             </div>
 
@@ -201,6 +248,7 @@ const JobApplicationForm=()=>{
                                 <label>Awards</label>
                                 <input type="text" placeholder="Enter Awards" required onChange={e => (
                                     setAwards(e.target.value))}
+                                       value={Awards}
                                 />
                             </div>
 
@@ -208,6 +256,7 @@ const JobApplicationForm=()=>{
                                 <label>Expected Salary</label>
                                 <input type="number" placeholder="Enter Expected Salary" required onChange={e => (
                                     setExpectedSalary(e.target.value))}
+                                       value={ExpectedSalary}
                                 />
                             </div>
 
@@ -215,6 +264,7 @@ const JobApplicationForm=()=>{
                                 <label>Notes</label>
                                 <input type="text" placeholder="Enter Notes" required onChange={e => (
                                     setNotes(e.target.value))}
+                                       value={Notes}
                                 />
                             </div>
                         </div>

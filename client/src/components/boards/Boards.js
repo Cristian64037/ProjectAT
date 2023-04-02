@@ -1,10 +1,12 @@
-import {useNavigate} from "react-router";
+import {Route, useNavigate} from "react-router";
 import {useEffect, useState} from "react";
 
 import Moment from 'moment';
+import JobApplicationForm from "../job/JobApplicationForm";
 
 const Boards = () => {
     let navigate = useNavigate();
+    const [jobId,setJobId]= useState("");
     const [BoardName, setBoardName] = useState("New Board");
     const [jobs, setjobs] = useState("");
     const [isPending, setIspending] = useState(false);
@@ -147,11 +149,16 @@ const Boards = () => {
     function handleEdit(index) {
 
         try {
-            // code that might throw an error
-            const jobSelected=jobs[index];
-            setJobToEdit(jobSelected);
-            console.log(jobToEdit);
-            alert(jobSelected.CompName)
+
+            alert(index)
+
+            navigate(`/JobApplicationForm`,{
+                state:{
+                    index
+                }
+            })
+
+
 
         } catch (error) {
             // code to handle the error
@@ -219,14 +226,15 @@ const Boards = () => {
                             </tr>
                             </thead>
                             <tbody>
-                            {jobs && jobs.map((job,index) => {
+                            {jobs && jobs.map((job,index2) => {
                                 return (
+
                                     /*Im Using Index So I can just pull the
                             * job from the array versus potentially giving them the option from accessing a job
                             * they dont' have access too by using inspect element. I will make the same changes to
                             *Boards  */
 
-                                    <tr key={index}>
+                                    <tr>
                                         <td>{job.CompName}</td>
                                         <td>{job.PositionName}</td>
                                         <td>{job.Status}</td>
@@ -235,7 +243,7 @@ const Boards = () => {
                                         <td>{Moment(job.AppliedDate).format('MM-DD-YYYY')}</td>
                                         <td>
                                             <button style={{backgroundColor: '#191c1f', color: 'white'}} onClick={() => {
-                                                handleEdit(index);
+                                                handleEdit(job.JobsID);
                                             }}>Edit Job
                                             </button>
                                         </td>
