@@ -12,6 +12,7 @@ const Boards = () => {
     const [boards, setBoards] = useState([]);
     const [lastUpdateDate, setLastUpdatedDate] = useState("");
     const [auth,setAuth]= useState(false);
+    const [jobToEdit,setJobToEdit]= useState("");
 
     async function getBoardData() {
         const response = await fetch("http://localhost:3306/api/Latestboard/4", {
@@ -69,7 +70,8 @@ const Boards = () => {
                     setIspending(true);
                 });
                 getBoardData().then(body => {
-                    console.log(body);
+                    //console.log(body);
+                    console.log(body[0][0])
                     setBoardName(body[0].BoardName);
                     setLastUpdatedDate(body[0].LastUpdated);
                     jobs && FormatTable();
@@ -142,6 +144,23 @@ const Boards = () => {
         navigate(path);
     }
 
+    function handleEdit(index) {
+
+        try {
+            // code that might throw an error
+            const jobSelected=jobs[index];
+            setJobToEdit(jobSelected);
+            console.log(jobToEdit);
+            alert(jobSelected.CompName)
+
+        } catch (error) {
+            // code to handle the error
+            return <div>Error: {error.message}</div>;
+        }
+
+
+    }
+
     return (
 
         <div>
@@ -200,9 +219,14 @@ const Boards = () => {
                             </tr>
                             </thead>
                             <tbody>
-                            {jobs && jobs.map((job) => {
+                            {jobs && jobs.map((job,index) => {
                                 return (
-                                    <tr key={job.id}>
+                                    /*Im Using Index So I can just pull the
+                            * job from the array versus potentially giving them the option from accessing a job
+                            * they dont' have access too by using inspect element. I will make the same changes to
+                            *Boards  */
+
+                                    <tr key={index}>
                                         <td>{job.CompName}</td>
                                         <td>{job.PositionName}</td>
                                         <td>{job.Status}</td>
@@ -210,12 +234,14 @@ const Boards = () => {
                                         <td>{job.ExpectSalary}</td>
                                         <td>{Moment(job.AppliedDate).format('MM-DD-YYYY')}</td>
                                         <td>
-                                            <button style={{backgroundColor: '#191c1f', color: 'white'}}>Edit Job
+                                            <button style={{backgroundColor: '#191c1f', color: 'white'}} onClick={() => {
+                                                handleEdit(index);
+                                            }}>Edit Job
                                             </button>
                                         </td>
                                         <td>
                                             {job.Status == "Applied" ? <span/> :
-                                                <button style={{backgroundColor: '#191c1f', color: 'white'}}>
+                                                <button style={{backgroundColor: '#191c1f', color: 'white'}} >
                                                     Interview Notes
                                                 </button>
                                             }
