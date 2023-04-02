@@ -42,6 +42,25 @@ const verifyJWT = (req, res, next) => {
 ==GET Requests==
 ==============*/
 
+//Get a list of interview history
+router.get('/InterviewHistory/:jobID',(req, res) => {
+    const sql = `Select * from InterviewHistory where JobsID=?`;
+    const fields = [req.params.jobID];
+
+    require("./queryDB").request(sql, fields, connection)
+        .then(
+            (data) => {
+                console.log(data);
+                res.status(200).json(data);
+
+            },
+            (err) => {
+                res.status(400).send(err);
+            }
+        );
+});
+
+
 //Get a list of jobs based on the user's identification and Job Board identification (populates Job Tracker UI)
 router.get('/jobs/:id',(req, res) => {
     const sql = `Select JobBoardID,JobsID,CompName, PositionName, AppliedDate, e.Name AS Status, i.Name AS Interest, ExpectSalary

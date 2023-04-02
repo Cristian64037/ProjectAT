@@ -8,7 +8,7 @@ const Login=()=>{
     const navigate = useNavigate();
     const [User,setUser]= useState("");
     const [Password,setPass]= useState("");
-    const [result,setResult]= useState("");
+    const [logInresult,setLogInResult]= useState("");
     const [loginStatus, setLoginStatus] = useState(false);
 
     async function handleSubmit(e) {
@@ -35,7 +35,8 @@ const Login=()=>{
                 navigate('/');
             }else {
                 setLoginStatus(false);
-                alert("Bad Log in");
+                setLogInResult(body.message);
+               
             }
         });
     }
@@ -80,7 +81,9 @@ const Login=()=>{
             </div>
             <div className="log-image">
                 <img src="../../JT.png"/>
+                <div style={{backgroundColor:"Red"}}>{logInresult}</div>
             </div>
+
         </div>
     );
 }
