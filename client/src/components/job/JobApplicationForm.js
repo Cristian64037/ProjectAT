@@ -6,7 +6,7 @@ import {useLocation} from "react-router";
 
 const JobApplicationForm=(e)=>{
     const navigate = useNavigate();
-    const [jobId,setJobId]= useState("");
+    const [jobId,setJobId]= useState(null);
     const [CompanyName,setCompanyName]= useState("");
     const [ApplyDate,setApplyDate]= useState("");
     const [JobTitle,setJobTitle]= useState("");
@@ -57,6 +57,7 @@ const JobApplicationForm=(e)=>{
     }
 
     useEffect(() => {
+        console.log(jobId)
         // Update the document title using the browser API
         fetchData();
         try{
@@ -101,37 +102,45 @@ const JobApplicationForm=(e)=>{
 
     async function handleSubmit(e) {
         e.preventDefault();
+        if(jobId==null){
+            alert("New Job");
+            await fetch("http://localhost:3306/api/jobs", {
+                method: 'POST',
+                headers: {
+                    'content-type': 'application/json'
+                },
+                body: JSON.stringify({
+                    "LogInID": 4,
+                    "company": CompanyName,
+                    "posName": JobTitle,
+                    "appDate": ApplyDate,
+                    "jobStatus": JobStatus,
+                    "interviewRound": InterviewRound,
+                    "interest": InterestLevel,
+                    "coreValues": CoreValues,
+                    "mission": MissionStatement,
+                    "webLink": Website,
+                    "awards": Awards,
+                    "salary": ExpectedSalary,
+                    "notes": Notes,
 
-        await fetch("http://localhost:3306/api/jobs", {
-            method: 'POST',
-            headers: {
-                'content-type': 'application/json'
-            },
-            body: JSON.stringify({
-                "LogInID": 4,
-                "company": CompanyName,
-                "posName": JobTitle,
-                "appDate": ApplyDate,
-                "jobStatus": JobStatus,
-                "interviewRound": InterviewRound,
-                "interest": InterestLevel,
-                "coreValues": CoreValues,
-                "mission": MissionStatement,
-                "webLink": Website,
-                "awards": Awards,
-                "salary": ExpectedSalary,
-                "notes": Notes,
+                })
+            }).then(async (data) => {
+                var body = await data.text();
+                if(data.status===201){
+                    alert("Successful Job Input");
+                    navigate("/boards")
+                }else {
+                    alert(body);
+                }
+            });
 
-            })
-        }).then(async (data) => {
-            var body = await data.text();
-            if(data.status===201){
-                alert("Successful Job Input");
-                navigate("/boards")
-            }else {
-                alert(body);
-            }
-        });
+        }else{
+            alert("Editing");
+            //Do a Edit to The Db route Here
+        }
+
+
     }
 
 
@@ -144,6 +153,7 @@ const JobApplicationForm=(e)=>{
             <header>Application Form</header>
 
             <form>
+
                 <div className="form first">
                     <div className="details Job">
                         <span className="title">Job Details</span>
@@ -177,7 +187,7 @@ const JobApplicationForm=(e)=>{
                             <div className="input-field">
                                 <label>Status</label>
                                 <select required onChange={e => (
-                                    setJobStatus(e.target.value))} value={JobStatus}>
+                                    setJobStatus(e.target.value))}>
 
                                     <option disabled selected >Select Status</option>
                                     {JobStatFromDb.map(e => (
@@ -202,7 +212,7 @@ const JobApplicationForm=(e)=>{
                             <div className="input-field" id={"InterestLevel"}>
                                 <label>Interest Level</label>
                                 <select required onChange={e => (
-                                    setInterestLevel(e.target.value))} value={InterestLevel}>
+                                    setInterestLevel(e.target.value))} >
                                     <option disabled selected >Select Interest Level</option>
                                     {InterestLevelFromDb.map(e => (
                                     <option value={e.InterestLevelID} >{e.Name}</option>

@@ -9,6 +9,7 @@ import Login from "./components/sign_in/Login";
 import CreateAccount from "./components/sign_in/CreateAccount";
 import ForgetPassword from "./components/sign_in/ForgetPassword";
 import Boards from "./components/boards/Boards";
+import InterviewHistory from "./components/interview/InterviewHistory";
 
 function App() {
 
@@ -25,6 +26,7 @@ function App() {
                         <Route exact path={"/login"} element={<Login/>}/>
                         <Route exact path={"/account"} element={<CreateAccount/>}/>
                         <Route exact path={"/password"} element={<ForgetPassword/>}/>
+                        <Route exact path={"/InterviewHistory"} element={<InterviewHistory/>}/>
                         <Route exact path={"/"} element={<CreateBoard/>}/>
                     </Routes>
                 </div>

@@ -398,3 +398,71 @@ log-container .log-form{
 .navbar{
     background-color:  rgba(114, 64, 0, 0.36);
 }
+
+#IntHistory .container {
+    width: 30%;
+    height: 450px;
+    float: left;
+    margin: 10px;
+    border: 1px solid black;
+    text-align: center;
+    margin-left: 20px;
+    margin-top: 40px;
+}
+
+#IntHistory .container2 {
+    width: 65%;
+    height: 450px;
+    float: left;
+    margin: 10px;
+    border: 1px solid black;
+    text-align: center;
+    margin-left: 5px;
+    margin-top: 40px;
+}
+
+#IntHistory .container3 {
+    width: 30%;
+    height: 150px;
+    float: left;
+    margin: 10px;
+    border: 1px solid black;
+    text-align: center;
+    margin-left: 20px;
+    margin-top: 5px;
+}
+
+#IntHistory .container4 {
+    width: 65%;
+    height: 150px;
+    float: left;
+    margin: 10px;
+    border: 1px solid black;
+    text-align: center;
+    margin-left: 5px;
+    margin-top: 5px;
+}
+
+#IntHistory .scroll-container {
+    height: 150px;
+    overflow-x: scroll;
+    display: flex;
+}
+
+#IntHistory .card-wrapper {
+    display: flex;
+}
+
+#IntHistory .card {
+    width: 50%;
+    margin: 10px;
+    padding: 20px;
+    background-color: #ddd;
+    border-radius: 10px;
+    display: inline-block;
+    border: 2px solid black;
+}
+
+#IntHistory button {
+    float: right;
+}
