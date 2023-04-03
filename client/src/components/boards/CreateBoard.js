@@ -2,10 +2,10 @@ import {useEffect, useState} from "react";
 import {useNavigate} from "react-router-dom";
 import Popup from "reactjs-popup";
 
-const CreateBoard = () =>{
+const CreateBoard = () => {
 
     const [boards, setBoards] = useState([]);
-    const [newBoardName, setNewBoardName]= useState("");
+    const [newBoardName, setNewBoardName] = useState("");
     const navigate = useNavigate();
 
     async function fetchData() {
@@ -13,7 +13,7 @@ const CreateBoard = () =>{
             method: 'Get',
             headers: {
                 'content-type': 'application/json',
-                "x-access-token" : localStorage.getItem("token")
+                "x-access-token": localStorage.getItem("token")
             }
         }).then(async (data) => {
             var body = await data.json();
@@ -51,20 +51,20 @@ const CreateBoard = () =>{
             alert("Refresh Page")
         }
 
-            /*alert("Hitting DB RN");
-            await fetch("http://localhost:3306/api/board", {
-                method: 'PUT',
-                headers: {
-                    'content-type': 'application/json'
-                },
-                body: JSON.stringify({
-                    "LogInID": 4,
-                    "JobBoardID": newBoard,
-                })
-            }).then(async (data) => {
-                var body = await data.text();
-                navigate('/boards');
-            });
+        /*alert("Hitting DB RN");
+        await fetch("http://localhost:3306/api/board", {
+            method: 'PUT',
+            headers: {
+                'content-type': 'application/json'
+            },
+            body: JSON.stringify({
+                "LogInID": 4,
+                "JobBoardID": newBoard,
+            })
+        }).then(async (data) => {
+            var body = await data.text();
+            navigate('/boards');
+        });
 */
     }
 
@@ -87,16 +87,16 @@ const CreateBoard = () =>{
         //navigate('/boards');
     }
 
-    return(
+    return (
         <div className="row create-board">
             <div className="col-6 createContainer">
                 <img src="../../JT.png" alt="JT"/>
                 <Popup trigger=
                            {<button className={"btn"}> New Board </button>}
                        position=" right">
-                    <div style={{backgroundColor:"blue"}}>
-                        <div > New Board Name </div>
-                        <input type="text"  required onChange={e => (
+                    <div style={{backgroundColor: "blue"}}>
+                        <div> New Board Name</div>
+                        <input type="text" required onChange={e => (
                             setNewBoardName(e.target.value))} value={newBoardName}
                         />
                         <button onClick={handleNewBoard}>Submit</button>
@@ -109,14 +109,11 @@ const CreateBoard = () =>{
 
                 <select className={"btn"} required onChange={e => (handleBoardChange(e.target.value))}>
                     <option disabled selected>Previous Boards</option>
-                    {boards.length ? boards.map((e,index) => (
+                    {boards.length ? boards.map((e, index) => (
                         <option value={index}>{e.BoardName}
-
-                        </option> )): ""}
+                        </option>)) : ""}
                 </select>
-
-
-                    </div>
+            </div>
         </div>
     );
 }

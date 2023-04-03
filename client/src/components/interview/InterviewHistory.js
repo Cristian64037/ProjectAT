@@ -167,7 +167,9 @@ const InterviewHistory=()=>{
                     console.log(body);
                     setInterviewHistory(body);
                 });
-            };
+            } else {
+                navigate('/unauthorized');
+            }
         });
 
 
