@@ -212,7 +212,7 @@ const InterviewHistory=()=>{
                             <Col>
                                 <Form.Group controlId="formDate">
                                     <Form.Label>Date:</Form.Label>
-                                    <Form.Control type="date" placeholder="yyyy-mm-dd" value={Moment(editInterviewInfo.Date).format('MM-DD-YYYY')} onChange={(event) => {
+                                    <Form.Control type="date" placeholder="yyyy-mm-dd"  value={Moment(editInterviewInfo.Date).format('MM-DD-YYYY')} onChange={(event) => {
                                         setEditInterviewInfo({ ...editInterviewInfo, Date: event.target.value });
                                     }}/>
                                 </Form.Group>
