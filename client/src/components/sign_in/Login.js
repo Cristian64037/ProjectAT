@@ -8,7 +8,9 @@ const Login=()=>{
     const navigate = useNavigate();
     const [User,setUser]= useState("");
     const [Password,setPass]= useState("");
-    const [result,setResult]= useState("");
+    const [logInresult,setLogInResult]= useState("");
+    const [loginStatus, setLoginStatus] = useState(false);
+
     async function handleSubmit(e) {
         e.preventDefault();
 
@@ -23,18 +25,34 @@ const Login=()=>{
             })
 
         }).then(async (data) => {
-            var body = await data.text();
+            var body = await data.json();
+           //console.log(body);
 
-            console.log(body)
-
-            if(data.status===201){
+            if(body.auth){
                 alert("Successful Log in");
+                localStorage.setItem("token", body.token);
+                setLoginStatus(true);
                 navigate('/');
-
-
             }else {
-                alert(body);
+                setLoginStatus(false);
+                setLogInResult(body.message);
+
             }
+        });
+    }
+
+    async function userAuth(e) {
+        e.preventDefault();
+
+
+        await fetch("http://localhost:3306/api/isAuth", {
+            method: 'GET',
+            headers: {
+                'content-type': 'application/json',
+                "x-access-token" : localStorage.getItem("token")
+            }
+        }).then(async (data) => {
+            console.log(await data.json());
         });
     }
 
@@ -46,7 +64,7 @@ const Login=()=>{
 
 
             <div className="log-form">
-                <form onSubmit={handleSubmit}>
+                <form onSubmit={userAuth}>
                     <h2>LOGIN</h2>
                     <input type="text" placeholder="User Name" onChange={e =>(
                         setUser(e.target.value)
@@ -55,7 +73,7 @@ const Login=()=>{
                     <input type="password" placeholder="Password" onChange={e =>(
                         setPass(e.target.value))}/>
                     <div className="form-actions">
-                        <button type="submit" >Login</button>
+                        <button type="submit" onClick={handleSubmit} >Login</button>
                         <Link to={"/account"}><button type="button"> <Link to={"/account"}/>Create Account</button></Link>
                         <Link to={"/password"}><button type="button"> Forgot Password?</button></Link>
                     </div>
@@ -63,7 +81,9 @@ const Login=()=>{
             </div>
             <div className="log-image">
                 <img src="../../JT.png"/>
+                <div style={{backgroundColor:"Red"}}>{logInresult}</div>
             </div>
+
         </div>
     );
 }

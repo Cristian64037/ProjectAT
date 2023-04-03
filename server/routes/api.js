@@ -9,14 +9,61 @@ const UserIdActive=28;
 
 //Initialize DB
 const connection = require('../database/connection');
+const {verify} = require("jsonwebtoken");
 
+const verifyJWT = (req, res, next) => {
+    const token = req.headers["x-access-token"]
+    console.log(token)
+    if (!token) {
+        res.send("Yo, we need a token. Please given it next time");
+    } else {
+        jwt.verify(token, process.env.token, (err, decoded) => {
+           if (err) {
+               console.log("============TOKEN FAILED=========")
+               console.log(err);
+               console.log(token);
+               res.json({
+                   auth: false,
+                   message: "You failed to authenticate"
+               });
+           } else {
+               console.log("============TOKEN SUCCEEDED=========")
+               req.logId = decoded.id;
+               next();
+               res.json({
+                   auth: true,
+                   message: "You are authenticated"
+               });
+           }
+        });
+    }
+}
 /*==============
 ==GET Requests==
 ==============*/
 
+//Get a list of interview history
+router.get('/InterviewHistory/:jobID',(req, res) => {
+    const sql = `Select * from InterviewHistory where JobsID=?`;
+    const fields = [req.params.jobID];
+
+    require("./queryDB").request(sql, fields, connection)
+        .then(
+            (data) => {
+                console.log(data);
+                res.status(200).json(data);
+
+            },
+            (err) => {
+                res.status(400).send(err);
+            }
+        );
+});
+
+
 //Get a list of jobs based on the user's identification and Job Board identification (populates Job Tracker UI)
-router.get('/jobs/:id', (req, res) => {
-    const sql = `Select JobBoardID,CompName, PositionName, AppliedDate, e.Name AS Status, i.Name AS Interest, ExpectSalary
+router.get('/jobs/:id',(req, res) => {
+    const sql = `Select JobBoardID,JobsID,CompName, PositionName, AppliedDate, e.Name AS Status, i.Name AS Interest, ExpectSalary
                  from (Jobs INNER JOIN JobStatus e ON Jobs.StatusID = e.StatusID) INNER JOIN InterestLevel i ON Jobs.InterestLevel = i.InterestLevelID
                  where JobBoardID = (Select CurrentBoard from User where LogInId=?)`;
     const fields = [req.params.id];
@@ -111,6 +158,7 @@ router.get('/interview/job/:id', (req, res) => {
 router.get('/documents', (req, res) => {
     const sql=`Select * from BoxCard`;
     const field=[];
+
     require("./queryDB").request(sql, field, connection)
         .then(
             (data) => {
@@ -130,6 +178,7 @@ router.get('/documents', (req, res) => {
 router.get('/board/:LoginID', (req, res) => {
     const sql = `Select LastUpdated,JobBoardID,BoardName from JobBoards where UserID = (Select UserID from User where LogInId=?)`;
     const fields = [req.params.LoginID];
+
     require("./queryDB").request(sql, fields, connection)
         .then(
             (data) => {
@@ -146,9 +195,11 @@ router.get('/board/:LoginID', (req, res) => {
             }
         );
 });
+
 router.get('/Latestboard/:LoginID', (req, res) => {
     const sql = `Select LastUpdated,JobBoardID,BoardName from JobBoards where UserID = (Select UserID from User where LogInId=?) and JobBoardID=(Select CurrentBoard from User where LogInId=?)`;
     const fields = [req.params.LoginID,req.params.LoginID];
+
     require("./queryDB").request(sql, fields, connection)
         .then(
             (data) => {
@@ -193,7 +244,7 @@ router.get('/InterestLevel', (req, res) => {
     require("./queryDB").request(sql,fields, connection)
         .then(
             (data) => {
-               // //console.log(data);
+               //console.log(data);
 
                 res.status(200).send(data);
 
@@ -205,6 +256,9 @@ router.get('/InterestLevel', (req, res) => {
             }
         );
 });
+
+router.get('/isAuth', verifyJWT, (req, res) => {});
+
 /*==============
 ==POST Requests==
 ==============*/
@@ -221,23 +275,32 @@ router.post('/auth', (req, res) => {
         .then(
             (data) => {
                 if(data.length === 0){
-                    res.status(400).send("User Name Does Not Exist");
+                    res.status(400).json({
+                        auth: false,
+                        message: "User does not exist"
+                    });
                 }else bcrypts.compare(fields[1], data[0].PSWD, function (err, result) {
 
                     if (result === true) {
-                       // //console.log("'yes'")
-                        res.status(201).send("YOu In");
+
+                        const id = data[0].LogInID;
+                        const token = jwt.sign({id}, process.env.token, {
+                           expiresIn: 300
+                        });
+                        res.status(200).json({
+                            auth: true,
+                            token: token,
+                            result: data
+                        });
                     } else {
-                       // //console.log("NO")
-                        res.status(400).send("Incorrect Password");
+                        res.status(400).json({
+                            auth: false,
+                            message: "Incorrect Password"
+                        });
                     }
-
                 })
-
-            },
-            (err) => {
+            }, (err) => {
                 res.status(400).send(err);
-                ////console.log(err);
             }
         );
 });
@@ -407,6 +470,7 @@ router.post('/board', (req, res) => {
     const getUserIDSQL=`Select UserID from User where LogInId=?`;
     const sql=`Insert into JobBoards(CreateDate,LastUpdated,BoardName,UserID) value(?,?,?,?)`;
     const UpdateUserSQl=`Update User Set CurrentBoard=? where LogInID=?`;
+    console.log("================PATH========================");
 
     require("./queryDB").request(getUserIDSQL, fields[0], connection)
         .then(

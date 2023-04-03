@@ -5,7 +5,6 @@ import Popup from "reactjs-popup";
 const CreateBoard = () =>{
 
     const [boards, setBoards] = useState([]);
-    const [newBoard, setNewBoard] = useState("");
     const [newBoardName, setNewBoardName]= useState("");
     const navigate = useNavigate();
 
@@ -13,7 +12,8 @@ const CreateBoard = () =>{
         await fetch("http://localhost:3306/api/board/4", {
             method: 'Get',
             headers: {
-                'content-type': 'application/json'
+                'content-type': 'application/json',
+                "x-access-token" : localStorage.getItem("token")
             }
         }).then(async (data) => {
             var body = await data.json();
@@ -23,21 +23,35 @@ const CreateBoard = () =>{
 
     useEffect(() => {
         fetchData();
-
     }, []);
 
 
-    async function handleBoardChange(newBoard) {
-        setNewBoard(newBoard)
-        console.log(newBoard);
-        alert(`Changed:${newBoard}`)
-        const isFound = boards.some(e => {
-            console.log(e.JobBoardID)
-            console.log(newBoard.valueOf())
-            return e.JobBoardID === parseInt(newBoard);
-        });
-        if(isFound){
-            alert("Hitting DB RN");
+    async function handleBoardChange(selectedFromDropDown) {
+        try {
+            console.log(boards[selectedFromDropDown].JobBoardID);
+
+            await fetch("http://localhost:3306/api/board", {
+
+                method: 'PUT',
+                headers: {
+                    'content-type': 'application/json'
+                },
+                body: JSON.stringify({
+                    "LogInID": 4,
+                    "JobBoardID": boards[selectedFromDropDown].JobBoardID,
+                })
+            }).then(async (data) => {
+                var body = await data.text();
+                navigate('/boards');
+            });
+
+
+        } catch (error) {
+            // code to handle the error
+            alert("Refresh Page")
+        }
+
+            /*alert("Hitting DB RN");
             await fetch("http://localhost:3306/api/board", {
                 method: 'PUT',
                 headers: {
@@ -51,9 +65,7 @@ const CreateBoard = () =>{
                 var body = await data.text();
                 navigate('/boards');
             });
-        }else{
-            alert("Inspect Element Detected Please Refresh")
-        }
+*/
     }
 
     async function handleNewBoard() {
@@ -97,8 +109,10 @@ const CreateBoard = () =>{
 
                 <select className={"btn"} required onChange={e => (handleBoardChange(e.target.value))}>
                     <option disabled selected>Previous Boards</option>
-                    {boards.length ? boards.map(e => (
-                        <option value={e.JobBoardID} key={e.JobBoardID}>{e.BoardName}  </option> )): ""}
+                    {boards.length ? boards.map((e,index) => (
+                        <option value={index}>{e.BoardName}
+
+                        </option> )): ""}
                 </select>
 
 
