@@ -1,7 +1,8 @@
 import {Link, redirect} from "react-router-dom";
-import {useState} from "react";
+import React, {useEffect, useState} from "react";
 import { useNavigate } from 'react-router-dom';
-import { Container, Row, Col, Form, Button } from 'react-bootstrap';
+import {Container, Row, Col, Form, Button, Card} from 'react-bootstrap';
+import Moment from "moment";
 
 
 
@@ -11,114 +12,316 @@ const InterviewHistory=()=>{
     const [Password,setPass]= useState("");
     const [logInresult,setLogInResult]= useState("");
     const [loginStatus, setLoginStatus] = useState(false);
+    const [auth,setAuth]= useState(false);
+    const [InterviewHistory, setInterviewHistory]= useState([]);
+    const [Job, setJob]= useState([]);
+    const [formState, setFormState] = useState({
+        CompanyName: '',
+        ApplyDate: '',
+        Awards: '',
+
+        CoreValues: '',
+        ExpectedSalary: '',
+        MissionStatement: '',
+
+        JobTitle: '',
+        JobStatus: '',
+        Website: '',
+        InterestLevel: '',
+        InterviewRound: '',
+        Notes: ''
+    });
+
+    const [editInterviewInfo,setEditInterviewInfo]= useState({
+        Date:'',
+        Time:'',
+        Interviewer:'',
+        Location:'',
+        Title:'',
+        Notes:''
+
+        }
+    );
+
+
+    function createNewCard(InterviewID) {
+        if(isNaN(InterviewID)){
+            setJob("NAN")
+            alert("New Card")
+            setEditInterviewInfo(prevState => ({
+                ...prevState,
+                Date:'yyyy-mm-dd',
+                Time:'hh:mm',
+                Interviewer:'',
+                Location:'',
+                Title:'',
+                Notes:''
+            }));
+
+
+
+        }else{
+            setJob(InterviewID);
+            console.log()
+            alert("Updating!");
+            try{
+            setEditInterviewInfo(prevState => ({
+                ...prevState,
+                Date: InterviewHistory[InterviewID].Date,
+                Time: InterviewHistory[InterviewID].Time,
+                Interviewer: InterviewHistory[InterviewID].Interviewer,
+                Location: InterviewHistory[InterviewID].Location,
+                Title: InterviewHistory[InterviewID].InterviewName,
+                Notes: InterviewHistory[InterviewID].Notes,
+            }));}catch (e) {
+                console.log(e);
+
+
+            }
+
+
+
+        }
+
+
+    }
+    async function getInterviewsThatHappened(number) {
+        const response = await fetch("http://localhost:3306/api/InterviewHistory/" + number, {
+            method: 'Get',
+            headers: {
+                'content-type': 'application/json',
+                "x-access-token": localStorage.getItem("token")
+            }
+        });
+
+        if (response) {
+            console.log("============FETCHING History==============");
+            return await response.json();
+        }
+
+
+    }
+
+    async function getJobDetails(number) {
+        const response = await fetch("http://localhost:3306/api/jobs/edit/"+number, {
+            method: 'Get',
+            headers: {
+                'content-type': 'application/json',
+                "x-access-token": localStorage.getItem("token")
+            }
+        });
+
+        if (response) {
+            console.log("============FETCHING Job Details==============");
+            return await response.json();
+        }
+
+    }
+
+    useEffect(() => {
+        //Check if we came with a job here
+        //If we Did display info otherwise don't
+
+        //We Send Number We Got From Arrival
+        const checkAuth = async () => {
+            const response = await fetch("http://localhost:3306/api/isAuth", {
+                method: 'Get',
+                headers: {
+                    'content-type': 'application/json',
+                    "x-access-token": localStorage.getItem("token")
+                }
+            });
+
+            if (response) {
+                console.log("============AUTHENTICATING==============");
+                return await response.json();
+            }
+        }
+        checkAuth().then(body => {
+            if (body.auth) {
+                setAuth(true);
+                getJobDetails(21).then(body => {
+                    //setJob(body[0])
+
+                    setFormState(prevState => ({
+                        ...prevState,
+                        CompanyName: body[0].CompName,
+                        ApplyDate: body[0].AppliedDate,
+                        Awards: body[0].Awards,
+
+                        CoreValues: body[0].CoreValues,
+                        ExpectedSalary: body[0].ExpectSalary,
+                        MissionStatement: body[0].MissionStatement,
+
+                        JobTitle: body[0].PositionName,
+                        JobStatus: body[0].StatusID,
+                        Website: body[0].WebUrl,
+                        InterestLevel: body[0].InterestLevel,
+                        InterviewRound: body[0].InterviewRound,
+                        Notes: body[0].InterviewNotes
+                    }));
+                    console.log(body[0]);
+
+                });
+                getInterviewsThatHappened(21).then(body => {
+                    console.log(body);
+                    setInterviewHistory(body);
+                });
+            };
+        });
+
+
+    }, []);
+
 
 
 
     return (
-        <Container id={"IntHistory"}>
-
-            <main>
-                <Container rows={10} style={{overflowY: "scroll"}}>
-                    <h2>Company Information</h2>
+        <Container id={"IntHistory"} style={{height:"100vh"}} >
+            <Row style={{height:"66.67%"}} className={"Style-Rows"} >
+            <Col md={3} style={{overflowY: "scroll",height:"100%",marginRight:15}} className={"My-col"} >
+                <Container rows={4}>
+                    <h2 style={{textAlign:"center"}}>Company Information</h2>
                     <Row>
-                        <Col sm={6}>
-                            <p><b>Company Name:</b> ACME Inc.</p>
-                            <p><b>Applied Date:</b> January 1, 2023</p>
-                            <p><b>Job Title:</b> Senior Software Engineer</p>
-                            <p><b>Status:</b> Applied</p>
-                            <p><b>Interview Round:</b> 1</p>
-                            <p><b>Interest Level:</b> High</p>
-                            <p><b>Website:</b> www.acme.com</p>
-                            <p><b>Mission Statement:</b> Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin ut fringilla metus, quis auctor eros. Vestibulum tristique purus in commodo ultricies.</p>
+                        <Col sm={6} >
+                            <p><b>Company Name:</b> {formState.CompanyName}</p>
+                            <p><b>Applied Date:</b> {formState.ApplyDate}</p>
+                            <p><b>Job Title:</b> {formState.JobTitle}</p>
+                            <p><b>Status:</b> {formState.JobStatus}</p>
+                            <p><b>Interview Round:</b> {formState.InterviewRound}</p>
+                            <p><b>Interest Level:</b> {formState.InterestLevel}</p>
+                            <p><b>Website:</b> {formState.Website}</p>
+                            <p><b>Mission Statement:</b>  {formState.MissionStatement} </p>
 
                         </Col>
-                        <Col sm={6}>
-                            <p><b>Core Values:</b> Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin ut fringilla metus, quis auctor eros. Vestibulum tristique purus in commodo ultricies.</p>
-                            <p><b>Awards:</b> Best Place to Work 2022, Top 100 Companies 2022</p>
-                            <p><b>Expected Salary:</b> $120,000</p>
-                            <p><b>Notes:</b> Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin ut fringilla metus, quis auctor eros. Vestibulum tristique purus in commodo ultricies.</p>
+                        <Col sm={6} >
+                            <p><b>Core Values:</b> {formState.CoreValues} </p>
+                            <p><b>Awards:</b> {formState.Awards}</p>
+                            <p><b>Expected Salary:</b> {formState.ExpectedSalary}</p>
+                            <p><b>Notes:</b>  {formState.Notes}</p>
                         </Col>
                     </Row>
 
                 </Container>
-
-                <div className="container2 container-fluid">
-                    <Row>
-                        <Col>
-                            <h3>Interview Details</h3>
-                            <Form>
-                                <Row>
-                                    <Col>
-                                        <Form.Group controlId="formDate">
-                                            <Form.Label>Date:</Form.Label>
-                                            <Form.Control type="date" placeholder="Enter date" />
-                                        </Form.Group>
-                                    </Col>
-                                    <Col>
-                                        <Form.Group controlId="formTime">
-                                            <Form.Label>Time:</Form.Label>
-                                            <Form.Control type="time" placeholder="Enter time" />
-                                        </Form.Group>
-                                    </Col>
-                                    <Col>
-                                        <Form.Group controlId="formInterviewer">
-                                            <Form.Label>Interviewer:</Form.Label>
-                                            <Form.Control type="text" placeholder="Enter interviewer" />
-                                        </Form.Group>
-                                    </Col>
-                                    <Col>
-                                        <Form.Group controlId="formLocation">
-                                            <Form.Label>Location:</Form.Label>
-                                            <Form.Control type="text" placeholder="Enter location" />
-                                        </Form.Group>
-                                    </Col>
-                                </Row>
-                                <Form.Group controlId="formNotes">
-                                    <Form.Label>Notes:</Form.Label>
-                                    <Form.Control as="textarea" rows={10} />
+            </Col>
+            <Col md={8} style={{height:"100%"}} className={"My-col"}>
+                <Container rows={10} style={{height:"98%"}}>
+                    <h3 style={{textAlign:"center"}}>{editInterviewInfo.Title}</h3>
+                    <Form>
+                        <Row>
+                            <Col>
+                                <Form.Group controlId="formDate">
+                                    <Form.Label>Date:</Form.Label>
+                                    <Form.Control type="date" placeholder="yyyy-mm-dd" value={Moment(editInterviewInfo.Date).format('MM-DD-YYYY')} onChange={(event) => {
+                                        setEditInterviewInfo({ ...editInterviewInfo, Date: event.target.value });
+                                    }}/>
                                 </Form.Group>
-                                <Button variant="primary" type="submit">
-                                    Save
-                                </Button>
-                            </Form>
-                        </Col>
-                    </Row>
+                            </Col>
+                            <Col>
+                                <Form.Group controlId="formTime">
+                                    <Form.Label>Time:</Form.Label>
+                                    <Form.Control type="time" placeholder="hh:mm" value={editInterviewInfo.Time} onChange={(event) => {
+                                        setEditInterviewInfo({ ...editInterviewInfo, Time: event.target.value });
+                                    }}/>
+                                </Form.Group>
+                            </Col>
+                            <Col>
+                                <Form.Group controlId="formInterviewer">
+                                    <Form.Label>Interviewer:</Form.Label>
+                                    <Form.Control type="text" placeholder="Enter interviewer" value={editInterviewInfo.Interviewer} onChange={(event) => {
+                                        setEditInterviewInfo({ ...editInterviewInfo, Interviewer: event.target.value });
+                                    }} />
+                                </Form.Group>
+                            </Col>
+                            <Col>
+                                <Form.Group controlId="formLocation">
+                                    <Form.Label>Location:</Form.Label>
+                                    <Form.Control type="text" placeholder="Enter location" value={editInterviewInfo.Location}  onChange={(event) => {
+                                        setEditInterviewInfo({ ...editInterviewInfo, Location: event.target.value });
+                                    }}
+                                    />
+                                </Form.Group>
+                            </Col>
+                            <Col>
+                                <Form.Group controlId="formTitle">
+                                    <Form.Label>Title:</Form.Label>
+                                    <Form.Control type="text" placeholder="Enter Title" value={editInterviewInfo.Title}
+                                                  onChange={(event) => {
+                                                      setEditInterviewInfo({ ...editInterviewInfo, Title: event.target.value });
+                                                  }}
+                                    />
+                                </Form.Group>
+                            </Col>
+                        </Row>
+                        <Form.Group controlId="formNotes">
+                            <Form.Label>Notes:</Form.Label>
+                            <Form.Control as="textarea" rows={10} value={editInterviewInfo.Notes} onChange={event => (
+                                setEditInterviewInfo({ ...editInterviewInfo, Notes: event.target.value })
+                            )}/>
+                        </Form.Group>
+                        <br/>
+
+                        <Button variant="primary" type="submit" >
+                            Save
+                        </Button>
+
+                    </Form>
+                </Container>
+            </Col>
+            </Row>
 
 
+            <Row className={"Style-Rows"}>
+                <Col md={3} style={{marginRight:"15px"}} className={"My-col"}>
+                    <Container>
 
-                </div>
 
-                <div className="container3">
-                    <p><b>Feedback</b></p>
+                    <p style={{textAlign:"center"}}><b>Feedback</b></p>
 
-                    <br /><br />
-                    <form action="save_file.php" enctype="multipart/form-data" method="post" style={{ display: 'flex', alignItems: 'center' }}></form>
-                </div>
-                <div className="container4">
-                    <p>
+                    </Container>
+
+                </Col>
+                <Col md={8} className={"My-col"} >
+                    <Container>
+
+                    <p style={{textAlign:"center"}}>
                         <b>
                             Interview History
 
-                            <button type="button">New Round</button>
                         </b>
                     </p>
 
-                    <div className="scroll-container2">
-                        <div className="card-wrapper">
-                            <div className="card">
-                                <p style={{ fontSize: '12px' }}>Round 1</p>
+                        <div className="cards-container" style={{overflowX: "auto"}}>
+                            <div className="row cards d-flex flex-nowrap">
+                                {InterviewHistory.map((Interview,index)=>(
+                                    <Card>
+                                        <Card.Title>
+                                           {Interview.InterviewName}
+                                        </Card.Title>
+                                        <Card.Body>
+                                            <button style={{backgroundColor: '#191c1f', color: 'white'}} onClick={() => {
+                                                createNewCard(index);
+
+                                            }}>Edit Job
+                                            </button>
+                                        </Card.Body>
+                                    </Card>
+
+
+                                    ))}
+                                <Card>
+                                    <Card.Body>
+                                        <Button variant="primary" onClick={createNewCard}>Create New Card</Button>
+                                    </Card.Body>
+                                </Card>
                             </div>
-                            <div className="card">
-                                <p style={{ fontSize: '12px' }}>Round 2</p>
-                            </div>
-                            <div className="card">
-                                <p style={{ fontSize: '12px' }}>Round 3</p>
-                            </div>
-                        </div>
+
+
                     </div>
-                    <br /><br />
-                </div>
-            </main>
+                    </Container>
+                </Col>
+            </Row>
+
         </Container>
     );
 }
