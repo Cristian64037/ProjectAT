@@ -3,6 +3,7 @@ import React, {useEffect, useState} from "react";
 import { useNavigate } from 'react-router-dom';
 import {Container, Row, Col, Form, Button, Card} from 'react-bootstrap';
 import Moment from "moment";
+import {useLocation} from "react-router";
 
 
 
@@ -31,6 +32,7 @@ const InterviewHistory=()=>{
         InterviewRound: '',
         Notes: ''
     });
+    const { state } = useLocation();
 
     const [editInterviewInfo,setEditInterviewInfo]= useState({
         Date:'',
@@ -140,33 +142,47 @@ const InterviewHistory=()=>{
         checkAuth().then(body => {
             if (body.auth) {
                 setAuth(true);
-                getJobDetails(21).then(body => {
-                    //setJob(body[0])
 
-                    setFormState(prevState => ({
-                        ...prevState,
-                        CompanyName: body[0].CompName,
-                        ApplyDate: body[0].AppliedDate,
-                        Awards: body[0].Awards,
+                try{
+                    const { JobsID } = state;
+                    console.log("envienv"+JobsID)
+                    getJobDetails(JobsID).then(body => {
+                        //setJob(body[0])
 
-                        CoreValues: body[0].CoreValues,
-                        ExpectedSalary: body[0].ExpectSalary,
-                        MissionStatement: body[0].MissionStatement,
+                        setFormState(prevState => ({
+                            ...prevState,
+                            CompanyName: body[0].CompName,
+                            ApplyDate: body[0].AppliedDate,
+                            Awards: body[0].Awards,
 
-                        JobTitle: body[0].PositionName,
-                        JobStatus: body[0].StatusID,
-                        Website: body[0].WebUrl,
-                        InterestLevel: body[0].InterestLevel,
-                        InterviewRound: body[0].InterviewRound,
-                        Notes: body[0].InterviewNotes
-                    }));
-                    console.log(body[0]);
+                            CoreValues: body[0].CoreValues,
+                            ExpectedSalary: body[0].ExpectSalary,
+                            MissionStatement: body[0].MissionStatement,
 
-                });
-                getInterviewsThatHappened(21).then(body => {
-                    console.log(body);
-                    setInterviewHistory(body);
-                });
+                            JobTitle: body[0].PositionName,
+                            JobStatus: body[0].StatusID,
+                            Website: body[0].WebUrl,
+                            InterestLevel: body[0].InterestLevel,
+                            InterviewRound: body[0].InterviewRound,
+                            Notes: body[0].InterviewNotes
+                        }));
+                        console.log(body[0]);
+
+                    });
+                    getInterviewsThatHappened(JobsID).then(body => {
+                        console.log(body);
+                        setInterviewHistory(body);
+                    });
+
+
+                }catch (e) {
+                    alert("Valid Page but only if you click from job")
+                    navigate(`/boards`)
+
+
+                }
+
+
             } else {
                 navigate('/unauthorized');
             }

@@ -10,11 +10,36 @@ const UserIdActive=28;
 //Initialize DB
 const connection = require('../database/connection');
 const {verify} = require("jsonwebtoken");
+const verifyJWTBackEnd = (req,res,next)=>{
+    const token = req.headers["x-access-token"];
+    if (!token) {
+        console.log("No Token");
+        return res
+            .status(401)
+            .json({ auth: false, message: "Yo, we need a token. Please given it next time" });
+    } else {
+        jwt.verify(token, process.env.token, (err, decoded) => {
+            if (err) {
+                console.log("============TOKEN FAILED=========");
+                console.log(err);
+                console.log(token);
+                return res
+                    .status(500)
+                    .json({ auth: false, message: "You failed to authenticate" });
+            } else {
+                console.log("============TOKEN SUCCEEDED=========");
+                req.logId = decoded.sub;
+                console.log(req.logId);
+                next();
+            }
+        });
+    }}
 
 const verifyJWT = (req, res, next) => {
     const token = req.headers["x-access-token"]
     console.log(token)
     if (!token) {
+        console.log("No Token")
         res.send("Yo, we need a token. Please given it next time");
     } else {
         jwt.verify(token, process.env.token, (err, decoded) => {
@@ -28,7 +53,8 @@ const verifyJWT = (req, res, next) => {
                });
            } else {
                console.log("============TOKEN SUCCEEDED=========")
-               req.logId = decoded.id;
+               req.logId = decoded.sub;
+               console.log(req.logId);
                next();
                res.json({
                    auth: true,
@@ -61,22 +87,20 @@ router.get('/InterviewHistory/:jobID',(req, res) => {
 });
 
 
+//Todo Should be working
 //Get a list of jobs based on the user's identification and Job Board identification (populates Job Tracker UI)
-router.get('/jobs/:id',(req, res) => {
+router.get('/jobs',verifyJWTBackEnd,(req, res) => {
     const sql = `Select JobBoardID,JobsID,CompName, PositionName, AppliedDate, e.Name AS Status, i.Name AS Interest, ExpectSalary
                  from (Jobs INNER JOIN JobStatus e ON Jobs.StatusID = e.StatusID) INNER JOIN InterestLevel i ON Jobs.InterestLevel = i.InterestLevelID
                  where JobBoardID = (Select CurrentBoard from User where LogInId=?)`;
-    const fields = [req.params.id];
+    const fields = req.logId;
 
     require("./queryDB").request(sql, fields, connection)
         .then(
             (data) => {
-                //console.log(data);
-                if (data.length == 0) {
-                    res.status(404).send(data);
-                } else {
+
                     res.status(200).send(data);
-                }
+
             },
             (err) => {
                 res.status(400).send(err);
@@ -111,9 +135,9 @@ router.get('/jobs/edit/:id', (req, res) => {
 });
 
 //Get a list of jobs in the interview stage and documents to support the user (populates drop-down and documents in the interview UI)
-router.get('/interview/:id', (req, res) => {
+router.get('/interview/:id', verifyJWTBackEnd, (req, res) => {
     const sql = `Select JobsID, CompName, PositionName from Jobs where (JobBoardID = (Select CurrentBoard from User where LogInId=?) and StatusID = 2)`;
-    const fields = [req.params.id];
+    const fields = req.logId;
 
     require("./queryDB").request(sql, fields, connection)
         .then(
@@ -174,39 +198,41 @@ router.get('/documents', (req, res) => {
     //res.send({Type: "GET5"});
 });
 
+
+//Todo Working//
 //Gets the list of boards by the specific user (populates dropdown in Board UI)
-router.get('/board/:LoginID', (req, res) => {
+router.get('/board', verifyJWTBackEnd, (req, res) => {
     const sql = `Select LastUpdated,JobBoardID,BoardName from JobBoards where UserID = (Select UserID from User where LogInId=?)`;
-    const fields = [req.params.LoginID];
+    const fields = req.logId;
 
     require("./queryDB").request(sql, fields, connection)
         .then(
             (data) => {
                 //console.log(data);
-                if (data.length == 0) {
-                    res.status(200).send("");
-                } else {
-                    res.status(200).send(data);
-                }
+                res.status(200).json({
+                    data:data
+
+                });
             },
             (err) => {
                 res.status(400).send(err);
                 //console.log(err);
             }
-        );
+        )
 });
 
-router.get('/Latestboard/:LoginID', (req, res) => {
+
+//Todo Working
+router.get('/Latestboard', verifyJWTBackEnd,(req, res) => {
     const sql = `Select LastUpdated,JobBoardID,BoardName from JobBoards where UserID = (Select UserID from User where LogInId=?) and JobBoardID=(Select CurrentBoard from User where LogInId=?)`;
-    const fields = [req.params.LoginID,req.params.LoginID];
+    const fields = [req.logId,req.logId];
 
     require("./queryDB").request(sql, fields, connection)
         .then(
             (data) => {
                 //console.log(data);
-                if (data.length == 0) {
-                    res.status(200).send("");
-                } else {
+                if (data.length > 0) {
+
                     res.status(200).send(data);
                 }
             },
@@ -217,6 +243,7 @@ router.get('/Latestboard/:LoginID', (req, res) => {
         );
 });
 
+//Todo Working
 router.get('/JobStatus', (req, res) => {
     const sql = `Select * from JobStatus`;
     const fields=[]
@@ -237,6 +264,7 @@ router.get('/JobStatus', (req, res) => {
         );
 });
 
+//Todo Working
 router.get('/InterestLevel', (req, res) => {
     const sql = `Select * from InterestLevel`;
     const fields=[]
@@ -257,6 +285,7 @@ router.get('/InterestLevel', (req, res) => {
         );
 });
 
+//Todo Working
 router.get('/isAuth', verifyJWT, (req, res) => {});
 
 /*==============
@@ -265,7 +294,7 @@ router.get('/isAuth', verifyJWT, (req, res) => {});
 
 //Gets the specific user to validate if credential are correct (informs login UI)
 router.post('/auth', (req, res) => {
-    const findUser = `Select PSWD from LogIn where UserName=?`;
+    const findUser = `Select PSWD,LogInId from LogIn where UserName=?`;
     const fields = [
         req.body.User,
         req.body.Pass
@@ -284,8 +313,9 @@ router.post('/auth', (req, res) => {
                     if (result === true) {
 
                         const id = data[0].LogInID;
-                        const token = jwt.sign({id}, process.env.token, {
-                           expiresIn: 300
+
+                        const token = jwt.sign({sub:data[0].LogInId}, process.env.token, {
+                           expiresIn: 600
                         });
                         res.status(200).json({
                             auth: true,
@@ -309,7 +339,7 @@ router.post('/auth', (req, res) => {
 //**********************************************************************
 //*****************TO DO: Map jobstatus and interest********************
 //**********************************************************************
-router.post('/jobs', (req, res) => {
+router.post('/jobs',verifyJWTBackEnd, (req, res) => {
     const sqlGetCurBoard=`Select CurrentBoard from User where LogInId=?`
 
     const sql = `Insert into Jobs(JobBoardID, CompName, PositionName,
@@ -320,7 +350,7 @@ router.post('/jobs', (req, res) => {
 
     const UpdateDate=`Update JobBoards SET LastUpdated=? where JobBoardID=?`;
     const fields = [
-        req.body.LogInID,
+        req.logId,
         req.body.company,
         req.body.posName,
         req.body.appDate,
@@ -455,18 +485,31 @@ router.post('/login', async (req, res) => {
 
 });
 
+//ToDo Not working . Maybe blacklist???
+router.post('/logout', (req, res) => {
+    const token = req.headers["x-access-token"];
 
+    console.log("\n\n\n\nK")
+
+
+        // Add token to blacklist
+
+
+
+
+});
 //Add a document for a specific user in a specific box card
-router.post('/documents', (req, res) => {
+router.post('/documents',verifyJWTBackEnd, (req, res) => {
 
 });
 
 //Add a job board for a specific user
-router.post('/board', (req, res) => {
+router.post('/board',verifyJWTBackEnd, (req, res) => {
     let date_ob = new Date();
     const fields = [
-        req.body.LogInID
+        req.logId
     ];
+    console.log(req.body)
     const getUserIDSQL=`Select UserID from User where LogInId=?`;
     const sql=`Insert into JobBoards(CreateDate,LastUpdated,BoardName,UserID) value(?,?,?,?)`;
     const UpdateUserSQl=`Update User Set CurrentBoard=? where LogInID=?`;
@@ -494,7 +537,7 @@ router.post('/board', (req, res) => {
                             //console.log(data)
                             const fields2=[
                                 data.insertId,
-                                req.body.LogInID
+                                req.logId
                             ]
                             require("./queryDB").request(UpdateUserSQl, fields2, connection)
                                 .then(
@@ -502,23 +545,25 @@ router.post('/board', (req, res) => {
 
                                         res.send("Success")
 
+
                                     },
                                     (err) => {
                                         res.status(400).send(err);
-                                        //console.log(err);
+
+                                        console.log(err);
                                     }
                                 );
-                            //res.send("Success")
+
                         },
                         (err) => {
                             res.status(400).send(err);
-                            //console.log(err);
+                            console.log(err);
                         }
                     );
             },
             (err) => {
                 res.status(400).send(err);
-                //console.log(err);
+                console.log(err);
             }
         );
 
@@ -531,14 +576,47 @@ router.post('/board', (req, res) => {
 //Edit a specific job record in a job board for a specific user
 router.put('/jobs/edit/:id', (req, res) => {
 
+    const sql = `Update Jobs t SET t.CompName = ?, t.PositionName = ?, t.AppliedDate = ?, t.StatusID = ?, t.InterviewRound = ?, t.InterestLevel = ?, t.CoreValues = ?, t.MissionStatement = ?, t.WebUrl = ?, t.Awards = ?, t.ExpectSalary = ?, t.InterviewNotes = ? WHERE t.JobsID = ?`;
+    const fields=[
+
+        req.body.company,
+        req.body.posName,
+        req.body.appDate,
+        req.body.jobStatus,
+        req.body.interviewRound,
+        req.body.interest,
+        req.body.CoreValues,
+        req.body.mission,
+        req.body.webLink,
+        req.body.awards,
+        req.body.salary,
+        req.body.notes,
+        req.params.id
+    ]
+    console.log(req.params.id)
+    require("./queryDB").request(sql, fields, connection)
+        .then(
+            (data) => {
+                console.log(data)
+
+                    res.status(201).send("Success");
+
+            },
+            (err) => {
+                res.status(400).send(err);
+                //console.log(err);
+            }
+        );
+
+
 });
 
 //Edit the current board a specific user
-router.put('/board', (req, res) => {
+router.put('/board', verifyJWTBackEnd,(req, res) => {
     const sql = `Update User SET CurrentBoard=? where LogInId=?`;
     const fields = [
         req.body.JobBoardID,
-        req.body.LogInID
+        req.logId
 
     ];
 
@@ -560,5 +638,24 @@ router.put('/board', (req, res) => {
         );
 
 });
+
+router.put('/OneTimePassWordChange',async(req, res) =>{
+    const pswd="CL";
+    let hashedPassword =  await bcrypts.hash(pswd, 8);
+    const field=[
+        hashedPassword
+    ]
+
+    const sql=` UPDATE LogIn t SET t.PSWD = ? WHERE t.LogInId = 4 `;
+    require("./queryDB").request(sql, field, connection)
+        .then(
+
+            (err) => {
+                res.status(400).send(err);
+                //console.log(err);
+            }
+        );
+
+})
 
 module.exports = router;

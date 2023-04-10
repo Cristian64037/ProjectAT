@@ -5,45 +5,35 @@ const ForgetPassword = () => {
     const nav = useNavigate();
     const [Username,setUsername]= useState("");
     const [Email,setEmail]= useState("");
-    const [Result,setResult]= useState("G");
+    const [name,setName]= useState("");
 
     const handleAlert = (e) => {
-        e.preventDefault();
+        alert("Searching")
 
-
-
-
-
-        document.getElementById("alert").style.display = "flex";
-        //log-container
-       /* document.getElementById("log-container").style.opacity = "0";
-        document.getElementById("log-container").style.display = "none";*/
     }
 
-    const handleCloseAlert = () => {
-        document.getElementById("alert").style.opacity = "0";
-        document.getElementById("alert").style.display = "none";
-        nav("/login");
-    }
+
 
     return (
         <div>
-            <div id="alert" className="alert">
-                {Result}
-            </div>
+
             <div className="log-container" id={"log-container"}>
                 <div className="log-form">
                     <form>
                         <h2>FORGOT PASSWORD</h2>
-                        <input type="email" placeholder="Email" onChange={e =>(
+                        <input type="email" placeholder="Recovery Email" onChange={e =>(
                             setEmail(e.target.value)
                         ) } value={Email}
-
 
                         />
                         <input type="text" placeholder="Username" onChange={e =>(
                             setUsername(e.target.value)
                         ) } value={Username}
+
+                        />
+                        <input type="text" placeholder="First Name" onChange={e =>(
+                            setName(e.target.value)
+                        ) } value={name}
 
                         />
 

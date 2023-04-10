@@ -2,7 +2,7 @@ import NavBar from './components/nav_foot/Navbar';
 import FootEnd from './components/nav_foot/FootEnd2';
 import {BrowserRouter as Router, Route, Routes} from "react-router-dom";
 import Documents from "./components/documents/Documents2";
-import InterviewPrep from "./components/interview/InterviewPrep";
+import InterviewPrep from "./components/interview/InterviewHistory";
 import JobApplicationForm from "./components/job/JobApplicationForm"
 import CreateBoard from "./components/boards/CreateBoard";
 import Login from "./components/sign_in/Login";

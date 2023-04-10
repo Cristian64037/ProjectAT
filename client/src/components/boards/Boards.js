@@ -3,6 +3,7 @@ import {useEffect, useState} from "react";
 
 import Moment from 'moment';
 import JobApplicationForm from "../job/JobApplicationForm";
+import {Link} from "react-router-dom";
 
 const Boards = () => {
     let navigate = useNavigate();
@@ -10,14 +11,12 @@ const Boards = () => {
     const [BoardName, setBoardName] = useState("New Board");
     const [jobs, setjobs] = useState("");
     const [isPending, setIspending] = useState(false);
-    const [JobBoardId, setJobBoardId] = useState([]);
-    const [boards, setBoards] = useState([]);
     const [lastUpdateDate, setLastUpdatedDate] = useState("");
     const [auth, setAuth] = useState(false);
     const [jobToEdit, setJobToEdit] = useState("");
 
     async function getBoardData() {
-        const response = await fetch("http://localhost:3306/api/Latestboard/4", {
+        const response = await fetch("http://localhost:3306/api/Latestboard", {
             method: 'Get',
             headers: {
                 'content-type': 'application/json',
@@ -32,7 +31,7 @@ const Boards = () => {
     }
 
     async function fetchData() {
-        const response = await fetch("http://localhost:3306/api/jobs/4", {
+        const response = await fetch("http://localhost:3306/api/jobs", {
             method: 'Get',
             headers: {
                 'content-type': 'application/json',
@@ -65,20 +64,32 @@ const Boards = () => {
             console.log(body.auth);
             if (body.auth) {
                 setAuth(true);
+                console.log("Beofre Fetch")
+
                 fetchData().then(body => {
+                    console.log("Fetchingggggggg Data")
                     console.log(body);
                     setjobs(body);
-                    setJobBoardId(body[0].JobBoardID);
-                    setIspending(true);
+                    //setIspending(true);
+                    console.log("Leaving fetch")
                 });
                 getBoardData().then(body => {
-                    //console.log(body);
-                    console.log(body[0][0])
-                    setBoardName(body[0].BoardName);
-                    setLastUpdatedDate(body[0].LastUpdated);
-                    jobs && FormatTable();
+                    console.log("YOomeomvoemvoOOO")
+                    console.log("This is working Board Data")
+
+                        console.log("YOomeomvoemvoOOO")
+                        setBoardName(body[0].BoardName);
+                        setLastUpdatedDate(body[0].LastUpdated);
+                        jobs && FormatTable();
+
+
+                        setIspending(true)
+
+
                 });
-            } else {
+            }
+
+            else {
                 navigate('/unauthorized')
             }
         });
@@ -169,98 +180,123 @@ const Boards = () => {
 
     }
 
+    function handleInterview(JobsID) {
+        try {
+
+            alert(JobsID)
+
+            navigate(`/interviewPrep`, {
+                state: {
+                    JobsID
+                }
+            })
+
+
+        } catch (error) {
+
+        }
+
+    }
+
     return (
 
+
         <div>
-            <div className="card mb-4">
-                <div className="card-header row">
+            {isPending ?
+                <div className="card mb-4">
+                    <div className="card-header row">
                 <span className="col-4">
                     <i className="fas fa-table me-2 fs-4"/>
                     <span style={{fontSize: '28px'}}>{BoardName}</span>
                 </span>
 
-                    <span style={{fontSize: '28px'}} className="flex-column text-center col-4">
+                        <span style={{fontSize: '28px'}} className="flex-column text-center col-4">
                     Last update:{Moment(lastUpdateDate).format('MM-DD-YYYY')}
                 </span>
 
 
-                    <span className="col-4">
+                        <span className="col-4">
                     {/* Button to open the pop-up notepad */}
-                        <button id="openBtn" className="float-lg-end  btn btn-outline-dark" onClick={OpenPad}>
+                            <button id="openBtn" className="float-lg-end  btn btn-outline-dark" onClick={OpenPad}>
                         Job Search Notes
                     </button>
 
                     <span className="float-lg-end">&nbsp;&nbsp;&nbsp;</span>
 
-                        {/* Button to open the job form */}
-                        <button id="myButton" className="float-lg-end  btn btn-outline-dark submit-button"
-                                onClick={GoToAppAdder}>
+                            {/* Button to open the job form */}
+                            <button id="myButton" className="float-lg-end  btn btn-outline-dark submit-button"
+                                    onClick={GoToAppAdder}>
                         Add New Job
                     </button>
 
-                        {/* The overlay */}
-                        <div className="overlay">
+                            {/* The overlay */}
+                            <div className="overlay">
                         {/* The pop-up notepad */}
-                            <div className="popup">
+                                <div className="popup">
                         <textarea id="notepad" rows={16} cols={58} defaultValue={""}/>
                         <br/><br/>
-                                {/* Button to close the pop-up notepad */}
-                                <button id="closeBtn">Close</button>
+                                    {/* Button to close the pop-up notepad */}
+                                    <button id="closeBtn">Close</button>
                         </div>
                     </div>
                 </span>
-                </div>
-                <div className="card-body">
-                    {isPending && <div> Loading...</div>}
-                    <table className="table">
-                        <thead>
-                        <tr>
-                            <th>Company Name</th>
-                            <th>Position</th>
-                            <th>Status</th>
-                            <th>Interest Level</th>
-                            <th>Salary</th>
-                            <th>Date Applied</th>
-                            <th></th>
-                            <th></th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        {jobs && jobs.map((job, index2) => {
-                            return (
+                    </div>
+                    <div className="card-body">
+                        {isPending && <div> Loading...</div>}
+                        <table className="table">
+                            <thead>
+                            <tr>
+                                <th>Company Name</th>
+                                <th>Position</th>
+                                <th>Status</th>
+                                <th>Interest Level</th>
+                                <th>Salary</th>
+                                <th>Date Applied</th>
+                                <th></th>
+                                <th></th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {jobs && jobs.map((job, index2) => {
+                                return (
 
-                                /*Im Using Index So I can just pull the
-                        * job from the array versus potentially giving them the option from accessing a job
-                        * they dont' have access too by using inspect element. I will make the same changes to
-                        *Boards  */
+                                    /*Im Using Index So I can just pull the
+                            * job from the array versus potentially giving them the option from accessing a job
+                            * they dont' have access too by using inspect element. I will make the same changes to
+                            *Boards  */
 
-                                <tr>
-                                    <td>{job.CompName}</td>
-                                    <td>{job.PositionName}</td>
-                                    <td>{job.Status}</td>
-                                    <td>{job.Interest}</td>
-                                    <td>{job.ExpectSalary}</td>
-                                    <td>{Moment(job.AppliedDate).format('MM-DD-YYYY')}</td>
-                                    <td>
-                                        <button style={{backgroundColor: '#191c1f', color: 'white'}} onClick={() => {
-                                            handleEdit(job.JobsID);
-                                        }}>Edit Job
-                                        </button>
-                                    </td>
-                                    <td>
-                                        {job.Status == "Applied" ? <span/> :
-                                            <button style={{backgroundColor: '#191c1f', color: 'white'}}>
-                                                Interview Notes
+                                    <tr>
+                                        <td>{job.CompName}</td>
+                                        <td>{job.PositionName}</td>
+                                        <td>{job.Status}</td>
+                                        <td>{job.Interest}</td>
+                                        <td>{job.ExpectSalary}</td>
+                                        <td>{Moment(job.AppliedDate).format('MM-DD-YYYY')}</td>
+                                        <td>
+                                            <button style={{backgroundColor: '#191c1f', color: 'white'}}
+                                                    onClick={() => {
+                                                        handleEdit(job.JobsID);
+                                                    }}>Edit Job
                                             </button>
-                                        }
-                                    </td>
-                                </tr>
-                            )
-                        })}
-                        </tbody>
-                    </table>
+                                        </td>
+                                        <td>
+                                            {job.Status == "Applied" ? <span/> :
+                                                <button style={{backgroundColor: '#191c1f', color: 'white'}}
+                                                        onClick={() => {
+                                                            handleInterview(job.JobsID);
+                                                        }}>
+                                                    Interview Notes
+                                                </button>
+                                            }
+                                        </td>
+                                    </tr>
+                                )
+                            })}
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
-            </div>
+                :<> You have No Active Board. Please Create one <Link to={"/"}>first</Link></>}
         </div>
 
     );

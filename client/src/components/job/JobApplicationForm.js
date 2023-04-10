@@ -57,17 +57,39 @@ const JobApplicationForm=(e)=>{
     }
 
     useEffect(() => {
-        console.log(jobId)
+        const checkAuth = async () => {
+            const response = await fetch("http://localhost:3306/api/isAuth", {
+                method: 'Get',
+                headers: {
+                    'content-type': 'application/json',
+                    "x-access-token": localStorage.getItem("token")
+                }
+            });
+
+            if (response) {
+                console.log("============AUTHENTICATING==============");
+                return await response.json();
+            }
+        };
+
+        checkAuth().then(body => {
+            console.log(body.auth);
+            if (body.auth) {
+                fetchData()
+                try{
+                    const { index } = state;
+                    fetchSpecificJob(index);
+
+                }catch (e) {
+
+                }
+            }
+            else {
+                navigate('/unauthorized')
+            }
+        });
         // Update the document title using the browser API
-        fetchData();
-        try{
-            const { index } = state;
-            fetchSpecificJob(index);
 
-
-        }catch (e) {
-
-        }
 
         }, []);
 
@@ -107,10 +129,11 @@ const JobApplicationForm=(e)=>{
             await fetch("http://localhost:3306/api/jobs", {
                 method: 'POST',
                 headers: {
-                    'content-type': 'application/json'
+                    'content-type': 'application/json',
+                    "x-access-token" : localStorage.getItem("token")
                 },
                 body: JSON.stringify({
-                    "LogInID": 4,
+
                     "company": CompanyName,
                     "posName": JobTitle,
                     "appDate": ApplyDate,
@@ -137,6 +160,36 @@ const JobApplicationForm=(e)=>{
 
         }else{
             alert("Editing");
+            await fetch("http://localhost:3306/api/jobs/edit/"+jobId, {
+                method: 'PUT',
+                headers: {
+                    'content-type': 'application/json',
+                    "x-access-token" : localStorage.getItem("token")
+                },
+                body: JSON.stringify({
+                    "company": CompanyName,
+                    "posName": JobTitle,
+                    "appDate": ApplyDate,
+                    "jobStatus": JobStatus,
+                    "interviewRound": InterviewRound,
+                    "interest": InterestLevel,
+                    "coreValues": CoreValues,
+                    "mission": MissionStatement,
+                    "webLink": Website,
+                    "awards": Awards,
+                    "salary": ExpectedSalary,
+                    "notes": Notes,
+
+                })
+            }).then(async (data) => {
+                var body = await data.text();
+                if(data.status===201){
+                    alert("Successful Job Update");
+                    navigate("/boards")
+                }else {
+                    alert(body);
+                }
+            });
             //Do a Edit to The Db route Here
         }
 

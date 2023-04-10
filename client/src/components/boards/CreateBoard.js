@@ -6,10 +6,11 @@ const CreateBoard = () => {
 
     const [boards, setBoards] = useState([]);
     const [newBoardName, setNewBoardName] = useState("");
+    const [errorMessage, setErrorMessage] = useState("");
     const navigate = useNavigate();
 
     async function fetchData() {
-        await fetch("http://localhost:3306/api/board/4", {
+        await fetch("http://localhost:3306/api/board", {
             method: 'Get',
             headers: {
                 'content-type': 'application/json',
@@ -17,27 +18,56 @@ const CreateBoard = () => {
             }
         }).then(async (data) => {
             var body = await data.json();
-            setBoards(body);
+            try{
+                setBoards(body.data);
+
+            }catch (e)
+            {
+                setErrorMessage("Unable to Parse Job Boards")
+
+            }
         });
     }
 
     useEffect(() => {
-        fetchData();
+        const checkAuth = async () => {
+            const response = await fetch("http://localhost:3306/api/isAuth", {
+                method: 'Get',
+                headers: {
+                    'content-type': 'application/json',
+                    "x-access-token": localStorage.getItem("token")
+                }
+            });
+
+            if (response) {
+                console.log("============AUTHENTICATING==============");
+                return await response.json();
+            }
+        };
+
+        checkAuth().then(body => {
+            console.log(body.auth);
+            if (body.auth) {
+                fetchData()
+            }
+            else {
+                navigate('/unauthorized')
+            }
+        });
     }, []);
 
 
     async function handleBoardChange(selectedFromDropDown) {
-        try {
-            console.log(boards[selectedFromDropDown].JobBoardID);
-
+        try {console.log(boards[selectedFromDropDown].JobBoardID);
             await fetch("http://localhost:3306/api/board", {
+
 
                 method: 'PUT',
                 headers: {
-                    'content-type': 'application/json'
+                    'content-type': 'application/json',
+                    "x-access-token": localStorage.getItem("token")
                 },
                 body: JSON.stringify({
-                    "LogInID": 4,
                     "JobBoardID": boards[selectedFromDropDown].JobBoardID,
                 })
             }).then(async (data) => {
@@ -51,21 +81,6 @@ const CreateBoard = () => {
             alert("Refresh Page")
         }
 
-        /*alert("Hitting DB RN");
-        await fetch("http://localhost:3306/api/board", {
-            method: 'PUT',
-            headers: {
-                'content-type': 'application/json'
-            },
-            body: JSON.stringify({
-                "LogInID": 4,
-                "JobBoardID": newBoard,
-            })
-        }).then(async (data) => {
-            var body = await data.text();
-            navigate('/boards');
-        });
-*/
     }
 
     async function handleNewBoard() {
@@ -73,15 +88,15 @@ const CreateBoard = () => {
         await fetch("http://localhost:3306/api/board", {
             method: 'POST',
             headers: {
-                'content-type': 'application/json'
+                'content-type': 'application/json',
+                "x-access-token": localStorage.getItem("token")
             },
             body: JSON.stringify({
-                "LogInID": 4,
                 "JobBoardName": newBoardName
             })
         }).then(async (data) => {
             var body = await data.text();
-            //console.log(body)
+            alert(body)
             navigate('/boards');
         });
         //navigate('/boards');
