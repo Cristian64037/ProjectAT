@@ -1,8 +1,10 @@
 import useFetch from "../../hooks/useFetch";
 import Files from "./Files";
 import React, {useEffect, useState} from "react";
+import {useNavigate} from "react-router-dom";
 
 const Documents = () => {
+    const navigate = useNavigate();
     const [boxes2,setBoxes]= useState([]);
     //const {data:boxes , isPending , error}= useFetch( "http://localhost:8000/BoxCard");
     //console.log(boxes);
@@ -23,8 +25,31 @@ const Documents = () => {
 
     }
     useEffect(() => {
-        fetchData();
-        console.log(boxes2);
+        const checkAuth = async () => {
+            const response = await fetch("http://localhost:3306/api/isAuth", {
+                method: 'Get',
+                headers: {
+                    'content-type': 'application/json',
+                    "x-access-token": localStorage.getItem("token")
+                }
+            });
+
+            if (response) {
+                console.log("============AUTHENTICATING==============");
+                return await response.json();
+            }
+        };
+
+        checkAuth().then(body => {
+            console.log(body.auth);
+            if (body.auth) {
+                fetchData()
+            }
+            else {
+                navigate('/unauthorized')
+            }
+        });
+
 
     }, []);
 

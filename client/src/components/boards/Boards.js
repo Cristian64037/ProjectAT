@@ -3,25 +3,24 @@ import {useEffect, useState} from "react";
 
 import Moment from 'moment';
 import JobApplicationForm from "../job/JobApplicationForm";
+import {Link} from "react-router-dom";
 
 const Boards = () => {
     let navigate = useNavigate();
-    const [jobId,setJobId]= useState("");
+    const [jobId, setJobId] = useState("");
     const [BoardName, setBoardName] = useState("New Board");
     const [jobs, setjobs] = useState("");
     const [isPending, setIspending] = useState(false);
-    const [JobBoardId, setJobBoardId] = useState([]);
-    const [boards, setBoards] = useState([]);
     const [lastUpdateDate, setLastUpdatedDate] = useState("");
-    const [auth,setAuth]= useState(false);
-    const [jobToEdit,setJobToEdit]= useState("");
+    const [auth, setAuth] = useState(false);
+    const [jobToEdit, setJobToEdit] = useState("");
 
     async function getBoardData() {
-        const response = await fetch("http://localhost:3306/api/Latestboard/4", {
+        const response = await fetch("http://localhost:3306/api/Latestboard", {
             method: 'Get',
             headers: {
                 'content-type': 'application/json',
-                "x-access-token" : localStorage.getItem("token")
+                "x-access-token": localStorage.getItem("token")
             }
         });
 
@@ -32,11 +31,11 @@ const Boards = () => {
     }
 
     async function fetchData() {
-        const response = await fetch("http://localhost:3306/api/jobs/4", {
+        const response = await fetch("http://localhost:3306/api/jobs", {
             method: 'Get',
             headers: {
                 'content-type': 'application/json',
-                "x-access-token" : localStorage.getItem("token")
+                "x-access-token": localStorage.getItem("token")
             }
         });
 
@@ -65,20 +64,34 @@ const Boards = () => {
             console.log(body.auth);
             if (body.auth) {
                 setAuth(true);
+                console.log("Beofre Fetch")
+
                 fetchData().then(body => {
+                    console.log("Fetchingggggggg Data")
                     console.log(body);
                     setjobs(body);
-                    setJobBoardId(body[0].JobBoardID);
-                    setIspending(true);
+                    //setIspending(true);
+                    console.log("Leaving fetch")
                 });
                 getBoardData().then(body => {
-                    //console.log(body);
-                    console.log(body[0][0])
-                    setBoardName(body[0].BoardName);
-                    setLastUpdatedDate(body[0].LastUpdated);
-                    jobs && FormatTable();
+                    console.log("YOomeomvoemvoOOO")
+                    console.log("This is working Board Data")
+
+                        console.log("YOomeomvoemvoOOO")
+                        setBoardName(body[0].BoardName);
+                        setLastUpdatedDate(body[0].LastUpdated);
+                        jobs && FormatTable();
+
+
+                        setIspending(true)
+
+
                 });
-            };
+            }
+
+            else {
+                navigate('/unauthorized')
+            }
         });
     }, [isPending]);
 
@@ -152,12 +165,11 @@ const Boards = () => {
 
             alert(index)
 
-            navigate(`/JobApplicationForm`,{
-                state:{
+            navigate(`/JobApplicationForm`, {
+                state: {
                     index
                 }
             })
-
 
 
         } catch (error) {
@@ -168,10 +180,29 @@ const Boards = () => {
 
     }
 
+    function handleInterview(JobsID) {
+        try {
+
+            alert(JobsID)
+
+            navigate(`/interviewPrep`, {
+                state: {
+                    JobsID
+                }
+            })
+
+
+        } catch (error) {
+
+        }
+
+    }
+
     return (
 
+
         <div>
-            {auth ?
+            {isPending ?
                 <div className="card mb-4">
                     <div className="card-header row">
                 <span className="col-4">
@@ -226,7 +257,7 @@ const Boards = () => {
                             </tr>
                             </thead>
                             <tbody>
-                            {jobs && jobs.map((job,index2) => {
+                            {jobs && jobs.map((job, index2) => {
                                 return (
 
                                     /*Im Using Index So I can just pull the
@@ -242,14 +273,18 @@ const Boards = () => {
                                         <td>{job.ExpectSalary}</td>
                                         <td>{Moment(job.AppliedDate).format('MM-DD-YYYY')}</td>
                                         <td>
-                                            <button style={{backgroundColor: '#191c1f', color: 'white'}} onClick={() => {
-                                                handleEdit(job.JobsID);
-                                            }}>Edit Job
+                                            <button style={{backgroundColor: '#191c1f', color: 'white'}}
+                                                    onClick={() => {
+                                                        handleEdit(job.JobsID);
+                                                    }}>Edit Job
                                             </button>
                                         </td>
                                         <td>
                                             {job.Status == "Applied" ? <span/> :
-                                                <button style={{backgroundColor: '#191c1f', color: 'white'}} >
+                                                <button style={{backgroundColor: '#191c1f', color: 'white'}}
+                                                        onClick={() => {
+                                                            handleInterview(job.JobsID);
+                                                        }}>
                                                     Interview Notes
                                                 </button>
                                             }
@@ -261,8 +296,7 @@ const Boards = () => {
                         </table>
                     </div>
                 </div>
-                :<div> Not Authorized Please Sign IN</div>
-            }
+                :<> You have No Active Board. Please Create one <Link to={"/"}>first</Link></>}
         </div>
 
     );
