@@ -69,71 +69,21 @@ const verifyJWT = (req, res, next) => {
 ==============*/
 
 //Get a list of interview history
-router.get('/InterviewHistory/:jobID',(req, res) => {
-    const sql = `Select * from InterviewHistory where JobsID=?`;
-    const fields = [req.params.jobID];
-
-    require("./queryDB").request(sql, fields, connection)
-        .then(
-            (data) => {
-                console.log(data);
-                res.status(200).json(data);
-
-            },
-            (err) => {
-                res.status(400).send(err);
-            }
-        );
+router.get('/InterviewHistory/:jobID', (req, res) => {
+    require("./get/interview/InterviewHistory").getInterviewHistory(req, res, connection);
 });
 
-
-//Todo Should be working
 //Get a list of jobs based on the user's identification and Job Board identification (populates Job Tracker UI)
-router.get('/jobs',verifyJWTBackEnd,(req, res) => {
-    const sql = `Select JobBoardID,JobsID,CompName, PositionName, AppliedDate, e.Name AS Status, i.Name AS Interest, ExpectSalary
-                 from (Jobs INNER JOIN JobStatus e ON Jobs.StatusID = e.StatusID) INNER JOIN InterestLevel i ON Jobs.InterestLevel = i.InterestLevelID
-                 where JobBoardID = (Select CurrentBoard from User where LogInId=?)`;
-    const fields = req.logId;
-
-    require("./queryDB").request(sql, fields, connection)
-        .then(
-            (data) => {
-
-                    res.status(200).send(data);
-
-            },
-            (err) => {
-                res.status(400).send(err);
-                //console.log(err);
-            }
-        );
+router.get('/jobs', verifyJWTBackEnd, (req, res) => {
+    require("./get/jobs/Jobs").getJobs(req, res, connection);
 });
 
 //Get a specific job so a user can edit its details (populates Edit Job Form UI)
 router.get('/jobs/edit/:id', (req, res) => {
-    const sql = `Select CompName, PositionName,
-            AppliedDate, StatusID, InterviewRound, InterestLevel,
-            CoreValues, MissionStatement, WebUrl, Awards, ExpectSalary,
-            ImportantSkills, InterviewNotes from Jobs where JobsID = ?`;
-    const fields = [req.params.id];
-
-    require("./queryDB").request(sql, fields, connection)
-        .then(
-            (data) => {
-                //console.log(data);
-                if (data.length == 0) {
-                    res.status(404).send("Job not found");
-                } else {
-                    res.status(200).send(data);
-                }
-            },
-            (err) => {
-                res.status(400).send(err);
-                //console.log(err);
-            }
-        );
+    require("./get/jobs/EditJob").getJobToEdit(req, res, connection);
 });
 
+//Todo Eliminate Route?
 //Get a list of jobs in the interview stage and documents to support the user (populates drop-down and documents in the interview UI)
 router.get('/interview/:id', verifyJWTBackEnd, (req, res) => {
     const sql = `Select JobsID, CompName, PositionName from Jobs where (JobBoardID = (Select CurrentBoard from User where LogInId=?) and StatusID = 2)`;
@@ -156,6 +106,7 @@ router.get('/interview/:id', verifyJWTBackEnd, (req, res) => {
         );
 });
 
+//Todo Eliminate Route?
 //Get a specific job in the interview stage (populates job details in the interview UI)
 router.get('/interview/job/:id', (req, res) => {
     const sql = `Select JobsID, CompName, PositionName, AppliedDate, StatusID, InterviewRound, InterestLevel from Jobs where JobsID = ?`;
@@ -180,113 +131,29 @@ router.get('/interview/job/:id', (req, res) => {
 
 //Gets the box cards and the documents within each for a specific user (populates documents UI)
 router.get('/documents', (req, res) => {
-    const sql=`Select * from BoxCard`;
-    const field=[];
-
-    require("./queryDB").request(sql, field, connection)
-        .then(
-            (data) => {
-                res.status(200).send(data);
-
-            },
-            (err) => {
-                res.status(400).send(err);
-                //console.log(err);
-            }
-        );
-
-    //res.send({Type: "GET5"});
+   require("./get/document/Documents").getDocuments(req, res, connection);
 });
 
-
-//Todo Working//
 //Gets the list of boards by the specific user (populates dropdown in Board UI)
 router.get('/board', verifyJWTBackEnd, (req, res) => {
-    const sql = `Select LastUpdated,JobBoardID,BoardName from JobBoards where UserID = (Select UserID from User where LogInId=?)`;
-    const fields = req.logId;
-
-    require("./queryDB").request(sql, fields, connection)
-        .then(
-            (data) => {
-                //console.log(data);
-                res.status(200).json({
-                    data:data
-
-                });
-            },
-            (err) => {
-                res.status(400).send(err);
-                //console.log(err);
-            }
-        )
+   require("./get/board/Boards").getBoards(req, res, connection);
 });
 
-
-//Todo Working
+//Gets the Board name and lastest updated date (populates Job Tracking UI)
 router.get('/Latestboard', verifyJWTBackEnd,(req, res) => {
-    const sql = `Select LastUpdated,JobBoardID,BoardName from JobBoards where UserID = (Select UserID from User where LogInId=?) and JobBoardID=(Select CurrentBoard from User where LogInId=?)`;
-    const fields = [req.logId,req.logId];
-
-    require("./queryDB").request(sql, fields, connection)
-        .then(
-            (data) => {
-                //console.log(data);
-                if (data.length > 0) {
-
-                    res.status(200).send(data);
-                }
-            },
-            (err) => {
-                res.status(400).send("Couldn't Do This");
-                //console.log(err);
-            }
-        );
+   require("./get/board/LatestBoard").getLatestBoard(req, res, connection);
 });
 
-//Todo Working
 router.get('/JobStatus', (req, res) => {
-    const sql = `Select * from JobStatus`;
-    const fields=[]
-
-    require("./queryDB").request(sql,fields, connection)
-        .then(
-            (data) => {
-                //console.log(data);
-
-                    res.status(200).send(data);
-
-            },
-
-            (err) => {
-                res.status(400).send(err);
-                ////console.log(err);
-            }
-        );
+    require("./get/jobs/JobStatus").getJobStatus(req, res, connection);
 });
 
-//Todo Working
 router.get('/InterestLevel', (req, res) => {
-    const sql = `Select * from InterestLevel`;
-    const fields=[]
-
-    require("./queryDB").request(sql,fields, connection)
-        .then(
-            (data) => {
-               //console.log(data);
-
-                res.status(200).send(data);
-
-            },
-
-            (err) => {
-                res.status(400).send(err);
-                ////console.log(err);
-            }
-        );
+    require("./get/jobs/InterestLevel").getInterestLevel(req, res, connection);
 });
 
-//Todo Working
-router.get('/isAuth', verifyJWT, (req, res) => {});
+//Checks if the user is Authenticated
+router.get('/isAuth', verifyJWT);
 
 /*==============
 ==POST Requests==
@@ -294,121 +161,12 @@ router.get('/isAuth', verifyJWT, (req, res) => {});
 
 //Gets the specific user to validate if credential are correct (informs login UI)
 router.post('/auth', (req, res) => {
-    const findUser = `Select PSWD,LogInId from LogIn where UserName=?`;
-    const fields = [
-        req.body.User,
-        req.body.Pass
-    ];
-
-    require("./queryDB").request(findUser, fields[0], connection)
-        .then(
-            (data) => {
-                if(data.length === 0){
-                    res.status(400).json({
-                        auth: false,
-                        message: "User does not exist"
-                    });
-                }else bcrypts.compare(fields[1], data[0].PSWD, function (err, result) {
-
-                    if (result === true) {
-
-                        const id = data[0].LogInID;
-
-                        const token = jwt.sign({sub:data[0].LogInId}, process.env.token, {
-                           expiresIn: 600
-                        });
-                        res.status(200).json({
-                            auth: true,
-                            token: token,
-                            result: data
-                        });
-                    } else {
-                        res.status(400).json({
-                            auth: false,
-                            message: "Incorrect Password"
-                        });
-                    }
-                })
-            }, (err) => {
-                res.status(400).send(err);
-            }
-        );
+    require("./post/Authenticate").authenticate(req, res, connection);
 });
 
 //Add a job to a job board for a specific user
-//**********************************************************************
-//*****************TO DO: Map jobstatus and interest********************
-//**********************************************************************
 router.post('/jobs',verifyJWTBackEnd, (req, res) => {
-    const sqlGetCurBoard=`Select CurrentBoard from User where LogInId=?`
-
-    const sql = `Insert into Jobs(JobBoardID, CompName, PositionName,
-            AppliedDate, StatusID, InterviewRound, InterestLevel,
-            CoreValues, MissionStatement, WebUrl, Awards, ExpectSalary,
-            ImportantSkills, InterviewNotes)
-            values(?,?,?,?,?,?,?,?,?,?,?,?,?,?)`;
-
-    const UpdateDate=`Update JobBoards SET LastUpdated=? where JobBoardID=?`;
-    const fields = [
-        req.logId,
-        req.body.company,
-        req.body.posName,
-        req.body.appDate,
-        req.body.jobStatus,
-        req.body.interviewRound,
-        req.body.interest,
-        req.body.coreValues,
-        req.body.mission,
-        req.body.webLink,
-        req.body.awards,
-        req.body.salary,
-        req.body.skills,
-        req.body.notes
-    ];
-    require("./queryDB").request(sqlGetCurBoard, fields.slice(0), connection)
-        .then(
-            (data) => {
-
-                fields[0]=data[0].CurrentBoard;
-                require("./queryDB").request(sql, fields, connection)
-                    .then(
-                        (data) => {
-                            ////console.log(data)
-                            //res.status(201).send(data);
-                            let date_ob = new Date();
-                            const updateFields=[
-
-                                date_ob,
-                                fields[0]
-
-                            ]
-                            require("./queryDB").request(UpdateDate, updateFields, connection)
-                                .then(
-                                    (data) => {
-                                        ////console.log(data)
-                                        res.status(201).send(data);
-                                    },
-                                    (err) => {
-                                        res.status(400).send(err);
-                                        ////console.log(err);
-                                    }
-                                );
-                        },
-                        (err) => {
-                            res.status(400).send(err);
-                            ////console.log(err);
-                        }
-                    );
-
-
-            },
-            (err) => {
-                res.status(400).send(err);
-                //console.log(err);
-            }
-        );
-
-
+    require("./post/Job").postJob(req, res, connection);
 });
 
 //Add a user for login
@@ -498,6 +256,7 @@ router.post('/logout', (req, res) => {
 
 
 });
+
 //Add a document for a specific user in a specific box card
 router.post('/documents',verifyJWTBackEnd, (req, res) => {
 
