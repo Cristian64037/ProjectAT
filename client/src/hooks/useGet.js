@@ -10,14 +10,19 @@ const useGet = (url) => {
         const abortCont = new AbortController();
         const fetchData = async () => {
             console.log("========IN FETCH DATA=======");
-            await fetch(url, {
+            const response = await fetch(url, {
                 method: 'Get',
                 headers: {
                     'content-type': 'application/json',
                     "x-access-token": localStorage.getItem("token")
                 },
                 signal: abortCont.signal
-            })
+            });
+
+            if (response) {
+                console.log("============AUTHENTICATING==============");
+                return await response.json();
+            }
         }
         fetchData()
             .then(res => {
