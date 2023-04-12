@@ -1,11 +1,7 @@
 const express = require('express');
 const router = express.Router();
-
 const jwt = require('jsonwebtoken');
 const bcrypts = require('bcrypt');
-
-//Current USER while Session tokens is done
-const UserIdActive=28;
 
 //Initialize DB
 const connection = require('../database/connection');
