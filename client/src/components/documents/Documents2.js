@@ -2,6 +2,7 @@ import useFetch from "../../hooks/useFetch";
 import Files from "./Files";
 import React, {useEffect, useState} from "react";
 import {useNavigate} from "react-router-dom";
+import {checkAuth} from "../../functions/checkAuth";
 
 const Documents = () => {
     const navigate = useNavigate();
@@ -25,21 +26,6 @@ const Documents = () => {
 
     }
     useEffect(() => {
-        const checkAuth = async () => {
-            const response = await fetch("http://localhost:3306/api/isAuth", {
-                method: 'Get',
-                headers: {
-                    'content-type': 'application/json',
-                    "x-access-token": localStorage.getItem("token")
-                }
-            });
-
-            if (response) {
-                console.log("============AUTHENTICATING==============");
-                return await response.json();
-            }
-        };
-
         checkAuth().then(body => {
             console.log(body.auth);
             if (body.auth) {
