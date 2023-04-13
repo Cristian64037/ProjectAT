@@ -34,10 +34,12 @@ function CollapsibleExample() {
     async function handleLogout() {
         alert("Logging eveveveveout");
         localStorage.removeItem('token');
+        navigate(`/login`)
+
 
         //This is not working
 
-        await fetch('http://localhost:3306/api/logout', {
+        /*await fetch('http://localhost:3306/api/logout', {
             method: 'Post',
             headers: {
                 'content-type': 'application/json',
@@ -48,7 +50,7 @@ function CollapsibleExample() {
             localStorage.removeItem('token');
             navigate(`/login`)
 
-        });
+        });*/
     }
 
     return (

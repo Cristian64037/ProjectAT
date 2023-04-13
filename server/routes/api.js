@@ -102,6 +102,11 @@ router.get('/InterestLevel', (req, res) => {
     require("./get/jobs/InterestLevel").getInterestLevel(req, res, connection);
 });
 
+//Gets The Resumes available for the Job Application UI
+router.get('/getResumesJobBoard',verifyJWTBackEnd,(req,res)=>{
+    require("./get/document/ResumesForJobApp").getResumesForJobApp(req,res,connection);
+})
+
 //Checks if the user is Authenticated
 router.get('/isAuth', verifyJWT);
 
@@ -133,6 +138,8 @@ router.post('/documents',verifyJWTBackEnd, (req, res) => {
 router.post('/board',verifyJWTBackEnd, (req, res) => {
     require("./post/Board").postBoard(req, res, connection);
 });
+
+
 
 /*==============
 ==PUT Requests==

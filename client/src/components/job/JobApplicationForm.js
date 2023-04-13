@@ -1,5 +1,5 @@
 import {useNavigate} from "react-router-dom";
-import {useEffect, useState} from "react";
+import React, {useEffect, useState} from "react";
 import DatePicker from "react-datepicker";
 import App from "../../App";
 import {useLocation} from "react-router";
@@ -20,7 +20,8 @@ const JobApplicationForm=(e)=>{
     const [CoreValues,setCoreValues]= useState("");
     const [Notes,setNotes]= useState("");
     const [JobStatFromDb,setJobStatFromDb]= useState([])
-    const [InterestLevelFromDb,setInterestLevelFromDb]= useState([])
+    const [InterestLevelFromDb,setInterestLevelFromDb]= useState([]);
+    const [resumeID,setResumeID]= useState([]);
     const { state } = useLocation();
 
 
@@ -56,6 +57,29 @@ const JobApplicationForm=(e)=>{
 
     }
 
+    async function getResumes() {
+        await fetch("http://localhost:3306/api/getResumesJobBoard", {
+            method: 'Get',
+            headers: {
+                'content-type': 'application/json',
+                "x-access-token": localStorage.getItem("token")
+            }
+        }).then(async (data) => {
+            console.log(data)
+            if(data.status===400){
+
+
+            }else{
+            var body = await data.json();
+
+            console.log(body)
+            setResumeID(body);}
+
+
+        });
+
+    }
+
     useEffect(() => {
         const checkAuth = async () => {
             const response = await fetch("http://localhost:3306/api/isAuth", {
@@ -76,6 +100,7 @@ const JobApplicationForm=(e)=>{
             console.log(body.auth);
             if (body.auth) {
                 fetchData()
+                getResumes()
                 try{
                     const { index } = state;
                     fetchSpecificJob(index);
@@ -195,11 +220,6 @@ const JobApplicationForm=(e)=>{
 
 
     }
-
-
-
-
-
 
     return(
         <div className="app-container">
@@ -330,11 +350,25 @@ const JobApplicationForm=(e)=>{
                                        value={Notes}
                                 />
                             </div>
+                            <div className="input-field">
+                                <label>Resume</label>
+                                <select>
+                                    <option disabled selected >Select Resume</option>
+                                    {resumeID.length!==0? resumeID.map(e => (
+                                            <option >{e.DocName}</option>
+                                        )
+                                    ):<option disabled> Upload to Documents First</option>
+                                    }
+
+                                </select>
+                            </div>
+                            <label/>
+                            <button className="nextBtn">
+                                <button type="submit" onClick={handleSubmit}>Submit</button>
+                            </button>
                         </div>
 
-                        <button className="nextBtn">
-                            <button type="submit" onClick={handleSubmit}>Submit</button>
-                        </button>
+
                     </div>
                 </div>
             </form>
