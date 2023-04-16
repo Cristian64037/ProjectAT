@@ -51,6 +51,7 @@ function App() {
                         <Route exact path={"/InterviewHistory"} element={<InterviewHistory/>}/>
                         <Route exact path={"/unauthorized"} element={<Unauthorized/>}/>
                         <Route exact path={"/"} element={<CreateBoard/>}/>
+                        <Route exact path={"*"} element={<Unauthorized/>}/>
                     </Routes>
                 </div>
                 <FootEnd/>
