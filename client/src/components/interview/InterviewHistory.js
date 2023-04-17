@@ -31,7 +31,8 @@ const InterviewHistory=()=>{
         Website: '',
         InterestLevel: '',
         InterviewRound: '',
-        Notes: ''
+        Notes: '',
+        Resume:''
     });
     const { state } = useLocation();
 
@@ -151,7 +152,8 @@ const InterviewHistory=()=>{
                             Website: body[0].WebUrl,
                             InterestLevel: body[0].InterestLevel,
                             InterviewRound: body[0].InterviewRound,
-                            Notes: body[0].InterviewNotes
+                            Notes: body[0].InterviewNotes,
+                            Resume: body[0].DocName
                         }));
                         console.log(body[0]);
 
@@ -281,7 +283,9 @@ const InterviewHistory=()=>{
                     <Container>
 
 
-                    <p style={{textAlign:"center"}}><b>Feedback</b></p>
+                    <p style={{textAlign:"center"}}><b>Resume</b></p>
+                        <p><b>Company Name:</b> {formState.Resume}</p>
+
 
                     </Container>
 

@@ -1,5 +1,5 @@
 const getJobs = (req, res, connection) => {
-    const sql = `Select JobBoardID,JobsID,CompName, PositionName, AppliedDate, e.Name AS Status, i.Name AS Interest, ExpectSalary
+    const sql = `Select JobBoardID,JobsID,CompName, Resume,PositionName, AppliedDate, e.Name AS Status, i.Name AS Interest, ExpectSalary
                  from (Jobs INNER JOIN JobStatus e ON Jobs.StatusID = e.StatusID) INNER JOIN InterestLevel i ON Jobs.InterestLevel = i.InterestLevelID
                  where JobBoardID = (Select CurrentBoard from User where LogInId=?)`;
     const fields = req.logId;

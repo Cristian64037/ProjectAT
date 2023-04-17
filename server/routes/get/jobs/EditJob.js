@@ -1,8 +1,8 @@
 const getJobToEdit = (req, res, connection) => {
-    const sql = `Select CompName, PositionName,
+    const sql = `Select CompName, d.DocName,PositionName,
             AppliedDate, StatusID, InterviewRound, InterestLevel,
             CoreValues, MissionStatement, WebUrl, Awards, ExpectSalary,
-            ImportantSkills, InterviewNotes from Jobs where JobsID = ?`;
+            ImportantSkills, InterviewNotes from Jobs Inner JOIN Documents d on Jobs.Resume= d.DocID where Jobs.JobsID = ?`;
     const fields = [req.params.id];
 
     require("../../queryDB").request(sql, fields, connection)
