@@ -135,7 +135,6 @@ const InterviewHistory=()=>{
                     const { JobsID } = state;
                     console.log("envienv"+JobsID)
                     getJobDetails(JobsID).then(body => {
-                        //setJob(body[0])
 
                         setFormState(prevState => ({
                             ...prevState,
@@ -181,7 +180,9 @@ const InterviewHistory=()=>{
     }, []);
 
 
-
+    function HandleSaveButton() {
+        alert("Saving")
+    }
 
     return (
         <Container id={"IntHistory"} style={{height:"100vh"}} >
@@ -268,7 +269,7 @@ const InterviewHistory=()=>{
                         </Form.Group>
                         <br/>
 
-                        <Button variant="primary" type="submit" >
+                        <Button variant="primary" type="submit" onClick={HandleSaveButton}>
                             Save
                         </Button>
 
