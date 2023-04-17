@@ -67,8 +67,12 @@ const Boards = () => {
                         console.log("YOomeomvoemvoOOO")
                         setBoardName(body[0].BoardName);
                         setLastUpdatedDate(body[0].LastUpdated);
+                        if(jobs){
+                            FormatTable();
 
-                    jobs && FormatTable();
+                        }
+
+
 
 
 
@@ -87,11 +91,11 @@ const Boards = () => {
     }, [isPending]);
 
     function FormatTable() {
-        const tableElement = document.getElementById("table");
+        /*const tableElement = document.getElementById("table");
         if (!tableElement) {
             console.error("Table element not found");
             return;
-        }
+        }*/
         new window.simpleDatatables.DataTable("table", {
             perPageSelect: [5, 10, ["All", -1]],
             columns: [
@@ -270,9 +274,10 @@ const Boards = () => {
                                         <td>{Moment(job.AppliedDate).format('MM-DD-YYYY')}</td>
                                         <td>
                                             <button style={{backgroundColor: '#191c1f', color: 'white'}}
-                                                    onClick={() => {
-                                                        handleEdit(job.JobsID);
-                                                    }}>Edit Job
+                                                    value={job.JobsID}
+                                                    onClick={(e) => {
+                                                        handleEdit(e.target.value);
+                                                    }}>Edit Job {job.JobsID}
                                             </button>
                                         </td>
                                         <td>
