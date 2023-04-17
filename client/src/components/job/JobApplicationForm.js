@@ -22,6 +22,7 @@ const JobApplicationForm=(e)=>{
     const [JobStatFromDb,setJobStatFromDb]= useState([])
     const [InterestLevelFromDb,setInterestLevelFromDb]= useState([]);
     const [resumeID,setResumeID]= useState([]);
+    const [selectedResumeID,setSelectedResumeID]= useState("");
     const { state } = useLocation();
 
 
@@ -171,6 +172,7 @@ const JobApplicationForm=(e)=>{
                     "awards": Awards,
                     "salary": ExpectedSalary,
                     "notes": Notes,
+                    "ResumeID":selectedResumeID
 
                 })
             }).then(async (data) => {
@@ -185,6 +187,7 @@ const JobApplicationForm=(e)=>{
 
         }else{
             alert("Editing");
+            alert(resumeID)
             await fetch("http://localhost:3306/api/jobs/edit/"+jobId, {
                 method: 'PUT',
                 headers: {
@@ -204,6 +207,7 @@ const JobApplicationForm=(e)=>{
                     "awards": Awards,
                     "salary": ExpectedSalary,
                     "notes": Notes,
+                    "ResumeID":selectedResumeID
 
                 })
             }).then(async (data) => {
@@ -355,7 +359,7 @@ const JobApplicationForm=(e)=>{
                                 <select>
                                     <option disabled selected >Select Resume</option>
                                     {resumeID.length!==0? resumeID.map(e => (
-                                            <option >{e.DocName}</option>
+                                            <option onChange={e=>{setResumeID(resumeID.DocID)}}>{e.DocName}</option>
                                         )
                                     ):<option disabled> Upload to Documents First</option>
                                     }

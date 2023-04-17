@@ -24,6 +24,7 @@ const postJob = (req, res, connection) => {
         req.body.skills,
         req.body.notes
     ];
+    console.log(req.body.ResumeID);
     require("../queryDB").request(sqlGetCurBoard, fields.slice(0), connection)
         .then(
             (data) => {
