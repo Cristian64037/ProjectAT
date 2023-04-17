@@ -67,7 +67,11 @@ const Boards = () => {
                         console.log("YOomeomvoemvoOOO")
                         setBoardName(body[0].BoardName);
                         setLastUpdatedDate(body[0].LastUpdated);
-                        jobs && FormatTable();
+
+                    jobs && FormatTable();
+
+
+
 
 
                         setIspending(true)
@@ -83,6 +87,11 @@ const Boards = () => {
     }, [isPending]);
 
     function FormatTable() {
+        const tableElement = document.getElementById("table");
+        if (!tableElement) {
+            console.error("Table element not found");
+            return;
+        }
         new window.simpleDatatables.DataTable("table", {
             perPageSelect: [5, 10, ["All", -1]],
             columns: [
@@ -229,7 +238,7 @@ const Boards = () => {
                 </span>
                     </div>
                     <div className="card-body">
-                        {isPending && <div> Loading...</div>}
+
                         <table className="table">
                             <thead>
                             <tr>
@@ -243,7 +252,7 @@ const Boards = () => {
                                 <th></th>
                             </tr>
                             </thead>
-                            <tbody>
+                            <tbody >
                             {jobs && jobs.map((job, index2) => {
                                 return (
 
@@ -280,7 +289,8 @@ const Boards = () => {
                                 )
                             })}
                             </tbody>
-                        </table>
+                        </table >
+
                     </div>
                 </div>
                 :<> You have No Active Board. Please Create one <Link to={"/"}>first</Link></>}

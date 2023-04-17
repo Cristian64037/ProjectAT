@@ -284,7 +284,8 @@ const InterviewHistory=()=>{
 
 
                     <p style={{textAlign:"center"}}><b>Resume</b></p>
-                        <p><b>Company Name:</b> {formState.Resume}</p>
+
+                        <p><b>Company Name:</b> {formState.Resume==null?"NO RESUME LINKED":formState.Resume}</p>
 
 
                     </Container>
