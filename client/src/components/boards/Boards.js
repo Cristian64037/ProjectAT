@@ -67,24 +67,10 @@ const Boards = () => {
                         console.log("YOomeomvoemvoOOO")
                         setBoardName(body[0].BoardName);
                         setLastUpdatedDate(body[0].LastUpdated);
-                        if(jobs){
-                            FormatTable();
-
-                        }
-
-
-
-
-
-
-
                         setIspending(true)
-
-
                 });
-            }
-
-            else {
+                //FormatTable();
+            } else {
                 navigate('/unauthorized')
             }
         });
@@ -257,7 +243,7 @@ const Boards = () => {
                             </tr>
                             </thead>
                             <tbody >
-                            {jobs && jobs.map((job, index2) => {
+                            {jobs && jobs.map((job) => {
                                 return (
 
                                     /*Im Using Index So I can just pull the
@@ -283,10 +269,12 @@ const Boards = () => {
                                         <td>
                                             {job.Status == "Applied" ? <span/> :
                                                 <button style={{backgroundColor: '#191c1f', color: 'white'}}
-                                                        onClick={() => {
-                                                            handleInterview(job.JobsID);
+                                                        value={job.JobsID}
+                                                        onClick={(e) => {
+                                                            console.log("Executing....")
+                                                            handleInterview(e.target.value);
                                                         }}>
-                                                    Interview Notes
+                                                    Interview Notes {job.JobsID}
                                                 </button>
                                             }
                                         </td>
