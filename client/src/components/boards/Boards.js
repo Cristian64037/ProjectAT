@@ -14,7 +14,6 @@ const Boards = () => {
     const [isPending, setIspending] = useState(false);
     const [lastUpdateDate, setLastUpdatedDate] = useState("");
     const [auth, setAuth] = useState(false);
-    const [jobToEdit, setJobToEdit] = useState("");
 
     async function getBoardData() {
         const response = await fetch("http://localhost:3306/api/Latestboard", {
@@ -69,7 +68,6 @@ const Boards = () => {
                         setLastUpdatedDate(body[0].LastUpdated);
                         setIspending(true)
                 });
-                //FormatTable();
             } else {
                 navigate('/unauthorized')
             }
@@ -77,11 +75,6 @@ const Boards = () => {
     }, [isPending]);
 
     function FormatTable() {
-        /*const tableElement = document.getElementById("table");
-        if (!tableElement) {
-            console.error("Table element not found");
-            return;
-        }*/
         new window.simpleDatatables.DataTable("table", {
             perPageSelect: [5, 10, ["All", -1]],
             columns: [
@@ -243,7 +236,7 @@ const Boards = () => {
                             </tr>
                             </thead>
                             <tbody >
-                            {jobs && jobs.map((job) => {
+                            {jobs && jobs.map((job, index) => {
                                 return (
 
                                     /*Im Using Index So I can just pull the
@@ -278,12 +271,12 @@ const Boards = () => {
                                                 </button>
                                             }
                                         </td>
+                                        {index + 1 === jobs.length && FormatTable}
                                     </tr>
                                 )
                             })}
                             </tbody>
                         </table >
-
                     </div>
                 </div>
                 :<> You have No Active Board. Please Create one <Link to={"/"}>first</Link></>}
