@@ -23,7 +23,7 @@ const authenticate = (req, res, connection) => {
                         const id = data[0].LogInID;
 
                         const token = jwt.sign({sub:data[0].LogInId}, process.env.token, {
-                            expiresIn: 600
+                            expiresIn: 1000
                         });
                         res.status(200).json({
                             auth: true,

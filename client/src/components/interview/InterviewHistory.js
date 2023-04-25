@@ -36,55 +36,56 @@ const InterviewHistory=()=>{
     });
     const { state } = useLocation();
 
+    //InterviewHistory
     const [editInterviewInfo,setEditInterviewInfo]= useState({
+        NewInterview:true,
+        JobId:state.JobsID,
         Date:'',
         Time:'',
         Interviewer:'',
         Location:'',
         Title:'',
-        Notes:''
+        Notes:'',
+        InterviewID:0
 
         }
     );
 
 
+    //Handles Bottom Row Right Corner
     function createNewCard(InterviewID) {
+
         if(isNaN(InterviewID)){
-            setJob("NAN")
+            alert(InterviewHistory)
             alert("New Card")
             setEditInterviewInfo(prevState => ({
                 ...prevState,
+                NewInterview: true,
                 Date:'yyyy-mm-dd',
                 Time:'hh:mm',
                 Interviewer:'',
                 Location:'',
                 Title:'',
-                Notes:''
+                Notes:'',
+                InterviewID:0
             }));
-
-
-
         }else{
-            setJob(InterviewID);
-            console.log()
             alert("Updating!");
             try{
             setEditInterviewInfo(prevState => ({
                 ...prevState,
+                NewInterview: false,
                 Date: InterviewHistory[InterviewID].Date,
                 Time: InterviewHistory[InterviewID].Time,
                 Interviewer: InterviewHistory[InterviewID].Interviewer,
                 Location: InterviewHistory[InterviewID].Location,
                 Title: InterviewHistory[InterviewID].InterviewName,
                 Notes: InterviewHistory[InterviewID].Notes,
+                InterviewID:InterviewHistory[InterviewID].InterviewID
+
             }));}catch (e) {
                 console.log(e);
-
-
             }
-
-
-
         }
 
 
@@ -180,8 +181,59 @@ const InterviewHistory=()=>{
     }, []);
 
 
-    function HandleSaveButton() {
-        alert("Saving")
+    async function HandleSaveButton() {
+        const boolInterviewNotes = editInterviewInfo.NewInterview;
+        if (boolInterviewNotes) {
+            await fetch("http://localhost:3306/api/AddInterview", {
+                method: 'POST',
+                headers: {
+                    'content-type': 'application/json',
+                    "x-access-token": localStorage.getItem("token")
+                },
+                body: JSON.stringify({
+
+                    "InterviewName": editInterviewInfo.Title,
+                    "JobsID": editInterviewInfo.JobId,
+                    "Date": editInterviewInfo.Date,
+                    "Time": editInterviewInfo.Time,
+                    "Location": editInterviewInfo.Location,
+                    "Interviewer": editInterviewInfo.Interviewer,
+                    "Notes": editInterviewInfo.Notes
+
+                })
+            }).then(async (data) => {
+                if (data.status === 202) {
+                    alert("Successful Interview Save");
+                    window.location.reload();
+                }
+            });
+        } else {
+            await fetch("http://localhost:3306/api/AddInterview/edit", {
+                method: 'PUT',
+                headers: {
+                    'content-type': 'application/json',
+                    "x-access-token" : localStorage.getItem("token")
+                },
+                body: JSON.stringify({
+                    "InterviewName": editInterviewInfo.Title,
+                    "Date": editInterviewInfo.Date,
+                    "Time": editInterviewInfo.Time,
+                    "Location": editInterviewInfo.Location,
+                    "Interviewer": editInterviewInfo.Interviewer,
+                    "Notes": editInterviewInfo.Notes,
+                    "InterviewID":editInterviewInfo.InterviewID
+
+                })
+            }).then(async (data) => {
+
+                if(data.status===202){
+                    alert("Successful Job Update");
+                    window.location.reload();
+
+                }
+            });
+        }
+
     }
 
     return (
@@ -269,7 +321,7 @@ const InterviewHistory=()=>{
                         </Form.Group>
                         <br/>
 
-                        <Button variant="primary" type="submit" onClick={HandleSaveButton}>
+                        <Button variant="primary" onClick={HandleSaveButton}>
                             Save
                         </Button>
 
@@ -322,7 +374,8 @@ const InterviewHistory=()=>{
                                     ))}
                                 <Card>
                                     <Card.Body>
-                                        <Button variant="primary" onClick={createNewCard}>Add Interview</Button>
+                                        <Button variant="primary" onClick={() => {
+                                            createNewCard("NONE")}}>Add Interview</Button>
                                     </Card.Body>
                                 </Card>
                             </div>
