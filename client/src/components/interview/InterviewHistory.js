@@ -10,13 +10,8 @@ import {checkAuth} from "../../functions/checkAuth";
 
 const InterviewHistory=()=>{
     const navigate = useNavigate();
-    const [User,setUser]= useState("");
-    const [Password,setPass]= useState("");
-    const [logInresult,setLogInResult]= useState("");
-    const [loginStatus, setLoginStatus] = useState(false);
     const [auth,setAuth]= useState(false);
-    const [InterviewHistory, setInterviewHistory]= useState([]);
-    const [Job, setJob]= useState([]);
+    const [InterviewHistory, setInterviewHistory]= useState([])
     const [formState, setFormState] = useState({
         CompanyName: '',
         ApplyDate: '',
@@ -365,7 +360,7 @@ const InterviewHistory=()=>{
                                             <button style={{backgroundColor: '#191c1f', color: 'white'}} onClick={() => {
                                                 createNewCard(index);
 
-                                            }}>Edit Job
+                                            }}>Edit/View
                                             </button>
                                         </Card.Body>
                                     </Card>

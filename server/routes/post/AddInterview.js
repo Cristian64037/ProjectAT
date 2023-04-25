@@ -16,12 +16,8 @@ const AddInterview = (req, res, connection) => {
     require("../queryDB").request(sql, fields, connection)
         .then(
             (data) => {
-                require("../queryDB").request(sql, fields, connection)
-                    .then(
-                        (data) => {
-                            res.status(202).json("Success")
-                        }
-                    );
+                res.status(202).json("Success")
+
             },
             (err) => {
                 res.status(400).send(err);
