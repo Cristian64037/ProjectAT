@@ -63,11 +63,12 @@ const Boards = () => {
                     console.log("YOomeomvoemvoOOO")
                     console.log("This is working Board Data")
 
-                        console.log("YOomeomvoemvoOOO")
-                        setBoardName(body[0].BoardName);
-                        setLastUpdatedDate(body[0].LastUpdated);
-                        setIspending(true)
+                    console.log("YOomeomvoemvoOOO")
+                    setBoardName(body[0].BoardName);
+                    setLastUpdatedDate(body[0].LastUpdated);
+                    setIspending(true)
                 });
+                FormatTable();
             } else {
                 navigate('/unauthorized')
             }
@@ -95,7 +96,7 @@ const Boards = () => {
 
                 const filterHeaders = {
                     nodeName: "TR",
-                    childNodes: tHead.childNodes[0].childNodes.slice(0, 6).map(
+                    childNodes: tHead.childNodes[0].childNodes.map(
                         (_th, index) => ({
                             nodeName: "TH",
                             childNodes: [
@@ -184,44 +185,56 @@ const Boards = () => {
             {isPending ?
                 <div className="card mb-4">
                     <div className="card-header row">
-                <span className="col-4">
-                    <i className="fas fa-table me-2 fs-4"/>
-                    <span style={{fontSize: '28px'}}>{BoardName}</span>
-                </span>
+                        <span className="col-3">
+                            <i className="fas fa-table me-2 fs-4"/>
+                            <span style={{fontSize: '28px'}}>{BoardName}</span>
+                        </span>
 
-                        <span style={{fontSize: '28px'}} className="flex-column text-center col-4">
-                    Last update:{Moment(lastUpdateDate).format('MM-DD-YYYY')}
-                </span>
-
-
-                        <span className="col-4">
-                    {/* Button to open the pop-up notepad */}
-                            <button id="openBtn" className="float-lg-end  btn btn-outline-dark" onClick={OpenPad}>
-                        Job Search Notes
-                    </button>
-
-                    <span className="float-lg-end">&nbsp;&nbsp;&nbsp;</span>
-
+                        <span className="col-6 d-flex justify-content-center">
                             {/* Button to open the job form */}
-                            <button id="myButton" className="float-lg-end  btn btn-outline-dark submit-button"
-                                    onClick={GoToAppAdder}>
-                        Add New Job
-                    </button>
+                            <button id="myButton" className="float-lg-end  btn btn-outline-dark submit-button" onClick={GoToAppAdder}>
+                                Add New Job
+                            </button>
+
+                            <span className="float-lg-end">&nbsp;&nbsp;&nbsp;</span>
+
+                            <button id="myButton" className="float-lg-end btn btn-outline-dark submit-button">
+                                Edit Job
+                            </button>
+
+                            <span className="float-lg-end">&nbsp;&nbsp;&nbsp;</span>
+
+                            <button id="myButton" className="float-lg-end btn btn-outline-dark submit-button">
+                                Interview Notes
+                            </button>
+
+                            <span className="float-lg-end">&nbsp;&nbsp;&nbsp;</span>
+
+                            {/* Button to open the pop-up notepad */}
+                            <button id="openBtn" className="float-lg-end btn btn-outline-dark" onClick={OpenPad}>
+                                Job Search Notes
+                            </button>
 
                             {/* The overlay */}
                             <div className="overlay">
-                        {/* The pop-up notepad */}
+                                {/* The pop-up notepad */}
                                 <div className="popup">
-                        <textarea id="notepad" rows={16} cols={58} defaultValue={""}/>
-                        <br/><br/>
+                                    <textarea id="notepad" rows={16} cols={58} defaultValue={""}/>
+                                    <br/>
+                                    <br/>
                                     {/* Button to close the pop-up notepad */}
                                     <button id="closeBtn">Close</button>
-                        </div>
+                                </div>
+                             </div>
+                        </span>
+
+                        <span style={{fontSize: '28px'}} className="col-3 text-end">
+                            Last update: {Moment(lastUpdateDate).format('MM-DD-YYYY')}
+                        </span>
                     </div>
-                </span>
+                    <div>
                     </div>
                     <div className="card-body">
-
                         <table className="table">
                             <thead>
                             <tr>
@@ -231,18 +244,16 @@ const Boards = () => {
                                 <th>Interest Level</th>
                                 <th>Salary</th>
                                 <th>Date Applied</th>
-                                <th></th>
-                                <th></th>
                             </tr>
                             </thead>
-                            <tbody >
+                            <tbody>
                             {jobs && jobs.map((job, index) => {
                                 return (
 
                                     /*Im Using Index So I can just pull the
-                            * job from the array versus potentially giving them the option from accessing a job
-                            * they dont' have access too by using inspect element. I will make the same changes to
-                            *Boards  */
+                                     * job from the array versus potentially giving them the option from accessing a job
+                                     * they dont' have access too by using inspect element. I will make the same changes to
+                                     *Boards  */
 
                                     <tr>
                                         <td>{job.CompName}</td>
@@ -251,35 +262,14 @@ const Boards = () => {
                                         <td>{job.Interest}</td>
                                         <td>{job.ExpectSalary}</td>
                                         <td>{Moment(job.AppliedDate).format('MM-DD-YYYY')}</td>
-                                        <td>
-                                            <button style={{backgroundColor: '#191c1f', color: 'white'}}
-                                                    value={job.JobsID}
-                                                    onClick={(e) => {
-                                                        handleEdit(e.target.value);
-                                                    }}>Edit Job {job.JobsID}
-                                            </button>
-                                        </td>
-                                        <td>
-                                            {job.Status == "Applied" ? <span/> :
-                                                <button style={{backgroundColor: '#191c1f', color: 'white'}}
-                                                        value={job.JobsID}
-                                                        onClick={(e) => {
-                                                            console.log("Executing....")
-                                                            handleInterview(e.target.value);
-                                                        }}>
-                                                    Interview Notes {job.JobsID}
-                                                </button>
-                                            }
-                                        </td>
-                                        {index + 1 === jobs.length && FormatTable}
                                     </tr>
                                 )
                             })}
                             </tbody>
-                        </table >
+                        </table>
                     </div>
                 </div>
-                :<> You have No Active Board. Please Create one <Link to={"/"}>first</Link></>}
+                : <> You have No Active Board. Please Create one <Link to={"/"}>first</Link></>}
         </div>
 
     );

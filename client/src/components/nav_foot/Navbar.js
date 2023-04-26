@@ -38,11 +38,9 @@ function CollapsibleExample() {
                     <Navbar.Toggle aria-controls="responsive-navbar-nav" />
                 <Navbar.Collapse id="responsive-navbar-nav">
                     <Nav className="m-auto">
-                        <Nav.Link href="/interviewPrep"> Interview Prep </Nav.Link>
-                        <Nav.Link href="/boards"> Board </Nav.Link>
-                        <Nav.Link href="/JobApplicationForm"> Job Form</Nav.Link>
+                        <Nav.Link href="/"> Job Searchs </Nav.Link>
+                        <Nav.Link href="/boards"> Job Board </Nav.Link>
                         <Nav.Link href="/documents"> Documents </Nav.Link>
-                        <Nav.Link href="/"> Change Board </Nav.Link>
                     </Nav>
                     <Nav>
                         <Nav.Link href="/login" id="BookAppointmentLogo" onClick={handleLogout} > Sign Out </Nav.Link>
