@@ -4,6 +4,7 @@ import {useEffect, useState} from "react";
 import Moment from 'moment';
 import JobApplicationForm from "../job/JobApplicationForm";
 import {Link} from "react-router-dom";
+import {checkAuth} from "../../functions/checkAuth";
 
 const Boards = () => {
     let navigate = useNavigate();
@@ -13,7 +14,6 @@ const Boards = () => {
     const [isPending, setIspending] = useState(false);
     const [lastUpdateDate, setLastUpdatedDate] = useState("");
     const [auth, setAuth] = useState(false);
-    const [jobToEdit, setJobToEdit] = useState("");
 
     async function getBoardData() {
         const response = await fetch("http://localhost:3306/api/Latestboard", {
@@ -46,20 +46,6 @@ const Boards = () => {
     }
 
     useEffect(() => {
-        const checkAuth = async () => {
-            const response = await fetch("http://localhost:3306/api/isAuth", {
-                method: 'Get',
-                headers: {
-                    'content-type': 'application/json',
-                    "x-access-token": localStorage.getItem("token")
-                }
-            });
-
-            if (response) {
-                console.log("============AUTHENTICATING==============");
-                return await response.json();
-            }
-        }
         checkAuth().then(body => {
             console.log(body.auth);
             if (body.auth) {
@@ -80,16 +66,9 @@ const Boards = () => {
                         console.log("YOomeomvoemvoOOO")
                         setBoardName(body[0].BoardName);
                         setLastUpdatedDate(body[0].LastUpdated);
-                        jobs && FormatTable();
-
-
                         setIspending(true)
-
-
                 });
-            }
-
-            else {
+            } else {
                 navigate('/unauthorized')
             }
         });
@@ -242,7 +221,7 @@ const Boards = () => {
                 </span>
                     </div>
                     <div className="card-body">
-                        {isPending && <div> Loading...</div>}
+
                         <table className="table">
                             <thead>
                             <tr>
@@ -256,8 +235,8 @@ const Boards = () => {
                                 <th></th>
                             </tr>
                             </thead>
-                            <tbody>
-                            {jobs && jobs.map((job, index2) => {
+                            <tbody >
+                            {jobs && jobs.map((job, index) => {
                                 return (
 
                                     /*Im Using Index So I can just pull the
@@ -274,26 +253,30 @@ const Boards = () => {
                                         <td>{Moment(job.AppliedDate).format('MM-DD-YYYY')}</td>
                                         <td>
                                             <button style={{backgroundColor: '#191c1f', color: 'white'}}
-                                                    onClick={() => {
-                                                        handleEdit(job.JobsID);
-                                                    }}>Edit Job
+                                                    value={job.JobsID}
+                                                    onClick={(e) => {
+                                                        handleEdit(e.target.value);
+                                                    }}>Edit Job {job.JobsID}
                                             </button>
                                         </td>
                                         <td>
                                             {job.Status == "Applied" ? <span/> :
                                                 <button style={{backgroundColor: '#191c1f', color: 'white'}}
-                                                        onClick={() => {
-                                                            handleInterview(job.JobsID);
+                                                        value={job.JobsID}
+                                                        onClick={(e) => {
+                                                            console.log("Executing....")
+                                                            handleInterview(e.target.value);
                                                         }}>
-                                                    Interview Notes
+                                                    Interview Notes {job.JobsID}
                                                 </button>
                                             }
                                         </td>
+                                        {index + 1 === jobs.length && FormatTable}
                                     </tr>
                                 )
                             })}
                             </tbody>
-                        </table>
+                        </table >
                     </div>
                 </div>
                 :<> You have No Active Board. Please Create one <Link to={"/"}>first</Link></>}

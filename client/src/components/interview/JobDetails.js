@@ -1,6 +1,7 @@
 import useFetch from "../../hooks/useFetch";
 import {useEffect, useState} from "react";
 
+
 const JobDetails = (JobId) => {
     const [job, setJob] = useState("");
     const [isPending, setIsPending] = useState(true);

@@ -2,6 +2,7 @@ import {useNavigate} from "react-router-dom";
 import React, {useEffect, useState} from "react";
 import DatePicker from "react-datepicker";
 import App from "../../App";
+import {checkAuth} from "../../functions/checkAuth";
 import {useLocation} from "react-router";
 
 const JobApplicationForm=(e)=>{
@@ -22,6 +23,7 @@ const JobApplicationForm=(e)=>{
     const [JobStatFromDb,setJobStatFromDb]= useState([])
     const [InterestLevelFromDb,setInterestLevelFromDb]= useState([]);
     const [resumeID,setResumeID]= useState([]);
+    const [selectedResumeID,setSelectedResumeID]= useState(null);
     const { state } = useLocation();
 
 
@@ -81,21 +83,6 @@ const JobApplicationForm=(e)=>{
     }
 
     useEffect(() => {
-        const checkAuth = async () => {
-            const response = await fetch("http://localhost:3306/api/isAuth", {
-                method: 'Get',
-                headers: {
-                    'content-type': 'application/json',
-                    "x-access-token": localStorage.getItem("token")
-                }
-            });
-
-            if (response) {
-                console.log("============AUTHENTICATING==============");
-                return await response.json();
-            }
-        };
-
         checkAuth().then(body => {
             console.log(body.auth);
             if (body.auth) {
@@ -148,6 +135,7 @@ const JobApplicationForm=(e)=>{
 
 
     async function handleSubmit(e) {
+        const ResumeID = selectedResumeID!=null ? resumeID[selectedResumeID].DocID : null;
         e.preventDefault();
         if(jobId==null){
             alert("New Job");
@@ -171,6 +159,7 @@ const JobApplicationForm=(e)=>{
                     "awards": Awards,
                     "salary": ExpectedSalary,
                     "notes": Notes,
+                    "ResumeID": ResumeID
 
                 })
             }).then(async (data) => {
@@ -185,6 +174,7 @@ const JobApplicationForm=(e)=>{
 
         }else{
             alert("Editing");
+            alert(resumeID)
             await fetch("http://localhost:3306/api/jobs/edit/"+jobId, {
                 method: 'PUT',
                 headers: {
@@ -204,6 +194,7 @@ const JobApplicationForm=(e)=>{
                     "awards": Awards,
                     "salary": ExpectedSalary,
                     "notes": Notes,
+                    "ResumeID":ResumeID
 
                 })
             }).then(async (data) => {
@@ -215,7 +206,6 @@ const JobApplicationForm=(e)=>{
                     alert(body);
                 }
             });
-            //Do a Edit to The Db route Here
         }
 
 
@@ -352,10 +342,12 @@ const JobApplicationForm=(e)=>{
                             </div>
                             <div className="input-field">
                                 <label>Resume</label>
-                                <select>
+                                <select onChange={e => (
+                                    setSelectedResumeID(e.target.value))}>
                                     <option disabled selected >Select Resume</option>
-                                    {resumeID.length!==0? resumeID.map(e => (
-                                            <option >{e.DocName}</option>
+                                    {resumeID.length!==0? resumeID.map((e,index) => (
+
+                                            <option value={index}>{e.DocName}</option>
                                         )
                                     ):<option disabled> Upload to Documents First</option>
                                     }

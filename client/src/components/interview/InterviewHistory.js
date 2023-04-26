@@ -4,18 +4,14 @@ import { useNavigate } from 'react-router-dom';
 import {Container, Row, Col, Form, Button, Card} from 'react-bootstrap';
 import Moment from "moment";
 import {useLocation} from "react-router";
+import {checkAuth} from "../../functions/checkAuth";
 
 
 
 const InterviewHistory=()=>{
     const navigate = useNavigate();
-    const [User,setUser]= useState("");
-    const [Password,setPass]= useState("");
-    const [logInresult,setLogInResult]= useState("");
-    const [loginStatus, setLoginStatus] = useState(false);
     const [auth,setAuth]= useState(false);
-    const [InterviewHistory, setInterviewHistory]= useState([]);
-    const [Job, setJob]= useState([]);
+    const [InterviewHistory, setInterviewHistory]= useState([])
     const [formState, setFormState] = useState({
         CompanyName: '',
         ApplyDate: '',
@@ -30,59 +26,61 @@ const InterviewHistory=()=>{
         Website: '',
         InterestLevel: '',
         InterviewRound: '',
-        Notes: ''
+        Notes: '',
+        Resume:''
     });
     const { state } = useLocation();
 
+    //InterviewHistory
     const [editInterviewInfo,setEditInterviewInfo]= useState({
+        NewInterview:true,
+        JobId:state.JobsID,
         Date:'',
         Time:'',
         Interviewer:'',
         Location:'',
         Title:'',
-        Notes:''
+        Notes:'',
+        InterviewID:0
 
         }
     );
 
 
+    //Handles Bottom Row Right Corner
     function createNewCard(InterviewID) {
+
         if(isNaN(InterviewID)){
-            setJob("NAN")
+            alert(InterviewHistory)
             alert("New Card")
             setEditInterviewInfo(prevState => ({
                 ...prevState,
+                NewInterview: true,
                 Date:'yyyy-mm-dd',
                 Time:'hh:mm',
                 Interviewer:'',
                 Location:'',
                 Title:'',
-                Notes:''
+                Notes:'',
+                InterviewID:0
             }));
-
-
-
         }else{
-            setJob(InterviewID);
-            console.log()
             alert("Updating!");
             try{
             setEditInterviewInfo(prevState => ({
                 ...prevState,
+                NewInterview: false,
                 Date: InterviewHistory[InterviewID].Date,
                 Time: InterviewHistory[InterviewID].Time,
                 Interviewer: InterviewHistory[InterviewID].Interviewer,
                 Location: InterviewHistory[InterviewID].Location,
                 Title: InterviewHistory[InterviewID].InterviewName,
                 Notes: InterviewHistory[InterviewID].Notes,
+                InterviewID:InterviewHistory[InterviewID].InterviewID
+
             }));}catch (e) {
                 console.log(e);
-
-
             }
-
-
-
         }
 
 
@@ -125,20 +123,6 @@ const InterviewHistory=()=>{
         //If we Did display info otherwise don't
 
         //We Send Number We Got From Arrival
-        const checkAuth = async () => {
-            const response = await fetch("http://localhost:3306/api/isAuth", {
-                method: 'Get',
-                headers: {
-                    'content-type': 'application/json',
-                    "x-access-token": localStorage.getItem("token")
-                }
-            });
-
-            if (response) {
-                console.log("============AUTHENTICATING==============");
-                return await response.json();
-            }
-        }
         checkAuth().then(body => {
             if (body.auth) {
                 setAuth(true);
@@ -147,7 +131,6 @@ const InterviewHistory=()=>{
                     const { JobsID } = state;
                     console.log("envienv"+JobsID)
                     getJobDetails(JobsID).then(body => {
-                        //setJob(body[0])
 
                         setFormState(prevState => ({
                             ...prevState,
@@ -164,7 +147,8 @@ const InterviewHistory=()=>{
                             Website: body[0].WebUrl,
                             InterestLevel: body[0].InterestLevel,
                             InterviewRound: body[0].InterviewRound,
-                            Notes: body[0].InterviewNotes
+                            Notes: body[0].InterviewNotes,
+                            Resume: body[0].DocName
                         }));
                         console.log(body[0]);
 
@@ -192,7 +176,60 @@ const InterviewHistory=()=>{
     }, []);
 
 
+    async function HandleSaveButton() {
+        const boolInterviewNotes = editInterviewInfo.NewInterview;
+        if (boolInterviewNotes) {
+            await fetch("http://localhost:3306/api/AddInterview", {
+                method: 'POST',
+                headers: {
+                    'content-type': 'application/json',
+                    "x-access-token": localStorage.getItem("token")
+                },
+                body: JSON.stringify({
 
+                    "InterviewName": editInterviewInfo.Title,
+                    "JobsID": editInterviewInfo.JobId,
+                    "Date": editInterviewInfo.Date,
+                    "Time": editInterviewInfo.Time,
+                    "Location": editInterviewInfo.Location,
+                    "Interviewer": editInterviewInfo.Interviewer,
+                    "Notes": editInterviewInfo.Notes
+
+                })
+            }).then(async (data) => {
+                if (data.status === 202) {
+                    alert("Successful Interview Save");
+                    window.location.reload();
+                }
+            });
+        } else {
+            await fetch("http://localhost:3306/api/AddInterview/edit", {
+                method: 'PUT',
+                headers: {
+                    'content-type': 'application/json',
+                    "x-access-token" : localStorage.getItem("token")
+                },
+                body: JSON.stringify({
+                    "InterviewName": editInterviewInfo.Title,
+                    "Date": editInterviewInfo.Date,
+                    "Time": editInterviewInfo.Time,
+                    "Location": editInterviewInfo.Location,
+                    "Interviewer": editInterviewInfo.Interviewer,
+                    "Notes": editInterviewInfo.Notes,
+                    "InterviewID":editInterviewInfo.InterviewID
+
+                })
+            }).then(async (data) => {
+
+                if(data.status===202){
+                    alert("Successful Job Update");
+                    window.location.reload();
+
+                }
+            });
+        }
+
+    }
 
     return (
         <Container id={"IntHistory"} style={{height:"100vh"}} >
@@ -279,7 +316,7 @@ const InterviewHistory=()=>{
                         </Form.Group>
                         <br/>
 
-                        <Button variant="primary" type="submit" >
+                        <Button variant="primary" onClick={HandleSaveButton}>
                             Save
                         </Button>
 
@@ -294,7 +331,10 @@ const InterviewHistory=()=>{
                     <Container>
 
 
-                    <p style={{textAlign:"center"}}><b>Feedback</b></p>
+                    <p style={{textAlign:"center"}}><b>Resume</b></p>
+
+                        <p><b>Company Name:</b> {formState.Resume==null?"NO RESUME LINKED":formState.Resume}</p>
+
 
                     </Container>
 
@@ -320,7 +360,7 @@ const InterviewHistory=()=>{
                                             <button style={{backgroundColor: '#191c1f', color: 'white'}} onClick={() => {
                                                 createNewCard(index);
 
-                                            }}>Edit Job
+                                            }}>Edit/View
                                             </button>
                                         </Card.Body>
                                     </Card>
@@ -329,7 +369,8 @@ const InterviewHistory=()=>{
                                     ))}
                                 <Card>
                                     <Card.Body>
-                                        <Button variant="primary" onClick={createNewCard}>Add Interview</Button>
+                                        <Button variant="primary" onClick={() => {
+                                            createNewCard("NONE")}}>Add Interview</Button>
                                     </Card.Body>
                                 </Card>
                             </div>

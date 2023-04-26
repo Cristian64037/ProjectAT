@@ -1,6 +1,6 @@
 const putJob = (req, res, connection) => {
 
-    const sql = `Update Jobs t SET t.CompName = ?, t.PositionName = ?, t.AppliedDate = ?, t.StatusID = ?, t.InterviewRound = ?, t.InterestLevel = ?, t.CoreValues = ?, t.MissionStatement = ?, t.WebUrl = ?, t.Awards = ?, t.ExpectSalary = ?, t.InterviewNotes = ? WHERE t.JobsID = ?`;
+    const sql = `Update Jobs t SET t.CompName = ?, t.PositionName = ?, t.AppliedDate = ?, t.StatusID = ?, t.InterviewRound = ?, t.InterestLevel = ?, t.CoreValues = ?, t.MissionStatement = ?, t.WebUrl = ?, t.Awards = ?, t.ExpectSalary = ?, t.InterviewNotes = ? t.Resume WHERE t.JobsID = ?`;
     const fields=[
 
         req.body.company,
@@ -15,6 +15,7 @@ const putJob = (req, res, connection) => {
         req.body.awards,
         req.body.salary,
         req.body.notes,
+        req.body.ResumeID,
         req.params.id
     ]
     console.log(req.params.id)

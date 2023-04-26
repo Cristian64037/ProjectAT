@@ -1,14 +1,14 @@
 const getJobToEdit = (req, res, connection) => {
-    const sql = `Select CompName, PositionName,
+    const sql = `Select CompName, d.DocName,PositionName,
             AppliedDate, StatusID, InterviewRound, InterestLevel,
             CoreValues, MissionStatement, WebUrl, Awards, ExpectSalary,
-            ImportantSkills, InterviewNotes from Jobs where JobsID = ?`;
+            ImportantSkills, InterviewNotes from Jobs j Left JOIN Documents d on j.Resume= d.DocID where j.JobsID = ?`;
     const fields = [req.params.id];
 
     require("../../queryDB").request(sql, fields, connection)
         .then(
             (data) => {
-                //console.log(data);
+                console.log(data);
                 if (data.length == 0) {
                     res.status(404).send("Job not found");
                 } else {

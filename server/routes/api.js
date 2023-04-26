@@ -138,7 +138,11 @@ router.post('/documents',verifyJWTBackEnd, (req, res) => {
 router.post('/board',verifyJWTBackEnd, (req, res) => {
     require("./post/Board").postBoard(req, res, connection);
 });
-
+//AddInterview
+//Add a Interview for Job
+router.post('/AddInterview',verifyJWTBackEnd, (req, res) => {
+    require("./post/AddInterview").AddInterview(req, res, connection);
+});
 
 
 /*==============
@@ -154,6 +158,12 @@ router.put('/jobs/edit/:id', (req, res) => {
 router.put('/board', verifyJWTBackEnd,(req, res) => {
    require("./put/Board").putBoard(req, res, connection);
 });
+//Edit The InterviewNotes
+router.put('/AddInterview/edit', verifyJWTBackEnd,(req, res) => {
+    require("./put/InterviewEdit").InterviewEdit(req, res, connection);
+});
+
+
 
 router.put('/OneTimePassWordChange',async(req, res) =>{
     const pswd="CL";

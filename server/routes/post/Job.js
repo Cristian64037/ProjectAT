@@ -4,8 +4,8 @@ const postJob = (req, res, connection) => {
     const sql = `Insert into Jobs(JobBoardID, CompName, PositionName,
             AppliedDate, StatusID, InterviewRound, InterestLevel,
             CoreValues, MissionStatement, WebUrl, Awards, ExpectSalary,
-            ImportantSkills, InterviewNotes)
-            values(?,?,?,?,?,?,?,?,?,?,?,?,?,?)`;
+            ImportantSkills, InterviewNotes,Resume)
+            values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)`;
 
     const UpdateDate=`Update JobBoards SET LastUpdated=? where JobBoardID=?`;
     const fields = [
@@ -22,8 +22,10 @@ const postJob = (req, res, connection) => {
         req.body.awards,
         req.body.salary,
         req.body.skills,
-        req.body.notes
+        req.body.notes,
+        req.body.ResumeID
     ];
+    console.log(req.body.ResumeID);
     require("../queryDB").request(sqlGetCurBoard, fields.slice(0), connection)
         .then(
             (data) => {
