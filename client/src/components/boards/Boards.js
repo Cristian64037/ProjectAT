@@ -25,27 +25,7 @@ const Boards = () => {
                 setjobs(jobsFromDB);
                 setBoardName(boardData[0].BoardName);
                 setLastUpdatedDate(boardData[0].LastUpdated);
-
-<<<<<<< Updated upstream
-                fetchData().then(body => {
-                    console.log("Fetchingggggggg Data")
-                    console.log(body);
-                    setjobs(body);
-                    //setIspending(true);
-                    console.log("Leaving fetch")
-                });
-                getBoardData().then(body => {
-                    console.log("YOomeomvoemvoOOO")
-                    console.log("This is working Board Data")
-
-                    console.log("YOomeomvoemvoOOO")
-                    setBoardName(body[0].BoardName);
-                    setLastUpdatedDate(body[0].LastUpdated);
-                    setIspending(true)
-                });
-                FormatTable();
-=======
->>>>>>> Stashed changes
+                
             } else {
                 navigate('/unauthorized')
             }
