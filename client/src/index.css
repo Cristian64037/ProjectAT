@@ -430,3 +430,89 @@ log-container .log-form{
 }
 
 
+/*Listbox Styles*/
+.ListBox {
+    padding: 1em;
+    margin: 1em;
+    border: 1px solid #aaaaaa55;
+    border-radius: 10px;
+    box-shadow: 5px 5px 5px #00000055;
+}
+
+.block {
+    display: block;
+}
+
+.overflow-auto {
+    overflow-y: auto;
+}
+
+.no-highlight {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+.full-width-input{
+    width: 100%;
+    margin-bottom: 10px;
+}
+
+.full-width {
+    padding: 3px;
+    border: 1px solid #aaaaaa55;
+    border-radius: 3px;
+}
+
+.btn-width {
+    width: 100%;
+}
+
+/*Modal Styles*/
+.modalBackground {
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(200, 200, 200, .35);
+    position: fixed;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.modalContainer {
+    width: 500px;
+    height: 500px;
+    border-radius: 12px;
+    background-color: white;
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+    display: flex;
+    flex-direction: column;
+    padding: 25px;
+}
+
+.modalTitle {
+    display: inline-block;
+    text-align: center;
+    margin-top: 10px;
+}
+
+.titleCloseBtn {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.titleCloseBtn button {
+    background-color: transparent;
+    border: none;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.modalBody {
+    flex: 50%;
+    display: flex;
+    justify-content: center;
+}
