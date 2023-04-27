@@ -138,7 +138,7 @@ const JobApplicationForm=(e)=>{
         const ResumeID = selectedResumeID!=null ? resumeID[selectedResumeID].DocID : null;
         e.preventDefault();
         if(jobId==null){
-            alert("New Job");
+
             await fetch("http://localhost:3306/api/jobs", {
                 method: 'POST',
                 headers: {
@@ -165,16 +165,15 @@ const JobApplicationForm=(e)=>{
             }).then(async (data) => {
                 var body = await data.text();
                 if(data.status===201){
-                    alert("Successful Job Input");
+                    alert("Success");
                     navigate("/boards")
                 }else {
-                    alert(body);
+                    alert("Error");
                 }
             });
 
         }else{
-            alert("Editing");
-            alert(resumeID)
+
             await fetch("http://localhost:3306/api/jobs/edit/"+jobId, {
                 method: 'PUT',
                 headers: {
@@ -200,10 +199,10 @@ const JobApplicationForm=(e)=>{
             }).then(async (data) => {
                 var body = await data.text();
                 if(data.status===201){
-                    alert("Successful Job Update");
+                    alert("Success");
                     navigate("/boards")
                 }else {
-                    alert(body);
+                    alert("Error");
                 }
             });
         }

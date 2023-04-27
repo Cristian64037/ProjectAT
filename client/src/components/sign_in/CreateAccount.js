@@ -30,8 +30,8 @@ const CreateAccount = () => {
         }).then(async (data) => {
             var body = await data.text();
             if(data.status===201){
-                alert("Successful Creation of Account");
-                navigate('/');
+                alert("Success");
+                navigate('/login');
 
 
             }else {
