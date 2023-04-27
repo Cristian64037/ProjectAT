@@ -80,7 +80,7 @@ router.get('/jobs/edit/:id', (req, res) => {
 });
 
 //Gets the box cards and the documents within each for a specific user (populates documents UI)
-router.get('/documents', (req, res) => {
+router.get('/documents',verifyJWTBackEnd, (req, res) => {
    require("./get/document/Documents").getDocuments(req, res, connection);
 });
 

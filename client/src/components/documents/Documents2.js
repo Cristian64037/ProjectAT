@@ -6,6 +6,7 @@ import useGet from "../../hooks/useGet";
 const Documents = () => {
     const navigate = useNavigate();
     const {data: boxes, isPending, error} = useGet("http://localhost:3306/api/documents");
+    console.log(boxes)
 
     useEffect(() => {
         checkAuth().then(body => {
@@ -23,19 +24,23 @@ const Documents = () => {
                 <div className="row row-cols-1 row-cols-md-4 vh-100 ">
 
                     {boxes && boxes.map((box) => (
+
                         <div className="col" style={{marginBottom: 5, marginTop: 5}}>
+
                             <div className="card" style={{width: "18rem"}} key={box.BoxCardId}>
                                 <img src={"Documents.png"} className={"card-img-top"} alt={"Images"}/>
 
                                 <div className="card-body">
-                                    <h5 className="card-title">{box.BoxName}</h5>
+                                    <h5 className="card-title">{box[1]}</h5>
                                     {/*<p className="card-text">Store all your {box.BoxName} </p>*/}
                                 </div>
                                 <ul className="list-group list-group-flush">
-                                    <li className="list-group-item">Download</li>
-                                    <li className="list-group-item">Download 2</li>
-                                    <li className="list-group-item">Download 3</li>
-
+                                    {box[2].length > 0 ?
+                                        box[2].map((doc, i) => (
+                                            <li className="list-group-item" key={i}> {doc}</li>
+                                        ))
+                                        : <li className="list-group-item">Nothing available</li>
+                                    }
                                 </ul>
 
 
