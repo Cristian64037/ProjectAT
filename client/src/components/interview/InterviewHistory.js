@@ -51,8 +51,7 @@ const InterviewHistory=()=>{
     function createNewCard(InterviewID) {
 
         if(isNaN(InterviewID)){
-            alert(InterviewHistory)
-            alert("New Card")
+
             setEditInterviewInfo(prevState => ({
                 ...prevState,
                 NewInterview: true,
@@ -65,7 +64,7 @@ const InterviewHistory=()=>{
                 InterviewID:0
             }));
         }else{
-            alert("Updating!");
+
             try{
             setEditInterviewInfo(prevState => ({
                 ...prevState,

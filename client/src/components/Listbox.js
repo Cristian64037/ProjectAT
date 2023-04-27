@@ -13,7 +13,7 @@ const Listbox = ({
 
     function handleEdit(index) {
         try {
-            alert(index)
+
             navigate(`/JobApplicationForm`, {
                 state: {
                     index
@@ -27,7 +27,7 @@ const Listbox = ({
 
     function handleInterview(JobsID) {
         try {
-            alert(JobsID)
+
             navigate(`/interviewPrep`, {
                 state: {
                     JobsID
