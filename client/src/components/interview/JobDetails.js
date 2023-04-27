@@ -1,43 +1,31 @@
 import useFetch from "../../hooks/useFetch";
 import {useEffect, useState} from "react";
-
+import useGet from "../../hooks/useGet";
+import Moment from 'moment';
 
 const JobDetails = (JobId) => {
     const [job, setJob] = useState("");
     const [isPending, setIsPending] = useState(true);
-    console.log(JobId);
-
-    async function fetchData(){
-        await fetch('http://localhost:3306/api/interview/job/' + JobId.JobId, {
-            method: 'Get',
-            headers: {
-                'content-type': 'application/json',
-                "x-access-token" : localStorage.getItem("token")
-            }
-        }).then(async (data) => {
-            var body = await data.json();
-            setJob(body);
-            console.log(job)
-            setIsPending(false);
-        });
-    }
+    const {data: jobDataFromDB, isPending2, error2} = useGet("http://localhost:3306/api/interview/job/"+JobId.JobId);
 
     useEffect(() => {
-        // Update the document title using the browser API
-        fetchData();
-    }, [isPending]);
+        setIsPending(false);
+        console.log(jobDataFromDB[0].AppliedDate)
+    }, [jobDataFromDB,isPending]);
 
     return (
         <div className="blog-details">
             { isPending && <div>Loading...</div> }
-            { job && (
+            { jobDataFromDB && (
                 <div className="blog-preview" key={job.JobsID}>
-                    <h2>{job[0].CompName}</h2>
-                    <p> Position Name {job[0].PositionName} </p>
-                    <p> Applied Date {job[0].AppliedDate} </p>
-                    <p> Status {job[0].StatusID} </p>
-                    <p> Interview Round {job[0].InterviewRound} </p>
-                    <p> Interest Level {job[0].InterestLevel} </p>
+                    <h2>{jobDataFromDB[0].CompName}</h2>
+                    <p> Position Name {jobDataFromDB[0].PositionName} </p>
+
+                    <p> Applied Date {Moment(jobDataFromDB[0].AppliedDate).format('MM-DD-YYYY')} </p>
+
+                    <p> Status {jobDataFromDB[0].StatusID} </p>
+                    <p> Interview Round {jobDataFromDB[0].InterviewRound} </p>
+                    <p> Interest Level {jobDataFromDB[0].InterestLevel} </p>
                 </div>
             )}
         </div>

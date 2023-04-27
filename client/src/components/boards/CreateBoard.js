@@ -2,45 +2,27 @@ import {useEffect, useState} from "react";
 import {useNavigate} from "react-router-dom";
 import Popup from "reactjs-popup";
 import {checkAuth} from "../../functions/checkAuth";
+import useGet from "../../hooks/useGet";
 
 const CreateBoard = () => {
 
     const [boards, setBoards] = useState([]);
     const [newBoardName, setNewBoardName] = useState("");
-    const [errorMessage, setErrorMessage] = useState("");
     const navigate = useNavigate();
-
-    async function fetchData() {
-        await fetch("http://localhost:3306/api/board", {
-            method: 'Get',
-            headers: {
-                'content-type': 'application/json',
-                "x-access-token": localStorage.getItem("token")
-            }
-        }).then(async (data) => {
-            var body = await data.json();
-            try{
-                setBoards(body.data);
-
-            }catch (e)
-            {
-                setErrorMessage("Unable to Parse Job Boards")
-
-            }
-        });
-    }
+    const {data: Boards, isPending2, error2} = useGet("http://localhost:3306/api/board");
 
     useEffect(() => {
         checkAuth().then(body => {
             console.log(body.auth);
             if (body.auth) {
-                fetchData()
+                setBoards(Boards.data);
+
             }
             else {
                 navigate('/unauthorized')
             }
         });
-    }, []);
+    }, [Boards]);
 
 
     async function handleBoardChange(selectedFromDropDown) {

@@ -5,53 +5,28 @@ import Moment from 'moment';
 import JobApplicationForm from "../job/JobApplicationForm";
 import {Link} from "react-router-dom";
 import {checkAuth} from "../../functions/checkAuth";
+import useGet from "../../hooks/useGet";
 
 const Boards = () => {
     let navigate = useNavigate();
-    const [jobId, setJobId] = useState("");
     const [BoardName, setBoardName] = useState("New Board");
     const [jobs, setjobs] = useState("");
     const [isPending, setIspending] = useState(false);
     const [lastUpdateDate, setLastUpdatedDate] = useState("");
-    const [auth, setAuth] = useState(false);
-
-    async function getBoardData() {
-        const response = await fetch("http://localhost:3306/api/Latestboard", {
-            method: 'Get',
-            headers: {
-                'content-type': 'application/json',
-                "x-access-token": localStorage.getItem("token")
-            }
-        });
-
-        if (response) {
-            console.log("============FETCHING BOARDS==============");
-            return await response.json();
-        }
-    }
-
-    async function fetchData() {
-        const response = await fetch("http://localhost:3306/api/jobs", {
-            method: 'Get',
-            headers: {
-                'content-type': 'application/json',
-                "x-access-token": localStorage.getItem("token")
-            }
-        });
-
-        if (response) {
-            console.log("============FETCHING JOBS==============");
-            return await response.json();
-        }
-    }
+    const {data: boardData, isPending1, error1} = useGet("http://localhost:3306/api/Latestboard");
+    const {data: jobsFromDB, isPending2, error2} = useGet("http://localhost:3306/api/jobs");
 
     useEffect(() => {
         checkAuth().then(body => {
             console.log(body.auth);
             if (body.auth) {
-                setAuth(true);
+                setIspending(true)
                 console.log("Beofre Fetch")
+                setjobs(jobsFromDB);
+                setBoardName(boardData[0].BoardName);
+                setLastUpdatedDate(boardData[0].LastUpdated);
 
+<<<<<<< Updated upstream
                 fetchData().then(body => {
                     console.log("Fetchingggggggg Data")
                     console.log(body);
@@ -69,11 +44,13 @@ const Boards = () => {
                     setIspending(true)
                 });
                 FormatTable();
+=======
+>>>>>>> Stashed changes
             } else {
                 navigate('/unauthorized')
             }
         });
-    }, [isPending]);
+    }, [isPending,boardData,jobsFromDB]);
 
     function FormatTable() {
         new window.simpleDatatables.DataTable("table", {
