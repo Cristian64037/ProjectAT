@@ -46,13 +46,13 @@ const CreateBoard = () => {
 
         } catch (error) {
             // code to handle the error
-            alert("Refresh Page")
+            alert("Error Refresh Page")
         }
 
     }
 
     async function handleNewBoard() {
-        alert("Created New Board");
+
         await fetch("http://localhost:3306/api/board", {
             method: 'POST',
             headers: {
@@ -64,7 +64,7 @@ const CreateBoard = () => {
             })
         }).then(async (data) => {
             var body = await data.text();
-            alert(body)
+
             navigate('/boards');
         });
         //navigate('/boards');

@@ -19,7 +19,6 @@ function CollapsibleExample() {
     }, [location]);
 
     async function handleLogout() {
-        alert("Logging eveveveveout");
         localStorage.removeItem('token');
         navigate(`/login`)
 

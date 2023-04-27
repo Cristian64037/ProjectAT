@@ -27,10 +27,7 @@ const Login=()=>{
 
         }).then(async (data) => {
             var body = await data.json();
-           //console.log(body);
-
             if(body.auth){
-                alert("Successful Log in");
                 localStorage.setItem("token", body.token);
                 setLoginStatus(true);
                 navigate('/');
