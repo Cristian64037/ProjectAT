@@ -25,7 +25,7 @@ const Boards = () => {
                 setjobs(jobsFromDB);
                 setBoardName(boardData[0].BoardName);
                 setLastUpdatedDate(boardData[0].LastUpdated);
-                
+
             } else {
                 navigate('/unauthorized')
             }
