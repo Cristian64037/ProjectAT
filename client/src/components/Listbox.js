@@ -93,7 +93,7 @@ const Listbox = ({
                 })}
             </ul>
             <button className="btn btn-outline-dark btn-width" type="submit" onClick={(e) =>
-                editFlag ? handleEdit(selectedID) : handleInterview(selectedID)}>
+                selectedID != "" && (editFlag ? handleEdit(selectedID) : handleInterview(selectedID))}>
                 Select
             </button>
         </div>
