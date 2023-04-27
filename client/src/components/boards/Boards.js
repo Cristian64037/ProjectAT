@@ -2,35 +2,89 @@ import {Route, useNavigate} from "react-router";
 import {useEffect, useState} from "react";
 
 import Moment from 'moment';
-import JobApplicationForm from "../job/JobApplicationForm";
 import {Link} from "react-router-dom";
 import {checkAuth} from "../../functions/checkAuth";
 import useGet from "../../hooks/useGet";
+import Modal from "../Modal";
 
 const Boards = () => {
     let navigate = useNavigate();
     const [BoardName, setBoardName] = useState("New Board");
     const [jobs, setjobs] = useState("");
+    const [interviewJobs, setInterviewJobs] = useState("");
     const [isPending, setIspending] = useState(false);
     const [lastUpdateDate, setLastUpdatedDate] = useState("");
     const {data: boardData, isPending1, error1} = useGet("http://localhost:3306/api/Latestboard");
     const {data: jobsFromDB, isPending2, error2} = useGet("http://localhost:3306/api/jobs");
+    const [auth, setAuth] = useState(false);
+    const [openModal, setOpenModal] = useState(false);
+    const [editFlag, setEditFlag] = useState(false);
+
+    async function getBoardData() {
+        const response = await fetch("http://localhost:3306/api/Latestboard", {
+            method: 'Get',
+            headers: {
+                'content-type': 'application/json',
+                "x-access-token": localStorage.getItem("token")
+            }
+        });
+
+        if (response) {
+            console.log("============FETCHING BOARDS==============");
+            return await response.json();
+        }
+    }
+
+    async function fetchData() {
+        const response = await fetch("http://localhost:3306/api/jobs", {
+            method: 'Get',
+            headers: {
+                'content-type': 'application/json',
+                "x-access-token": localStorage.getItem("token")
+            }
+        });
+
+        if (response) {
+            console.log("============FETCHING JOBS==============");
+            return await response.json();
+        }
+    }
 
     useEffect(() => {
         checkAuth().then(body => {
             console.log(body.auth);
             if (body.auth) {
-                setIspending(true)
-                console.log("Beofre Fetch")
+                setIspending(true);
+                console.log("Beofre Fetch");
                 setjobs(jobsFromDB);
                 setBoardName(boardData[0].BoardName);
                 setLastUpdatedDate(boardData[0].LastUpdated);
+                setAuth(true);
 
+                fetchData().then(body => {
+                    let nonAppliedJobs = [];
+
+                    for (let i = 0; i < body.length; i++) {
+                        if (body[i].Status !== "Applied") {
+                            nonAppliedJobs.push(body[i]);
+                        }
+                    }
+
+                    setjobs(body);
+                    setInterviewJobs(nonAppliedJobs);
+                    FormatTable();
+                });
+                getBoardData().then(body => {
+                    setBoardName(body[0].BoardName);
+                    setLastUpdatedDate(body[0].LastUpdated);
+                    setIspending(true);
+                });
             } else {
                 navigate('/unauthorized')
             }
         });
-    }, [isPending,boardData,jobsFromDB]);
+    }, [isPending,boardData,jobsFromDB, openModal]);
+
 
     function FormatTable() {
         new window.simpleDatatables.DataTable("table", {
@@ -96,51 +150,11 @@ const Boards = () => {
         navigate(path);
     }
 
-    function handleEdit(index) {
-
-        try {
-
-            alert(index)
-
-            navigate(`/JobApplicationForm`, {
-                state: {
-                    index
-                }
-            })
-
-
-        } catch (error) {
-            // code to handle the error
-            return <div>Error: {error.message}</div>;
-        }
-
-
-    }
-
-    function handleInterview(JobsID) {
-        try {
-
-            alert(JobsID)
-
-            navigate(`/interviewPrep`, {
-                state: {
-                    JobsID
-                }
-            })
-
-
-        } catch (error) {
-
-        }
-
-    }
-
     return (
-
-
         <div>
             {isPending ?
                 <div className="card mb-4">
+                    {openModal && <Modal closeModel={setOpenModal} list={editFlag ? jobs : interviewJobs} widthPct={80} editFlag={editFlag}/>}
                     <div className="card-header row">
                         <span className="col-3">
                             <i className="fas fa-table me-2 fs-4"/>
@@ -155,13 +169,19 @@ const Boards = () => {
 
                             <span className="float-lg-end">&nbsp;&nbsp;&nbsp;</span>
 
-                            <button id="myButton" className="float-lg-end btn btn-outline-dark submit-button">
+                            <button id="editButton" className="float-lg-end btn btn-outline-dark submit-button" onClick={() => {
+                                setOpenModal(true);
+                                setEditFlag(true);
+                            }}>
                                 Edit Job
                             </button>
 
                             <span className="float-lg-end">&nbsp;&nbsp;&nbsp;</span>
 
-                            <button id="myButton" className="float-lg-end btn btn-outline-dark submit-button">
+                            <button id="interviewButton" className="float-lg-end btn btn-outline-dark submit-button" onClick={() => {
+                                setOpenModal(true);
+                                setEditFlag(false);
+                            }}>
                                 Interview Notes
                             </button>
 
@@ -189,8 +209,6 @@ const Boards = () => {
                             Last update: {Moment(lastUpdateDate).format('MM-DD-YYYY')}
                         </span>
                     </div>
-                    <div>
-                    </div>
                     <div className="card-body">
                         <table className="table">
                             <thead>
@@ -212,7 +230,7 @@ const Boards = () => {
                                      * they dont' have access too by using inspect element. I will make the same changes to
                                      *Boards  */
 
-                                    <tr>
+                                    <tr key={index}>
                                         <td>{job.CompName}</td>
                                         <td>{job.PositionName}</td>
                                         <td>{job.Status}</td>
