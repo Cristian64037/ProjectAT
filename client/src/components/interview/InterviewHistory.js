@@ -197,7 +197,6 @@ const InterviewHistory=()=>{
                 })
             }).then(async (data) => {
                 if (data.status === 202) {
-                    alert("Successful Interview Save");
                     window.location.reload();
                 }
             });
@@ -221,7 +220,7 @@ const InterviewHistory=()=>{
             }).then(async (data) => {
 
                 if(data.status===202){
-                    alert("Successful Job Update");
+
                     window.location.reload();
 
                 }
