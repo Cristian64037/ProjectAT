@@ -31,7 +31,7 @@ function CollapsibleExample() {
 
                 {auth ?
                     <>
-                    <Navbar.Brand href="/">ProjectAt</Navbar.Brand>
+                    <Navbar.Brand href="/">ProjectAT</Navbar.Brand>
 
 
                     <Navbar.Toggle aria-controls="responsive-navbar-nav" />
