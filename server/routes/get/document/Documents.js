@@ -7,7 +7,8 @@ const getDocuments = (req, res, connection) => {
         .then(
             (data) => {
                 const fields2=[1,2,3,4,5,6];
-                let Docs=[                    [1,"Resume",[]],
+                let Docs=[
+                    [1,"Resume",[]],
                     [2,"Behavioral Questions",[]],
                     [3,"Cover Letter",[]],
                     [4,"Elevator Pitch",[]],
@@ -30,7 +31,7 @@ const getDocuments = (req, res, connection) => {
                                     for (let j = 0; j <docs.length ; j++) {
                                         PrevValues.push(docs[j].DocName)
                                     }
-                                    Docs[i][2]=PrevValues
+                                    Docs[i-1][2]=PrevValues
                                 }
                                 //console.log(Docs);
                             });
