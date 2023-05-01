@@ -480,11 +480,15 @@ log-container .log-form{
     display: flex;
     justify-content: center;
     align-items: center;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    left: 0;
 }
 
 .modalContainer {
-    width: 500px;
-    height: 500px;
+    width: 400px;
+    height: 425px;
     border-radius: 12px;
     background-color: white;
     box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;

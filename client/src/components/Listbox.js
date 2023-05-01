@@ -7,7 +7,7 @@ const Listbox = ({
                      list = [],
                      widthPct = 100,
                      editFlag = true,
-                     maxHeight = "250px"
+                     maxHeight = "175px"
 }) => {
     let navigate = useNavigate();
 
@@ -57,7 +57,7 @@ const Listbox = ({
     }
 
     const onSelect = (item) => {
-        setSelectedValue(`${item.CompName} - ${item.PositionName}`);
+        setSelectedValue(`${item.JobsID} - ${item.CompName} - ${item.PositionName}`);
         setSelectedID(item.JobsID);
         setFilterText('');
         onFilter('');
@@ -69,7 +69,6 @@ const Listbox = ({
                 <input
                     className="full-width full-width-input"
                     type="text"
-                    placeholder={selectedValue}
                     onChange={(e) => onFilter(e.target.value)}
                     value={filterText}
                 />
@@ -81,7 +80,7 @@ const Listbox = ({
                             key={index}
                             className="no-highlight"
                             style={{
-                                backgroundColor: selectedValue === `${item.CompName} - ${item.PositionName}`
+                                backgroundColor: selectedValue === `${item.JobsID} - ${item.CompName} - ${item.PositionName}`
                                     ? HIGHLIGHT_COLOR :
                                     'white',}}
                             value={`${item.CompName} - ${item.PositionName}`}
