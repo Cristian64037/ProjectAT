@@ -1,9 +1,8 @@
 import {useNavigate} from "react-router-dom";
 import React, {useEffect, useState} from "react";
-import DatePicker from "react-datepicker";
-import App from "../../App";
 import {checkAuth} from "../../functions/checkAuth";
 import {useLocation} from "react-router";
+import ErrorModal from "../pop_ups/ErrorModal";
 
 const JobApplicationForm=(e)=>{
     const navigate = useNavigate();
@@ -24,6 +23,8 @@ const JobApplicationForm=(e)=>{
     const [InterestLevelFromDb,setInterestLevelFromDb]= useState([]);
     const [resumeID,setResumeID]= useState([]);
     const [selectedResumeID,setSelectedResumeID]= useState(null);
+    const [openModel, setOpenModel] = useState(false);
+    const [errMsg, setErrMsg] = useState("");
     const { state } = useLocation();
 
 
@@ -168,7 +169,8 @@ const JobApplicationForm=(e)=>{
                     alert("Success");
                     navigate("/boards")
                 }else {
-                    alert("Error");
+                    setErrMsg(body);
+                    setOpenModel(true);
                 }
             });
 
@@ -202,7 +204,8 @@ const JobApplicationForm=(e)=>{
                     alert("Success");
                     navigate("/boards")
                 }else {
-                    alert("Error");
+                    setErrMsg(body);
+                    setOpenModel(true);
                 }
             });
         }
@@ -212,6 +215,7 @@ const JobApplicationForm=(e)=>{
 
     return(
         <div className="app-container">
+            {openModel && <ErrorModal closeModel={setOpenModel} errMsg={errMsg}/>}
             <header>Application Form</header>
 
             <form>

@@ -25,46 +25,72 @@ const postJob = (req, res, connection) => {
         req.body.notes,
         req.body.ResumeID
     ];
-    console.log(req.body.ResumeID);
-    require("../queryDB").request(sqlGetCurBoard, fields.slice(0), connection)
-        .then(
-            (data) => {
 
-                fields[0]=data[0].CurrentBoard;
-                require("../queryDB").request(sql, fields, connection)
-                    .then(
-                        (data) => {
-                            ////console.log(data)
-                            //res.status(201).send(data);
-                            let date_ob = new Date();
-                            const updateFields=[
+    let errMsg = "";
 
-                                date_ob,
-                                fields[0]
+    if (fields[1] === '') {
+        errMsg += "Company Name is a required field,";
+    }
+    if (fields[2] === '') {
+        errMsg += "Position Name is a required field,";
+    }
+    if (fields[3] === '') {
+        errMsg += "Applied Date is a required field,";
+    }
+    if (fields[4] === '') {
+        errMsg += "Job Status is a required field,";
+    }
+    if (fields[5] === '') {
+        errMsg += "Interview Round is a required field,";
+    }
+    if (fields[6] === '') {
+        errMsg += "Interest Level is a required field,";
+    }
 
-                            ]
-                            require("../queryDB").request(UpdateDate, updateFields, connection)
-                                .then(
-                                    (data) => {
-                                        ////console.log(data)
-                                        res.status(201).send(data);
-                                    },
-                                    (err) => {
-                                        res.status(400).send(err);
-                                        ////console.log(err);
-                                    }
-                                );
-                        },
-                        (err) => {
-                            res.status(400).send(err);
-                            ////console.log(err);
-                        }
-                    );
-            },
-            (err) => {
-                res.status(400).send(err);
-                //console.log(err);
-            }
-        );
+    if (errMsg == '') {
+        require("../queryDB").request(sqlGetCurBoard, fields.slice(0), connection)
+            .then(
+                (data) => {
+
+                    fields[0] = data[0].CurrentBoard;
+                    require("../queryDB").request(sql, fields, connection)
+                        .then(
+                            (data) => {
+                                //console.log(data)
+                                //res.status(201).send(data);
+                                let date_ob = new Date();
+                                const updateFields = [
+
+                                    date_ob,
+                                    fields[0]
+
+                                ]
+                                require("../queryDB").request(UpdateDate, updateFields, connection)
+                                    .then(
+                                        (data) => {
+                                            ////console.log(data)
+                                            res.status(201).send(data);
+                                        },
+                                        (err) => {
+                                            res.status(400).send(err);
+                                            ////console.log(err);
+                                        }
+                                    );
+                            },
+                            (err) => {
+                                res.status(400).send(err);
+                                ////console.log(err);
+                            }
+                        );
+                },
+                (err) => {
+                    res.status(400).send(err);
+                    //console.log(err);
+                }
+            );
+    } else {
+        errMsg = errMsg.slice(0, -1);
+        res.status(400).send(errMsg);
+    }
 }
 module.exports = {postJob};

@@ -5,7 +5,7 @@ import Moment from 'moment';
 import {Link} from "react-router-dom";
 import {checkAuth} from "../../functions/checkAuth";
 import useGet from "../../hooks/useGet";
-import Modal from "../Modal";
+import Modal from "../pop_ups/Modal";
 
 const Boards = () => {
     let navigate = useNavigate();
@@ -158,7 +158,7 @@ const Boards = () => {
                     <div className="card-header row">
                         <span className="col-3">
                             <i className="fas fa-table me-2 fs-4"/>
-                            <span style={{fontSize: '28px'}}>{BoardName}</span>
+                            <span style={{fontSize: '24px'}}>{BoardName}</span>
                         </span>
 
                         <span className="col-6 d-flex justify-content-center">
@@ -205,7 +205,7 @@ const Boards = () => {
                              </div>
                         </span>
 
-                        <span style={{fontSize: '28px'}} className="col-3 text-end">
+                        <span style={{fontSize: '24px'}} className="col-3 text-end">
                             Last update: {Moment(lastUpdateDate).format('MM-DD-YYYY')}
                         </span>
                     </div>

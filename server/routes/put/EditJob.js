@@ -18,21 +18,45 @@ const putJob = (req, res, connection) => {
         req.body.ResumeID,
         req.params.id
     ]
-    console.log(req.params.id)
-    require("../queryDB").request(sql, fields, connection)
-        .then(
-            (data) => {
-                console.log(data)
 
-                res.status(201).send("Success");
+    let errMsg = "";
 
-            },
-            (err) => {
-                res.status(400).send(err);
-                //console.log(err);
-            }
-        );
+    if (fields[0] === '') {
+        errMsg += "Company Name is a required field,";
+    }
+    if (fields[1] === '') {
+        errMsg += "Position Name is a required field,";
+    }
+    if (fields[2] === '') {
+        errMsg += "Applied Date is a required field,";
+    }
+    if (fields[3] === '') {
+        errMsg += "Job Status is a required field,";
+    }
+    if (fields[4] === '') {
+        errMsg += "Interview Round is a required field,";
+    }
+    if (fields[5] === '') {
+        errMsg += "Interest Level is a required field,";
+    }
 
+    if (errMsg == '') {
+        require("../queryDB").request(sql, fields, connection)
+            .then(
+                (data) => {
+                    console.log(data)
 
+                    res.status(201).send("Success");
+
+                },
+                (err) => {
+                    res.status(400).send(err);
+                    //console.log(err);
+                }
+            );
+    } else {
+        errMsg = errMsg.slice(0, -1);
+        res.status(400).send(errMsg);
+    }
 }
 module.exports = {putJob};
